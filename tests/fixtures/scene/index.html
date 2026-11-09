@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>umd fixture</title>
+<style>
+  :root { --motion-entrance: cubic-bezier(0, 0, 0.3, 1); --motion-slow: 700ms; }
+  html, body { margin: 0; height: 100%; background: #101418; overflow: hidden; }
+  .card { position: absolute; left: 10%; top: 30%; width: 30%; height: 40%; background: #e8d5b5; border-radius: 24px;
+          animation: slide var(--motion-slow) var(--motion-entrance) both; }
+  .title { position: absolute; left: 50%; top: 40%; color: #f4f1ea; font: 700 72px/1.1 system-ui, sans-serif; opacity: 0; }
+  .title.on { animation: rise var(--motion-slow) var(--motion-entrance) forwards; }
+  canvas { position: absolute; inset: 0; }
+  @keyframes slide { from { transform: translateX(-120%); } to { transform: none; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .card, .title.on { animation: none; opacity: 1; } }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<div class="card"></div>
+<div class="title" id="t">Hello motion</div>
+<script>
+  window.umdDuration = 4;
+  const ctx = document.getElementById("c").getContext("2d");
+  const start = performance.now();
+  const dots = Array.from({ length: 40 }, () => ({ x: Math.random() * 1920, y: Math.random() * 1080, r: 4 + Math.random() * 10 }));
+  function draw(now) {
+    const t = (now - start) / 1000;
+    ctx.clearRect(0, 0, 1920, 1080);
+    ctx.fillStyle = "rgba(120,170,255,0.6)";
+    for (const d of dots) { ctx.beginPath(); ctx.arc(d.x + Math.sin(t + d.r) * 40, d.y + t * 20, d.r, 0, Math.PI * 2); ctx.fill(); }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+  setTimeout(() => document.getElementById("t").classList.add("on"), 1500);
+</script>
+</body>
+</html>

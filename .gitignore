@@ -1,0 +1,10 @@
+node_modules/
+.motion/
+umd-analysis/
+*.log
+.DS_Store
+Thumbs.db
+# local research material and backups
+research_notes/
+reports/
+*.backup.md

@@ -1,0 +1,155 @@
+{
+  "group": "motion",
+  "label": { "fr": "Mouvement, texte et sécurité", "en": "Motion, text and safety" },
+  "domains": [
+    {
+      "id": "motion",
+      "code": "MOT",
+      "label": { "fr": "Easing et chorégraphie", "en": "Easing and choreography" },
+      "summary": { "fr": "Des durées et courbes cohérentes, un but pour chaque mouvement, aucun tic de motion IA.", "en": "Consistent durations and curves, a purpose for every motion, no AI motion tells." },
+      "build": [
+        { "fr": "Durées et courbes uniquement depuis .motion/motion-tokens.json ; aucune valeur en dur dans les composants.", "en": "Durations and curves only from .motion/motion-tokens.json; no hard-coded values in components." },
+        { "fr": "Chaque mouvement a un rôle : guider le regard, expliquer un changement, donner un retour, enchaîner deux idées.", "en": "Every motion has a role: guide the eye, explain a change, give feedback, link two ideas." },
+        { "fr": "Entrées en ease-out, sorties en ease-in, déplacements à l'écran en ease-in-out ; jamais de linéaire sur un déplacement.", "en": "Entrances ease-out, exits ease-in, on-screen moves ease-in-out; never linear on a spatial move." },
+        { "fr": "Un seul mouvement principal à la fois ; les autres le suivent en décalé.", "en": "One focal motion at a time; the others follow, offset." },
+        { "fr": "Bannir les tics IA : points qui pulsent, flou à chaque entrée, ressorts rebondissants partout, tout qui monte de 20 px en fondu, flottement infini.", "en": "Ban AI tells: pulsing dots, blur on every entrance, bouncy springs everywhere, everything fading up 20 px, infinite floating." },
+        { "fr": "Sur le web, n'animer que transform et opacity ; jamais transition: all.", "en": "On the web, animate only transform and opacity; never transition: all." }
+      ],
+      "criteria": [
+        {
+          "id": "MOT-01", "severity": "major", "check": { "method": "auto", "tool": "lint" },
+          "label": { "fr": "Durées et courbes issues des tokens de mouvement", "en": "Durations and curves come from motion tokens" },
+          "verify": { "fr": "umd lint : hardcoded_motion.count ≤ thresholds.hardcoded_motion_max hors fichier de tokens.", "en": "umd lint: hardcoded_motion.count ≤ thresholds.hardcoded_motion_max outside the token file." }
+        },
+        {
+          "id": "MOT-02", "severity": "major", "check": { "method": "inspect" },
+          "label": { "fr": "Aucun tic de motion IA", "en": "No AI motion tells" },
+          "verify": { "fr": "umd lint (ai_tells) puis images successives : pas de pulsation infinie, de flou systématique à l'entrée, de ressort partout, de fondu-montée uniforme.", "en": "umd lint (ai_tells) then successive frames: no infinite pulsing, systematic blur-in, springs everywhere or uniform fade-up." }
+        },
+        {
+          "id": "MOT-03", "severity": "major", "check": { "method": "inspect" },
+          "label": { "fr": "Chaque mouvement a un but", "en": "Every motion has a purpose" },
+          "verify": { "fr": "storyboard.md : chaque animation notée a un rôle ; aucune animation purement décorative en boucle.", "en": "storyboard.md: every noted animation has a role; no purely decorative looping animation." }
+        },
+        {
+          "id": "MOT-04", "severity": "minor", "check": { "method": "inspect" },
+          "label": { "fr": "Easing conforme à la physique du mouvement", "en": "Easing matches the physics of the motion" },
+          "verify": { "fr": "umd lint (linear_moves) et code : entrées ease-out, sorties ease-in, pas de linéaire sur les déplacements.", "en": "umd lint (linear_moves) and code: entrances ease-out, exits ease-in, no linear on moves." }
+        },
+        {
+          "id": "MOT-05", "severity": "minor", "check": { "method": "inspect" },
+          "label": { "fr": "Un mouvement principal à la fois", "en": "One focal motion at a time" },
+          "verify": { "fr": "Images successives d'une transition : un élément mène, les autres suivent en décalé.", "en": "Successive frames of a transition: one element leads, the others follow offset." }
+        },
+        {
+          "id": "MOT-06", "severity": "major", "check": { "method": "auto", "tool": "lint" }, "applies_if": ["is_web"],
+          "label": { "fr": "Web : seulement transform et opacity, jamais transition: all", "en": "Web: only transform and opacity, never transition: all" },
+          "verify": { "fr": "umd lint : layout_props.count et transition_all.count valent 0.", "en": "umd lint: layout_props.count and transition_all.count are 0." }
+        }
+      ]
+    },
+    {
+      "id": "text",
+      "code": "TXT",
+      "label": { "fr": "Texte à l'écran", "en": "On-screen text" },
+      "summary": { "fr": "Assez long pour être lu, contrasté, jamais coupé ni chevauché.", "en": "Long enough to read, contrasted, never clipped or overlapping." },
+      "applies_if": ["has_text"],
+      "build": [
+        { "fr": "Temps d'affichage d'un texte : au moins max(1,2 s ; mots ÷ 3 + 0,5 s).", "en": "Text display time: at least max(1.2 s, words ÷ 3 + 0.5 s)." },
+        { "fr": "Contraste ≥ 4,5:1 (≥ 3:1 en grand texte) ; sur fond mouvant, ajouter un voile ou un contour.", "en": "Contrast ≥ 4.5:1 (≥ 3:1 for large text); over moving backgrounds add a scrim or stroke." },
+        { "fr": "Taille minimale du corps de texte : environ 4 % de la hauteur d'image en vidéo.", "en": "Minimum body text size: about 4% of frame height in video." },
+        { "fr": "Aucun chevauchement ni débordement ; tout reste dans la zone titre.", "en": "No overlap or overflow; everything stays inside title-safe." }
+      ],
+      "criteria": [
+        {
+          "id": "TXT-01", "severity": "blocker", "check": { "method": "auto", "tool": "lint" },
+          "label": { "fr": "Chaque texte reste à l'écran assez longtemps pour être lu", "en": "Every text stays on screen long enough to be read" },
+          "verify": { "fr": "umd lint : storyboard.text_too_short vaut 0 (règle max(text_min_s ; mots ÷ text_words_per_s + 0,5)), confirmé par umd frames.", "en": "umd lint: storyboard.text_too_short is 0 (rule max(text_min_s, words ÷ text_words_per_s + 0.5)), confirmed with umd frames." }
+        },
+        {
+          "id": "TXT-02", "severity": "major", "check": { "method": "inspect" },
+          "label": { "fr": "Texte contrasté, même sur fond mouvant", "en": "Text contrasted, even over moving backgrounds" },
+          "verify": { "fr": "Images où le texte passe sur un fond chargé : voile, contour ou zone calme ; contraste estimé ≥ 4,5:1.", "en": "Frames where text crosses a busy background: scrim, stroke or calm area; estimated contrast ≥ 4.5:1." }
+        },
+        {
+          "id": "TXT-03", "severity": "major", "check": { "method": "inspect" },
+          "label": { "fr": "Aucun texte coupé, chevauché ou hors zone", "en": "No clipped, overlapping or out-of-zone text" },
+          "verify": { "fr": "Images clés de chaque carton : texte entier, sans chevauchement, dans la zone titre.", "en": "Key frames of each card: full text, no overlap, inside title-safe." }
+        },
+        {
+          "id": "TXT-04", "severity": "minor", "check": { "method": "inspect" },
+          "label": { "fr": "Taille de texte suffisante pour le format", "en": "Text size large enough for the format" },
+          "verify": { "fr": "Image à 100 % : hauteur du corps de texte ≥ 4 % de la hauteur d'image (plus en 9:16).", "en": "Frame at 100%: body text height ≥ 4% of frame height (more in 9:16)." }
+        }
+      ]
+    },
+    {
+      "id": "safety",
+      "code": "SAF",
+      "label": { "fr": "Sécurité du mouvement", "en": "Motion safety" },
+      "summary": { "fr": "Pas de flashs dangereux, pas de mouvement qui donne la nausée sans alternative.", "en": "No dangerous flashes, no nauseating motion without an alternative." },
+      "build": [
+        { "fr": "Jamais plus de 3 flashs par seconde (WCAG 2.3.1), y compris les coupes blanches et les stroboscopes.", "en": "Never more than 3 flashes per second (WCAG 2.3.1), including white cuts and strobes." },
+        { "fr": "Limiter zooms rapides, rotations et parallaxes amples ; sur le web, les couper avec prefers-reduced-motion.", "en": "Limit fast zooms, spins and large parallax; on the web, turn them off with prefers-reduced-motion." }
+      ],
+      "criteria": [
+        {
+          "id": "SAF-01", "severity": "blocker", "check": { "method": "auto", "tool": "analyze" }, "applies_if": ["is_video"],
+          "label": { "fr": "Au plus 3 flashs par seconde", "en": "At most 3 flashes per second" },
+          "verify": { "fr": "umd analyze : flashes.max_per_s ≤ thresholds.flashes_per_s (mesure plein cadre, approximation de WCAG 2.3.1).", "en": "umd analyze: flashes.max_per_s ≤ thresholds.flashes_per_s (full-frame measure, approximation of WCAG 2.3.1)." }
+        },
+        {
+          "id": "SAF-02", "severity": "minor", "check": { "method": "inspect" },
+          "label": { "fr": "Pas de mouvement vestibulaire agressif", "en": "No aggressive vestibular motion" },
+          "verify": { "fr": "Images successives : pas de zoom ou de rotation plein écran rapide et répété, pas de parallaxe ample prolongée.", "en": "Successive frames: no fast, repeated full-screen zoom or spin, no long large parallax." }
+        }
+      ]
+    },
+    {
+      "id": "web",
+      "code": "WEB",
+      "label": { "fr": "Pages web animées", "en": "Animated web pages" },
+      "summary": { "fr": "Fluide, stable, respectueux de prefers-reduced-motion et du défilement natif.", "en": "Smooth, stable, respectful of prefers-reduced-motion and native scrolling." },
+      "applies_if": ["is_web"],
+      "build": [
+        { "fr": "Toute animation non essentielle s'arrête ou se réduit avec prefers-reduced-motion: reduce.", "en": "Every non-essential animation stops or shrinks with prefers-reduced-motion: reduce." },
+        { "fr": "Budget : 95 % des images à l'heure sur un processeur ralenti 4 fois ; animer transform et opacity.", "en": "Budget: 95% of frames on time on a 4× throttled CPU; animate transform and opacity." },
+        { "fr": "Aucune animation ne décale la mise en page (CLS < 0,1).", "en": "No animation shifts the layout (CLS < 0.1)." },
+        { "fr": "Pas de scroll-jacking : le défilement reste natif, au clavier comme au trackpad.", "en": "No scroll-jacking: scrolling stays native, with keyboard and trackpad." },
+        { "fr": "Interactions : retour visible en moins de 100 ms, durées UI de 100 à 300 ms.", "en": "Interactions: visible feedback within 100 ms, UI durations of 100 to 300 ms." }
+      ],
+      "criteria": [
+        {
+          "id": "WEB-01", "severity": "blocker", "check": { "method": "auto", "tool": "webperf" },
+          "label": { "fr": "prefers-reduced-motion respecté", "en": "prefers-reduced-motion honoured" },
+          "verify": { "fr": "umd webperf : reduced_motion.respected vaut true (animations arrêtées ou fortement réduites en mode reduce).", "en": "umd webperf: reduced_motion.respected is true (animations stopped or strongly reduced in reduce mode)." }
+        },
+        {
+          "id": "WEB-02", "severity": "major", "check": { "method": "auto", "tool": "webperf" },
+          "label": { "fr": "Animations fluides, sans images perdues", "en": "Smooth animations, no dropped frames" },
+          "verify": { "fr": "umd webperf : smooth_ratio ≥ thresholds.web_smooth_frames_min avec processeur ralenti 4 fois.", "en": "umd webperf: smooth_ratio ≥ thresholds.web_smooth_frames_min with a 4× throttled CPU." }
+        },
+        {
+          "id": "WEB-03", "severity": "major", "check": { "method": "auto", "tool": "webperf" },
+          "label": { "fr": "Aucun décalage de mise en page causé par une animation", "en": "No layout shift caused by animation" },
+          "verify": { "fr": "umd webperf : cls < thresholds.web_cls_max.", "en": "umd webperf: cls < thresholds.web_cls_max." }
+        },
+        {
+          "id": "WEB-04", "severity": "major", "check": { "method": "inspect" },
+          "label": { "fr": "Interactions réactives et cohérentes", "en": "Responsive, consistent interactions" },
+          "verify": { "fr": "Survol, focus, clic : retour en moins de 100 ms, mêmes durées et courbes partout.", "en": "Hover, focus, click: feedback within 100 ms, same durations and curves everywhere." }
+        },
+        {
+          "id": "WEB-05", "severity": "major", "check": { "method": "inspect" },
+          "label": { "fr": "Pas de scroll-jacking, navigation clavier intacte", "en": "No scroll-jacking, keyboard navigation intact" },
+          "verify": { "fr": "Défiler à la molette, au clavier (Espace, flèches) et au trackpad : vitesse native, sections accessibles au focus.", "en": "Scroll with wheel, keyboard (Space, arrows) and trackpad: native speed, sections reachable by focus." }
+        },
+        {
+          "id": "WEB-06", "severity": "minor", "check": { "method": "auto", "tool": "lint" },
+          "label": { "fr": "will-change utilisé avec parcimonie", "en": "will-change used sparingly" },
+          "verify": { "fr": "umd lint : will_change.count ≤ 5 déclarations permanentes.", "en": "umd lint: will_change.count ≤ 5 permanent declarations." }
+        }
+      ]
+    }
+  ]
+}

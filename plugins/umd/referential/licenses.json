@@ -1,0 +1,52 @@
+{
+  "_note": "Known licence traps for motion work, checked on 2026-11-09 (see reports and references/licenses.md). Matching is case-insensitive on npm/pypi package names, GitHub repos (owner/name) and model names. Unknown packages are not flagged; assets are judged by their declared licence.",
+  "classes": {
+    "ok": { "fr": "Licence permissive", "en": "Permissive licence", "blocks": [] },
+    "remotion": { "fr": "Licence Remotion : gratuite jusqu'à 3 salariés, licence entreprise payante au-delà", "en": "Remotion licence: free up to 3 employees, paid company licence above", "blocks": [] },
+    "gpl": { "fr": "GPL : à appeler comme outil, pas à embarquer dans un code redistribué sous licence permissive", "en": "GPL: call it as a tool, do not embed it in code redistributed under a permissive licence", "blocks": ["redistribute"] },
+    "agpl": { "fr": "AGPL : ne pas embarquer ni exposer en service sans publier le code", "en": "AGPL: do not embed or expose as a service without publishing the code", "blocks": ["redistribute", "service"] },
+    "nc": { "fr": "Non commercial : interdit dans un livrable commercial", "en": "Non-commercial: forbidden in a commercial deliverable", "blocks": ["commercial"] },
+    "tencent-eu": { "fr": "Licence Tencent Hunyuan : ne s'applique pas dans l'UE, au Royaume-Uni ni en Corée du Sud", "en": "Tencent Hunyuan licence: does not apply in the EU, the UK or South Korea", "blocks": ["region:EU", "region:UK", "region:KR"] },
+    "commons-clause": { "fr": "Commons Clause : revente interdite", "en": "Commons Clause: resale forbidden", "blocks": ["resale"] },
+    "no-license": { "fr": "Aucune licence : à citer ou installer à part, jamais à copier", "en": "No licence: cite or install separately, never copy", "blocks": ["copy"] },
+    "conditional": { "fr": "Licence communautaire sous conditions : à lire avant usage commercial", "en": "Community licence with conditions: read before commercial use", "blocks": [] }
+  },
+  "entries": [
+    { "match": ["remotion", "@remotion/*", "remotion-dev/*"], "class": "remotion", "note": "remotion-dev/remotion LICENSE.md; licence change announced for Remotion 5.0" },
+    { "match": ["f5-tts", "SWivid/F5-TTS"], "class": "nc", "note": "weights CC-BY-NC" },
+    { "match": ["audiocraft", "musicgen", "audiogen", "facebookresearch/audiocraft"], "class": "nc", "note": "MusicGen/AudioGen weights CC-BY-NC 4.0" },
+    { "match": ["yue", "multimodal-art-projection/YuE"], "class": "nc", "note": "YuE2 weights CC BY-NC 4.0" },
+    { "match": ["mmaudio", "hkchengrex/MMAudio"], "class": "nc", "note": "checkpoints CC-BY-NC 4.0" },
+    { "match": ["higgs-audio", "boson-ai/higgs-audio"], "class": "nc", "note": "research and non-commercial licence" },
+    { "match": ["fish-speech", "fishaudio/fish-speech"], "class": "nc", "note": "Fish Audio research licence" },
+    { "match": ["madmom", "CPJKU/madmom"], "class": "nc", "note": "models CC BY-NC-SA" },
+    { "match": ["liveportrait", "KlingAIResearch/LivePortrait", "insightface"], "class": "nc", "note": "InsightFace models non-commercial" },
+    { "match": ["wav2lip", "Rudrabha/Wav2Lip"], "class": "nc", "note": "personal or research use" },
+    { "match": ["flux.1-dev", "flux-dev", "FLUX.1-dev", "FLUX.1-Fill-dev", "black-forest-labs/flux"], "class": "nc", "note": "FLUX.1 [dev] non-commercial licence (schnell is Apache-2.0)" },
+    { "match": ["codeformer", "sczhou/CodeFormer"], "class": "nc", "note": "S-Lab licence" },
+    { "match": ["graphdeco-inria/gaussian-splatting"], "class": "nc", "note": "non-commercial research licence" },
+    { "match": ["hunyuanvideo", "hunyuanvideo-foley", "hunyuanvideo-1.5", "hunyuanimage", "hunyuan3d", "Tencent/HunyuanVideo", "Tencent-Hunyuan/*", "Tencent/Hunyuan3D-2"], "class": "tencent-eu", "note": "Tencent Hunyuan Community License excludes EU, UK, South Korea" },
+    { "match": ["openchatcut", "0xsline/OpenChatCut", "depthflow", "BrokenSource/DepthFlow", "hydra-synth", "whisper-timestamped", "linto-ai/whisper-timestamped", "aeneas", "essentia", "upscayl", "video2x"], "class": "agpl", "note": "AGPL" },
+    { "match": ["pedalboard", "spotify/pedalboard", "matchering", "carson-katri/geometry-script", "sverchok", "etro", "screenity", "piper1-gpl", "ffmpeg-static", "@ffmpeg-installer/*"], "class": "gpl", "note": "GPL (ffmpeg-static ships GPL FFmpeg builds)" },
+    { "match": ["easings.net", "ai/easings.net"], "class": "gpl", "note": "GPL: cite, do not embed" },
+    { "match": ["fullpage.js", "alvarotrigo/fullPage.js"], "class": "gpl", "note": "GPL or commercial licence" },
+    { "match": ["animate-ui", "@animate-ui/*", "imskyleen/animate-ui"], "class": "commons-clause", "note": "MIT + Commons Clause" },
+    { "match": ["lygia", "patriciogonzalezvivo/lygia"], "class": "conditional", "note": "reported Prosperity (non-commercial) + Patron dual licence: read before use" },
+    { "match": ["neutts", "neuphonic/neutts"], "class": "conditional", "note": "paid licence above a revenue threshold" },
+    { "match": ["wangp", "deepbeepmeep/WanGP"], "class": "conditional", "note": "resale forbidden" },
+    { "match": ["ltx-2", "Lightricks/LTX-2", "skyreels-v2"], "class": "conditional", "note": "community licence with conditions" },
+    { "match": ["MahmoudAshraf/mms-300m-1130-forced-aligner", "mms-300m-1130-forced-aligner"], "class": "nc", "note": "default model of ctc-forced-aligner is CC-BY-NC-4.0: pass an Apache-2.0 wav2vec2 model instead" },
+    { "match": ["gifski", "ImageOptim/gifski"], "class": "agpl", "note": "AGPL-3.0: run it as a tool, never bundle it" },
+    { "match": ["rmbg-2.0", "briaai/RMBG-2.0"], "class": "conditional", "note": "BRIA custom licence: commercial use needs an agreement" },
+    { "match": ["soundcn", "kapishdima/soundcn"], "class": "conditional", "note": "MIT, but includes Blizzard (World of Warcraft) sounds that are not free to use" },
+    { "match": ["pocket-tts", "kyutai-labs/pocket-tts"], "class": "conditional", "note": "weights CC-BY-4.0 (attribution), per-voice licences" },
+    { "match": ["kokoro:ff_siwis", "ff_siwis"], "class": "conditional", "note": "Kokoro French voice trained on SIWIS (CC BY): credit it" },
+    { "match": ["shadergradient", "ruucm/shadergradient", "vibe-motion/sound", "av/remotion-bits", "reactvideoeditor/remotion-templates", "ali-abassi/remotion-templates", "remotion-dev/claude-code-plugin"], "class": "no-license", "note": "no licence declared on GitHub (2026-11-09)" }
+  ],
+  "asset_licenses": {
+    "ok": ["mit", "apache-2.0", "bsd-2-clause", "bsd-3-clause", "isc", "mpl-2.0", "cc0-1.0", "cc0", "public-domain", "ofl-1.1", "ofl", "cc-by-4.0", "cc-by-3.0", "cc-by", "unsplash", "pexels", "pixabay", "mixkit", "own", "generated-commercial", "licensed"],
+    "attribution": ["cc-by-4.0", "cc-by-3.0", "cc-by", "cc-by-sa-4.0", "cc-by-sa"],
+    "nc": ["cc-by-nc", "cc-by-nc-4.0", "cc-by-nc-sa", "cc-by-nc-sa-4.0", "cc-by-nc-nd", "non-commercial", "research", "personal"],
+    "no-license": ["", "unknown", "none", "all-rights-reserved"]
+  }
+}

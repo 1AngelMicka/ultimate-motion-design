@@ -1,0 +1,24 @@
+{
+  "$description": "Motion tokens (DTCG 2025.10 format). Durations and curves used by every animation of the project. Values from IBM Carbon motion (productive/expressive) as a starting point; adjust to the brand.",
+  "motion": {
+    "duration": {
+      "$type": "duration",
+      "fast-01": { "$value": { "value": 70, "unit": "ms" } },
+      "fast-02": { "$value": { "value": 110, "unit": "ms" } },
+      "moderate-01": { "$value": { "value": 150, "unit": "ms" } },
+      "moderate-02": { "$value": { "value": 240, "unit": "ms" } },
+      "slow-01": { "$value": { "value": 400, "unit": "ms" } },
+      "slow-02": { "$value": { "value": 700, "unit": "ms" } },
+      "beat": { "$value": { "value": 2000, "unit": "ms" }, "$description": "Average spacing between new events in video." }
+    },
+    "easing": {
+      "$type": "cubicBezier",
+      "standard-productive": { "$value": [0.2, 0, 0.38, 0.9] },
+      "entrance-productive": { "$value": [0, 0, 0.38, 0.9] },
+      "exit-productive": { "$value": [0.2, 0, 1, 0.9] },
+      "standard-expressive": { "$value": [0.4, 0.14, 0.3, 1] },
+      "entrance-expressive": { "$value": [0, 0, 0.3, 1] },
+      "exit-expressive": { "$value": [0.4, 0.14, 1, 1] }
+    }
+  }
+}

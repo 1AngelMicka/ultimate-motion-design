@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "scoring": {
+    "severity_weight": { "blocker": 5, "major": 3, "minor": 1 },
+    "status_value": { "pass": 1.0, "partial": 0.5, "fail": 0.0 },
+    "blocker_cap": 3,
+    "global_blocker_cap": 5.9,
+    "unknown_counts_as": "fail",
+    "grades": [
+      { "min": 9.0, "fr": "Excellent", "en": "Excellent" },
+      { "min": 7.5, "fr": "Bon", "en": "Good" },
+      { "min": 6.0, "fr": "Correct, à améliorer", "en": "Fair, needs work" },
+      { "min": 4.0, "fr": "Insuffisant", "en": "Poor" },
+      { "min": 0.0, "fr": "Critique", "en": "Critical" }
+    ]
+  },
+  "thresholds": {
+    "_note": "Defaults. Override any of them in .motion/project.json \"thresholds\". Values marked 'convention' are starting points to calibrate on real renders, not standards.",
+    "loudness_lufs": -14,
+    "loudness_tolerance_lu": 1,
+    "true_peak_dbtp": -1,
+    "freeze_s": 1.0,
+    "dead_air_s": 3.0,
+    "motion_floor": 0.4,
+    "flashes_per_s": 3,
+    "flash_delta": 0.1,
+    "duration_tolerance": 0.1,
+    "vmaf_min": 93,
+    "caption_offset_ms": 100,
+    "caption_cps_max": 17,
+    "caption_coverage_min": 0.98,
+    "caption_lines_max": 2,
+    "text_min_s": 1.2,
+    "text_words_per_s": 3,
+    "web_smooth_frames_min": 0.95,
+    "web_cls_max": 0.1,
+    "hardcoded_motion_max": 3,
+    "ai_tells_max": 0,
+    "fonts_max": 2,
+    "black_frames_max_s": 0.1,
+    "silence_edge_max_s": 0.5
+  },
+  "flags": {
+    "is_video": { "fr": "Le livrable est une vidéo (MP4, WebM, GIF…)", "en": "The deliverable is a video (MP4, WebM, GIF…)" },
+    "is_web": { "fr": "Le livrable est une page ou une interface web animée", "en": "The deliverable is an animated web page or UI" },
+    "has_audio": { "fr": "La pièce a une bande son", "en": "The piece has a soundtrack" },
+    "has_voice": { "fr": "Voix off ou dialogues", "en": "Voice-over or dialogue" },
+    "has_music": { "fr": "Musique", "en": "Music" },
+    "has_captions": { "fr": "Sous-titres ou captions", "en": "Captions or subtitles" },
+    "has_text": { "fr": "Texte à l'écran", "en": "On-screen text" },
+    "has_characters": { "fr": "Personnages ou créatures animés", "en": "Animated characters or creatures" },
+    "has_master": { "fr": "Un master haute qualité existe à côté de l'encodage livré", "en": "A high-quality master exists next to the delivered encode" },
+    "commercial": { "fr": "Usage commercial (client, marque, produit, monétisation)", "en": "Commercial use (client, brand, product, monetisation)" },
+    "uses_remotion": { "fr": "Le rendu utilise Remotion", "en": "Rendering uses Remotion" }
+  },
+  "derived_flags": {
+    "has_sound_or_text": ["has_audio", "has_text"]
+  },
+  "profiles": {
+    "promo": {
+      "label": { "fr": "Promo ou lancement produit", "en": "Promo or product launch" },
+      "default_flags": ["is_video", "has_audio", "has_music", "has_text", "commercial"],
+      "weights": { "narrative": 3, "timing": 3, "life": 2, "art": 3, "motion": 3, "text": 3, "safety": 2, "web": 0, "audio": 2, "captions": 2, "render": 3, "licenses": 3 }
+    },
+    "presentation": {
+      "label": { "fr": "Vidéo de présentation (entreprise, produit, projet)", "en": "Presentation video (company, product, project)" },
+      "default_flags": ["is_video", "has_audio", "has_voice", "has_music", "has_text", "has_captions", "commercial"],
+      "weights": { "narrative": 3, "timing": 2, "life": 1, "art": 3, "motion": 2, "text": 3, "safety": 2, "web": 0, "audio": 3, "captions": 3, "render": 2, "licenses": 3 }
+    },
+    "explainer": {
+      "label": { "fr": "Vidéo explicative ou pédagogique", "en": "Explainer or educational video" },
+      "default_flags": ["is_video", "has_audio", "has_voice", "has_text", "has_captions"],
+      "weights": { "narrative": 3, "timing": 2, "life": 1, "art": 2, "motion": 2, "text": 3, "safety": 2, "web": 0, "audio": 3, "captions": 3, "render": 2, "licenses": 2 }
+    },
+    "social": {
+      "label": { "fr": "Short vertical pour les réseaux", "en": "Vertical short for social media" },
+      "default_flags": ["is_video", "has_audio", "has_music", "has_text", "has_captions"],
+      "weights": { "narrative": 3, "timing": 3, "life": 2, "art": 2, "motion": 2, "text": 3, "safety": 2, "web": 0, "audio": 2, "captions": 3, "render": 2, "licenses": 2 }
+    },
+    "film": {
+      "label": { "fr": "Court métrage animé narratif", "en": "Narrative animated short" },
+      "default_flags": ["is_video", "has_audio", "has_music", "has_characters"],
+      "weights": { "narrative": 3, "timing": 3, "life": 3, "art": 3, "motion": 2, "text": 1, "safety": 2, "web": 0, "audio": 3, "captions": 1, "render": 2, "licenses": 2 }
+    },
+    "logo": {
+      "label": { "fr": "Animation de logo ou ident (2 à 8 s)", "en": "Logo animation or ident (2 to 8 s)" },
+      "default_flags": ["is_video", "commercial"],
+      "weights": { "narrative": 1, "timing": 2, "life": 1, "art": 3, "motion": 3, "text": 1, "safety": 2, "web": 0, "audio": 1, "captions": 0, "render": 3, "licenses": 2 }
+    },
+    "web": {
+      "label": { "fr": "Page web ou interface animée", "en": "Animated web page or UI" },
+      "default_flags": ["is_web", "has_text"],
+      "weights": { "narrative": 1, "timing": 1, "life": 1, "art": 3, "motion": 3, "text": 2, "safety": 3, "web": 3, "audio": 0, "captions": 0, "render": 0, "licenses": 2 }
+    }
+  }
+}

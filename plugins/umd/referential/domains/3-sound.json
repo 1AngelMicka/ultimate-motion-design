@@ -1,0 +1,86 @@
+{
+  "group": "sound",
+  "label": { "fr": "Son et sous-titres", "en": "Sound and captions" },
+  "domains": [
+    {
+      "id": "audio",
+      "code": "AUD",
+      "label": { "fr": "Audio", "en": "Audio" },
+      "summary": { "fr": "Un niveau sonore conforme, une voix claire, une musique qui s'efface sous la voix, des sons synchrones.", "en": "Compliant loudness, a clear voice, music ducking under the voice, sounds in sync." },
+      "applies_if": ["has_audio"],
+      "build": [
+        { "fr": "Mixer avec umd mix (ducking automatique), puis normaliser avec umd normalize (−14 LUFS, crête vraie ≤ −1 dBTP par défaut).", "en": "Mix with umd mix (automatic ducking), then normalise with umd normalize (−14 LUFS, true peak ≤ −1 dBTP by default)." },
+        { "fr": "Le son arrive 0 à 1 image après l'image qu'il souligne, jamais avant.", "en": "Sound lands 0 to 1 frame after the image it underlines, never before." },
+        { "fr": "Fondu d'entrée et de sortie ; pas de silence de plus de 0,5 s au début.", "en": "Fade in and out; no silence longer than 0.5 s at the start." },
+        { "fr": "Voix : script humanisé, noms de marque prononcés correctement, 140 à 170 mots par minute.", "en": "Voice: humanised script, brand names pronounced correctly, 140 to 170 words per minute." },
+        { "fr": "Export 48 kHz stéréo, AAC ≥ 192 kb/s (ou Opus en WebM).", "en": "Export 48 kHz stereo, AAC ≥ 192 kb/s (or Opus in WebM)." }
+      ],
+      "criteria": [
+        {
+          "id": "AUD-01", "severity": "blocker", "check": { "method": "auto", "tool": "analyze" },
+          "label": { "fr": "Niveau sonore conforme et crête vraie sous le plafond", "en": "Compliant loudness and true peak under the ceiling" },
+          "verify": { "fr": "umd analyze : loudness.integrated à ±thresholds.loudness_tolerance_lu de thresholds.loudness_lufs et loudness.true_peak ≤ thresholds.true_peak_dbtp.", "en": "umd analyze: loudness.integrated within ±thresholds.loudness_tolerance_lu of thresholds.loudness_lufs and loudness.true_peak ≤ thresholds.true_peak_dbtp." }
+        },
+        {
+          "id": "AUD-02", "severity": "major", "check": { "method": "inspect" }, "applies_if": ["has_voice", "has_music"],
+          "label": { "fr": "La musique s'efface sous la voix", "en": "Music ducks under the voice" },
+          "verify": { "fr": "Commande de mix (umd mix ou sidechaincompress) dans render.json ou les logs, et écoute d'un passage parlé : la voix domine nettement.", "en": "Mix command (umd mix or sidechaincompress) in render.json or the logs, and listening to a spoken passage: the voice clearly dominates." }
+        },
+        {
+          "id": "AUD-03", "severity": "minor", "check": { "method": "inspect" },
+          "label": { "fr": "Effets sonores synchrones, 0 à 1 image après l'image", "en": "Sound effects in sync, 0 to 1 frame after the image" },
+          "verify": { "fr": "Horodatages des SFX (umd mix --sfx a.wav@t) comparés aux images des événements (umd frames --at).", "en": "SFX timestamps (umd mix --sfx a.wav@t) compared with the event frames (umd frames --at)." }
+        },
+        {
+          "id": "AUD-04", "severity": "major", "check": { "method": "auto", "tool": "analyze" },
+          "label": { "fr": "Pas de silence de tête ni de coupure brutale", "en": "No leading silence or abrupt cut" },
+          "verify": { "fr": "umd analyze : silence.leading_s et silence.trailing_s ≤ thresholds.silence_edge_max_s, et audio_end.abrupt vaut false.", "en": "umd analyze: silence.leading_s and silence.trailing_s ≤ thresholds.silence_edge_max_s, and audio_end.abrupt is false." }
+        },
+        {
+          "id": "AUD-05", "severity": "major", "check": { "method": "inspect" }, "applies_if": ["has_voice"],
+          "label": { "fr": "Voix claire et naturelle, noms bien prononcés", "en": "Clear, natural voice, names pronounced right" },
+          "verify": { "fr": "Écoute et transcription : pas d'artefact robotique, rythme 140–170 mots/min, noms de marque corrects.", "en": "Listening and transcript: no robotic artefacts, 140–170 words/min, brand names correct." }
+        },
+        {
+          "id": "AUD-06", "severity": "minor", "check": { "method": "auto", "tool": "analyze" },
+          "label": { "fr": "Format audio de diffusion", "en": "Delivery audio format" },
+          "verify": { "fr": "umd analyze : probe.audio à 48 kHz, 2 canaux, AAC ≥ 192 kb/s ou Opus.", "en": "umd analyze: probe.audio at 48 kHz, 2 channels, AAC ≥ 192 kb/s or Opus." }
+        }
+      ]
+    },
+    {
+      "id": "captions",
+      "code": "CAP",
+      "label": { "fr": "Sous-titres", "en": "Captions" },
+      "summary": { "fr": "Chaque mot présent, au bon moment, lisible et bien orthographié.", "en": "Every word present, on time, readable and spelled right." },
+      "applies_if": ["has_captions"],
+      "build": [
+        { "fr": "Script connu : alignement forcé (ctc-forced-aligner). Sinon : horodatage mot à mot (faster-whisper, WhisperX).", "en": "Known script: forced alignment (ctc-forced-aligner). Otherwise: word timestamps (faster-whisper, WhisperX)." },
+        { "fr": "Générer avec umd captions, vérifier avec umd captions-check.", "en": "Generate with umd captions, check with umd captions-check." },
+        { "fr": "Deux lignes au plus, 17 caractères par seconde au plus, dans la zone sûre, sans masquer l'essentiel.", "en": "Two lines at most, 17 characters per second at most, inside the safe area, never hiding the key visual." }
+      ],
+      "criteria": [
+        {
+          "id": "CAP-01", "severity": "blocker", "check": { "method": "auto", "tool": "captions_check" },
+          "label": { "fr": "Tous les mots, synchronisés", "en": "Every word, in sync" },
+          "verify": { "fr": "umd captions-check : coverage ≥ thresholds.caption_coverage_min et max_offset_ms ≤ thresholds.caption_offset_ms.", "en": "umd captions-check: coverage ≥ thresholds.caption_coverage_min and max_offset_ms ≤ thresholds.caption_offset_ms." }
+        },
+        {
+          "id": "CAP-02", "severity": "major", "check": { "method": "inspect" },
+          "label": { "fr": "Sous-titres lisibles et bien placés", "en": "Readable, well-placed captions" },
+          "verify": { "fr": "Images avec sous-titres : deux lignes au plus, contraste fort, dans la zone sûre, sans masquer le sujet.", "en": "Frames with captions: two lines at most, strong contrast, inside the safe area, not hiding the subject." }
+        },
+        {
+          "id": "CAP-03", "severity": "minor", "check": { "method": "auto", "tool": "captions_check" },
+          "label": { "fr": "Vitesse de lecture raisonnable", "en": "Reasonable reading speed" },
+          "verify": { "fr": "umd captions-check : max_cps ≤ thresholds.caption_cps_max et max_lines ≤ thresholds.caption_lines_max.", "en": "umd captions-check: max_cps ≤ thresholds.caption_cps_max and max_lines ≤ thresholds.caption_lines_max." }
+        },
+        {
+          "id": "CAP-04", "severity": "minor", "check": { "method": "inspect" },
+          "label": { "fr": "Noms et marques exactement orthographiés", "en": "Names and brands spelled exactly" },
+          "verify": { "fr": "Comparer le fichier de sous-titres au script et à BRIEF.md (noms propres, marques, chiffres).", "en": "Compare the caption file with the script and BRIEF.md (proper names, brands, figures)." }
+        }
+      ]
+    }
+  ]
+}

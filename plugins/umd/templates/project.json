@@ -1,0 +1,23 @@
+{
+  "name": "",
+  "language": "fr",
+  "profile": "promo",
+  "flags": ["is_video", "has_audio", "has_music", "has_text", "commercial"],
+  "route": "html-video",
+  "engine": "umd-capture",
+  "format": { "width": 1920, "height": 1080, "fps": 30, "aspect": "16:9" },
+  "duration_s": 30,
+  "platforms": ["youtube"],
+  "render": {
+    "capture": { "entry": "index.html", "format": "mp4" },
+    "audio": null
+  },
+  "captions": { "file": null, "words": null },
+  "url": null,
+  "master": null,
+  "license_policy": { "commercial": true, "region": "EU", "remotion": "unknown", "allow": [] },
+  "models": [],
+  "thresholds": {},
+  "audit_model": "inherit",
+  "token_budget": null
+}

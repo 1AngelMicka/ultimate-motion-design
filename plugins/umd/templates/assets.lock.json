@@ -1,0 +1,4 @@
+{
+  "$description": "Every asset that enters the project: image, icon, font, footage, music, SFX, voice, generated output. path is relative to the project root. license: SPDX id or a platform licence (unsplash, pexels, pixabay, mixkit), own, generated-commercial. model: the model that generated it, if any.",
+  "assets": []
+}

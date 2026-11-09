@@ -1,0 +1,39 @@
+---
+name: storyboard
+description: "Write the storyboard (beats, timings, on-screen text, motion, sound, one intent per beat), then render key stills and validate the look against the brief before any animation. FR : storyboard, découpage, plans, images clés."
+disable-model-invocation: true
+argument-hint: "[notes or changes]"
+---
+
+# /umd:storyboard
+
+CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). Talk in the project's language. Extra notes: `$ARGUMENTS`.
+
+**Cost:** medium. Read one recipe file at most; stills rounds use the `umd:critic` agent on small images.
+
+## 1. Beats
+
+1. Read `BRIEF.md` and `.motion/project.json`. If missing, stop and suggest `/umd:kickoff`.
+2. Read the matching recipe in `${CLAUDE_PLUGIN_ROOT}/references/recipes/` (one file: launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions or narrative-short).
+3. Write the script in plain words first if there is a voice-over (no hollow phrasing: `umd lint` flags it).
+4. Fill `.motion/storyboard.md`: the arc line, then one table row per beat: `| # | Time | Shot | On-screen text | Motion | Sound | Intent |`.
+   - Time as `a–b s`; beats sum to `duration_s`.
+   - Something new about every 2 s; no 3 s without meaningful motion.
+   - On-screen text gets at least max(1.2 s, words ÷ 3 + 0.5 s).
+   - Each Motion cell names its role and a token (`entrance-expressive`, `moderate-02`…).
+   - Sound lands 0–1 frame after the image it underlines.
+   - Last column: one intent or emotion per beat.
+   - Film: wants → tries → surprise → looks at camera; eyes lead the body by 6–10 frames; nothing fully still.
+5. `umd lint` → `storyboard` must show 0 beats without duration or intent and 0 text too short. Fix and re-run.
+
+## 2. Key stills (the look, before any animation)
+
+1. Build only the static layout of the key beats (up to 8), in the route's engine, using the tokens and brand assets. Record each asset in `.motion/assets.lock.json` as it arrives.
+2. Render them: HTML routes `umd still <entry> --at <t1>,<t2>,… --out .motion/stills`; other engines with their still command (see the route file) into `.motion/stills/`.
+3. Review round: launch the `umd:critic` agent with the project path, `.motion/stills/`, the round number and the CLI path. Apply its fixes, re-render the stills.
+4. Up to 3 rounds. Stop when the critic says "ready to animate" or after round 3 (then list what is left to the user).
+5. Show the user the stills (paths), the critic's last verdict, and ask for approval. On approval, add `Stills validated YYYY-MM-DD` (today) under `## Stills` in the storyboard. This line is what the audit checks (ART-01).
+
+## 3. Hand over
+
+Summarise: beats count, total duration, stills validated or not, open points. Next step: `/umd:build`.

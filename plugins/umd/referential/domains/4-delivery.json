@@ -1,0 +1,90 @@
+{
+  "group": "delivery",
+  "label": { "fr": "Rendu et licences", "en": "Render and licences" },
+  "domains": [
+    {
+      "id": "render",
+      "code": "REN",
+      "label": { "fr": "Rendu et encodage", "en": "Render and encoding" },
+      "summary": { "fr": "Un rendu reproductible, au bon format, sans perte visible ni artefact.", "en": "A reproducible render, in the right format, with no visible loss or artefact." },
+      "applies_if": ["is_video"],
+      "build": [
+        { "fr": "Le temps est piloté par le numéro d'image (umd capture, useCurrentFrame, timeline.seek) ; jamais par l'horloge.", "en": "Time is driven by the frame number (umd capture, useCurrentFrame, timeline.seek); never by the clock." },
+        { "fr": "Polices et assets locaux (Fontsource) : aucun chargement réseau pendant le rendu.", "en": "Local fonts and assets (Fontsource): no network loading during render." },
+        { "fr": "Master de haute qualité, puis encodage de diffusion H.264 High yuv420p, cadence constante, faststart.", "en": "High-quality master, then delivery encode H.264 High yuv420p, constant frame rate, faststart." },
+        { "fr": "Dégradés : ajouter du grain ou un tramage contre le banding.", "en": "Gradients: add grain or dithering against banding." }
+      ],
+      "criteria": [
+        {
+          "id": "REN-01", "severity": "blocker", "check": { "method": "auto", "tool": "determinism" },
+          "label": { "fr": "Rendu déterministe : deux rendus identiques", "en": "Deterministic render: two identical renders" },
+          "verify": { "fr": "umd compare sur deux rendus (umd render --twice) : identical vaut true, ou ssim ≥ 0,999 si l'encodeur introduit du bruit.", "en": "umd compare on two renders (umd render --twice): identical is true, or ssim ≥ 0.999 if the encoder adds noise." }
+        },
+        {
+          "id": "REN-02", "severity": "major", "check": { "method": "auto", "tool": "analyze" },
+          "label": { "fr": "Format de sortie conforme au brief", "en": "Output format matches the brief" },
+          "verify": { "fr": "umd analyze : probe.width, height et fps égaux au brief, cadence constante, pix_fmt yuv420p pour MP4.", "en": "umd analyze: probe.width, height and fps equal the brief, constant frame rate, yuv420p for MP4." }
+        },
+        {
+          "id": "REN-03", "severity": "major", "check": { "method": "auto", "tool": "vmaf" }, "applies_if": ["has_master"],
+          "label": { "fr": "Encodage livré fidèle au master", "en": "Delivered encode faithful to the master" },
+          "verify": { "fr": "umd vmaf : vmaf ≥ thresholds.vmaf_min.", "en": "umd vmaf: vmaf ≥ thresholds.vmaf_min." }
+        },
+        {
+          "id": "REN-04", "severity": "major", "check": { "method": "auto", "tool": "lint" },
+          "label": { "fr": "Polices et assets locaux", "en": "Local fonts and assets" },
+          "verify": { "fr": "umd lint : remote_assets.count vaut 0 (pas de Google Fonts, CDN d'images ou de vidéos chargés au rendu).", "en": "umd lint: remote_assets.count is 0 (no Google Fonts, image or video CDN loaded at render)." }
+        },
+        {
+          "id": "REN-05", "severity": "minor", "check": { "method": "auto", "tool": "analyze" },
+          "label": { "fr": "Pas d'images noires involontaires", "en": "No unintended black frames" },
+          "verify": { "fr": "umd analyze : black ne contient aucun segment plus long que thresholds.black_frames_max_s hors fondus prévus ; la première image n'est pas vide.", "en": "umd analyze: black has no segment longer than thresholds.black_frames_max_s outside planned fades; the first frame is not blank." }
+        },
+        {
+          "id": "REN-06", "severity": "major", "check": { "method": "inspect" },
+          "label": { "fr": "Aucun artefact : banding, crénelage, scintillement", "en": "No artefacts: banding, aliasing, flicker" },
+          "verify": { "fr": "Images à 100 % sur dégradés, lignes fines et textes en mouvement.", "en": "Frames at 100% on gradients, thin lines and moving text." }
+        }
+      ]
+    },
+    {
+      "id": "licenses",
+      "code": "LIC",
+      "label": { "fr": "Licences et droits", "en": "Licences and rights" },
+      "summary": { "fr": "Chaque asset, modèle et dépendance a le droit d'être dans le livrable.", "en": "Every asset, model and dependency is allowed in the deliverable." },
+      "build": [
+        { "fr": "Inscrire chaque asset dans .motion/assets.lock.json avec sa source et sa licence au moment où il entre dans le projet.", "en": "Record every asset in .motion/assets.lock.json with its source and licence as soon as it enters the project." },
+        { "fr": "Livrable commercial : aucun poids non commercial, aucun modèle Tencent en UE, pas d'AGPL embarqué, pas d'asset sans licence.", "en": "Commercial deliverable: no non-commercial weights, no Tencent model in the EU, no embedded AGPL, no unlicensed asset." },
+        { "fr": "Remotion : gratuit jusqu'à 3 salariés, licence entreprise au-delà ; à déclarer dans project.json.", "en": "Remotion: free up to 3 employees, company licence above; declare it in project.json." },
+        { "fr": "Décrire les références avec ses mots ; ne jamais faire copier la vidéo de quelqu'un d'autre.", "en": "Describe references in your own words; never have someone else's video copied." }
+      ],
+      "criteria": [
+        {
+          "id": "LIC-01", "severity": "blocker", "check": { "method": "auto", "tool": "licenses" }, "applies_if": ["commercial"],
+          "label": { "fr": "Aucun asset, modèle ou dépendance interdit en usage commercial", "en": "No asset, model or dependency forbidden for commercial use" },
+          "verify": { "fr": "umd licenses : violations vaut 0 pour la politique de project.json.", "en": "umd licenses: violations is 0 for the project.json policy." }
+        },
+        {
+          "id": "LIC-02", "severity": "blocker", "check": { "method": "auto", "tool": "licenses" }, "applies_if": ["uses_remotion"],
+          "label": { "fr": "Licence Remotion adaptée à l'équipe", "en": "Remotion licence fits the team" },
+          "verify": { "fr": "umd licenses : remotion.ok vaut true (project.json license_policy.remotion vaut individual, small-company, non-profit ou company-license).", "en": "umd licenses: remotion.ok is true (project.json license_policy.remotion is individual, small-company, non-profit or company-license)." }
+        },
+        {
+          "id": "LIC-03", "severity": "major", "check": { "method": "auto", "tool": "licenses" },
+          "label": { "fr": "Chaque asset est inventorié avec sa licence", "en": "Every asset is inventoried with its licence" },
+          "verify": { "fr": "umd licenses : unlisted_assets vaut 0 et chaque entrée de assets.lock.json a source et license.", "en": "umd licenses: unlisted_assets is 0 and every assets.lock.json entry has source and license." }
+        },
+        {
+          "id": "LIC-04", "severity": "minor", "check": { "method": "inspect" },
+          "label": { "fr": "Attributions requises présentes", "en": "Required attributions present" },
+          "verify": { "fr": "Assets marqués attribution_required : crédits dans la vidéo, la description ou deliverables/credits.txt.", "en": "Assets marked attribution_required: credits in the video, the description or deliverables/credits.txt." }
+        },
+        {
+          "id": "LIC-05", "severity": "major", "check": { "method": "inspect" },
+          "label": { "fr": "Pas de marque, visage ou œuvre de tiers sans droit", "en": "No third-party trademark, likeness or work without rights" },
+          "verify": { "fr": "Planche contact et assets : logos tiers, visages réels, musiques et extraits sous droits justifiés ; références décrites, pas copiées.", "en": "Contact sheet and assets: third-party logos, real faces, music and clips under rights are justified; references described, not copied." }
+        }
+      ]
+    }
+  ]
+}
