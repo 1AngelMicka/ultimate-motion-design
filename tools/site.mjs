@@ -12,7 +12,7 @@
 //   AGENTS.md, llms.txt             copied to the site root; llms-full.txt is assembled here
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync, copyFileSync, cpSync, rmSync, statSync } from "node:fs";
 import { join, dirname, resolve, basename } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "_site");
@@ -21,6 +21,7 @@ const SITE = "https://1angelmicka.github.io/ultimate-motion-design";
 const VERSION = readFileSync(join(ROOT, "VERSION"), "utf8").trim();
 const read = (p) => readFileSync(join(ROOT, p), "utf8");
 const readJson = (p) => JSON.parse(read(p));
+const FACETS_LIB = await import(pathToFileURL(join(ROOT, "plugins", "umd", "scripts", "lib", "facets.mjs")).href);
 
 // ---------------------------------------------------------------- markdown → HTML (the subset our docs use)
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -120,7 +121,7 @@ const PAGES = [
   { slug: "installation", nav: { fr: "Installation", en: "Install" }, sections: ["install"] },
   { slug: "premier-projet", nav: { fr: "Premier projet", en: "First project" }, content: "first-project.md" },
   { slug: "astuces", nav: { fr: "Astuces et prompts", en: "Tips and prompts" }, content: "tips.md" },
-  { slug: "bibliotheque", nav: { fr: "Bibliothèque de styles", en: "Style library" }, content: "library.md", wide: true },
+  { slug: "bibliotheque", nav: { fr: "Bibliothèque de styles ↗", en: "Style library ↗" }, redirect: "library/" },
   { slug: "commandes", nav: { fr: "Commandes", en: "Commands" }, sections: ["commands", "files"], extra: "cli" },
   { slug: "routes", nav: { fr: "Routes et technos", en: "Routes and tech" }, sections: ["routes"], extra: "references" },
   { slug: "qualite", nav: { fr: "Contrôle qualité", en: "Quality checks" }, sections: ["checks"], extra: "referential" },
@@ -211,7 +212,7 @@ function shell({ lang, page, title, html, toc, pagePath }) {
   const T = LANGS[lang];
   const up = "../".repeat(pagePath.split("/").length - 1);
   const otherPath = `${LANGS[T.other].base}${page.slug}.html`;
-  const nav = PAGES.map((p) => `<a href="${up}${T.base}${p.slug}.html"${p.slug === page.slug ? ' aria-current="page"' : ""}>${p.nav[lang]}</a>`).join("");
+  const nav = PAGES.map((p) => `<a href="${p.redirect ? `${up}${p.redirect}${lang === "en" ? "?lang=en" : ""}` : `${up}${T.base}${p.slug}.html`}"${p.slug === page.slug ? ' aria-current="page"' : ""}>${p.nav[lang]}</a>`).join("");
   const tocHtml = !page.wide && toc.filter((x) => x.level === 2).length > 1
     ? `<nav class="toc" aria-label="${T.on}"><p>${T.on}</p>${toc.filter((x) => x.level === 2).map((x) => `<a href="#${x.id}">${x.text}</a>`).join("")}</nav>` : "";
   const desc = lang === "fr" ? "Plugin Claude Code pour produire et auditer du motion design de haute qualité : vidéos, pages animées, 3D. Rendu déterministe, contrôle qualité noté sur 10, licences, tokens." : "Claude Code plugin to make and audit high-end motion design: videos, animated pages, 3D. Deterministic rendering, quality checks scored out of 10, licences, tokens.";
@@ -253,8 +254,7 @@ ${html}
   </main>
   ${tocHtml}
 </div>
-<script src="${up}assets/site.js?v=${VERSION}"></script>${page.wide ? `
-<script src="${up}assets/library.js?v=${VERSION}"></script>` : ""}
+<script src="${up}assets/site.js?v=${VERSION}"></script>
 </body>
 </html>
 `;
@@ -279,48 +279,40 @@ function heroHtml(lang) {
 </section>`;
 }
 
-function galleryHtml(lang) {
-  const fr = lang === "fr";
-  const idx = readJson("plugins/umd/references/styles/index.json");
-  const n = idx.counts;
-  const src = [
-    ["all", fr ? "Tout" : "All", idx.entries.length],
-    ["lemo-opuscar", fr ? "Styles de film" : "Film styles", n["lemo-opuscar"]],
-    ["mg-styles-15", fr ? "Motion graphics notés" : "Scored motion graphics", n["mg-styles-15"]],
-    ["awesome-opus5-5-videos", fr ? "Prompts de créateurs" : "Creators' prompts", n["awesome-opus5-5-videos"]],
-  ];
-  return `<div class="lib" data-src="${lang === "fr" ? "" : "../"}assets/library.json">
-  <div class="lib-bar" role="search">
-    <label class="lib-search"><span class="sr">${fr ? "Rechercher" : "Search"}</span><input type="search" placeholder="${fr ? "Rechercher : néon, papier, keynote, logo, 3D…" : "Search: neon, paper, keynote, logo, 3D…"}" autocomplete="off"></label>
-    <div class="lib-src" role="group" aria-label="${fr ? "Source" : "Source"}">${src.map(([k, l, c], i) => `<button type="button" data-src="${k}" aria-pressed="${i === 0}">${l} <span>${c}</span></button>`).join("")}</div>
-    <label class="lib-cat"><span class="sr">${fr ? "Catégorie" : "Category"}</span><select><option value="">${fr ? "Toutes les catégories" : "All categories"}</option></select></label>
-  </div>
-  <p class="lib-count" aria-live="polite"></p>
-  <ul class="lib-grid"></ul>
-  <p class="lib-more-wrap"><button type="button" class="lib-more" hidden>${fr ? "Afficher plus" : "Show more"}</button></p>
-  <noscript><p>${fr ? "La bibliothèque a besoin de JavaScript. Sans lui : <code>umd styles &lt;mots&gt;</code> dans un terminal." : "The library needs JavaScript. Without it: <code>umd styles &lt;words&gt;</code> in a terminal."}</p></noscript>
-</div>
-<dialog class="lib-dlg" aria-labelledby="lib-dlg-title">
-  <div class="lib-dlg-head"><h2 id="lib-dlg-title"></h2><button type="button" class="lib-close" aria-label="${fr ? "Fermer" : "Close"}">×</button></div>
-  <div class="lib-dlg-body"></div>
-</dialog>`;
-}
-
 // ---------------------------------------------------------------- build
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(join(OUT, "assets"), { recursive: true });
 mkdirSync(join(OUT, "en"), { recursive: true });
 cpSync(join(ROOT, "site", "assets"), join(OUT, "assets"), { recursive: true });
-// Gallery data: the style index, trimmed to what a card needs; site-hosted previews become relative paths
+// Style library: a standalone page at /library/ (outside the docs shell), fed by the style index and the shared facets
 {
   const idx = readJson("plugins/umd/references/styles/index.json");
-  const rel = (u) => (u && u.startsWith(SITE + "/") ? u.slice(SITE.length + 1) : u || null);
-  const items = idx.entries.map((e) => ({
-    id: e.id, s: e.source, k: e.kind, n: e.name, c: e.category, l: e.line, f: e.film || null, d: e.duration_s || null, j: e.jury_score || null,
-    a: e.author || null, t: e.tags || e.uses || [], pp: !!e.partial, p: rel(e.poster_url), v: rel(e.clip_url), w: e.film_url || e.preview_url,
-    g: e.preview_url, x: e.post_url || null, u: e.prompt_url,
-  }));
-  writeFileSync(join(OUT, "assets", "library.json"), JSON.stringify({ generated: idx.generated, items }));
+  const rel = (u) => (u && u.startsWith(SITE + "/") ? "../" + u.slice(SITE.length + 1) : u || null);
+  const origin = (e) => (e.collection === "OPUSCAR 98" ? "oscar" : { "lemo-opuscar": "lemo", "mg-styles-15": "mg", "awesome-opus5-5-videos": "opus", hyperframes: "hf" }[e.source]);
+  const items = idx.entries.map((e) => {
+    const f = e.facets || {};
+    return {
+      id: e.id, o: origin(e), k: e.kind, q: e.tier || 1, n: e.name, c: e.category, l: e.line, f: e.film || null, d: e.duration_s || null, j: e.jury_score || null,
+      a: e.author || null, t: (e.tags || e.uses || []).slice(0, 6), P: f.project || [], M: f.mood || [], D: f.medium || [], F: f.format || [], T: f.tech || [],
+      p: rel(e.poster_url), v: rel(e.clip_url), w: e.film_url || e.preview_url || null, g: e.preview_url || null, x: e.post_url || null, u: e.prompt_url || null,
+      pr: e.prompt || null, i: e.install || null, z: e.size || null, ad: e.added || null, pp: !!e.partial, li: e.source === "hyperframes" ? e.licence : null,
+    };
+  });
+  const strip = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, { fr: v.fr, en: v.en }]));
+  const labels = {
+    project: FACETS_LIB.PROJECTS, kind: FACETS_LIB.KINDS, tier: FACETS_LIB.TIERS,
+    mood: strip(FACETS_LIB.FACETS.mood), medium: strip(FACETS_LIB.FACETS.medium), format: strip(FACETS_LIB.FACETS.format), tech: strip(FACETS_LIB.FACETS.tech),
+    origin: {
+      lemo: { fr: "Styles LemoLab", en: "LemoLab styles", lic: "Prompt MIT · film CC BY 4.0 (LemoLab)" },
+      oscar: { fr: "OPUSCAR 98", en: "OPUSCAR 98", lic: "Prompt MIT · still and film CC BY 4.0 (LemoLab)" },
+      mg: { fr: "mg-styles-15", en: "mg-styles-15", lic: "MIT (Vincentwei1021/mg-styles-15)" },
+      opus: { fr: "Prompts de créateurs", en: "Creators' prompts", lic: "Index MIT; the prompt belongs to its author: credit the post" },
+      hf: { fr: "Blocs HyperFrames", en: "HyperFrames blocks", lic: "Apache-2.0 (HyperFrames, HeyGen)" },
+    },
+  };
+  mkdirSync(join(OUT, "library"), { recursive: true });
+  writeFileSync(join(OUT, "assets", "library.json"), JSON.stringify({ generated: idx.generated, version: VERSION, labels, items }));
+  writeFileSync(join(OUT, "library", "index.html"), read("site/library/index.html").replaceAll("{{VERSION}}", VERSION).replaceAll("{{COUNT}}", String(items.length)));
 }
 let pageCount = 0;
 const fullText = { fr: [], en: [] };
@@ -329,6 +321,13 @@ for (const lang of ["fr", "en"]) {
   const { intro, sections } = splitReadme(T.readme);
   for (const page of PAGES) {
     const pagePath = `${T.base}${page.slug}.html`;
+    if (page.redirect) {
+      // the library left the docs: keep the old address working, with its #id
+      const to = "../".repeat(pagePath.split("/").length - 1) + page.redirect + (lang === "en" ? "?lang=en" : "");
+      writeFileSync(join(OUT, pagePath), '<!doctype html><html lang="' + lang + '"><head><meta charset="utf-8"><title>' + page.nav[lang] + '</title><meta http-equiv="refresh" content="0; url=' + to + '"><link rel="canonical" href="' + SITE + "/" + page.redirect + '"><script>location.replace(' + JSON.stringify(to) + '+location.hash)</script></head><body><p><a href="' + to + '">' + page.nav[lang] + "</a></p></body></html>\n");
+      fullText[lang].push("# " + page.nav[lang].replace(" ↗", "") + "\n\n" + SITE + "/" + page.redirect + "\n");
+      continue;
+    }
     const ctx = { lang, link: linker(lang, pagePath) };
     let src = "";
     if (page.content) src = readFileSync(join(ROOT, "site", "content", lang, page.content), "utf8").replace(/^# .*\n/, "");
@@ -339,7 +338,6 @@ for (const lang of ["fr", "en"]) {
     if (page.extra === "references") src += "\n\n" + referencesSection(lang);
     if (page.extra === "referential") src += "\n\n" + referentialSection(lang);
     let { html, toc } = markdown(src, ctx);
-    if (page.wide) html = html.replace("<p>@@GALLERY@@</p>", galleryHtml(lang));
     const h1 = page.hero ? "" : `<h1>${page.nav[lang]}</h1>\n`;
     const body = page.hero ? heroHtml(lang) + "\n" + html : h1 + html;
     const title = page.hero ? `Ultimate Motion Design — ${T.tagline}` : `${page.nav[lang]} · Ultimate Motion Design`;

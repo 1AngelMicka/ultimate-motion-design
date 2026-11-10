@@ -124,7 +124,7 @@ Record every asset the moment it enters the project (path, source, URL, licence,
 | An engine's API, patterns and determinism rules | `${CLAUDE_PLUGIN_ROOT}/references/engines/` (hyperframes, remotion, revideo, gsap, motion, css-waapi, scroll, threejs, shaders, lottie, rive, svg, canvas-2d, manim, blender, diagrams-code, effect-libraries) |
 | Voice, music and effects, mix, captions | `${CLAUDE_PLUGIN_ROOT}/references/audio/` |
 | Images, icons, fonts; platform specs; licence traps | `${CLAUDE_PLUGIN_ROOT}/references/assets.md`, `${CLAUDE_PLUGIN_ROOT}/references/platforms.md`, `${CLAUDE_PLUGIN_ROOT}/references/licenses.md` |
-| A proven style to start from | `${CLAUDE_PLUGIN_ROOT}/references/styles.md`, then `umd styles <words>` (784 styles and prompts with previews, no tokens) and `umd styles get <id>` |
+| A proven style to start from | `${CLAUDE_PLUGIN_ROOT}/references/styles.md`. **Before deciding any look, run `umd styles match`**: it ranks 1 323 styles, prompts and blocks against BRIEF.md and project.json, with reasons and previews (no tokens); then `umd styles get <id>` |
 
 ## Cost
 

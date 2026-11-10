@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.0 — 2026-11-10
+
+- **The model picks the look from the library, by rule.** `umd styles match` reads BRIEF.md and project.json (project type, format, mood, medium, ambition) and ranks the whole library for this project, with a reason per pick and the best ready blocks apart. The storyboard's step 0, `/umd:go`, the `motion` skill and AGENTS.md now require it before any look is decided. Kickoff asks who picks: "show me 3 options" (`style_choice: "ask"`, default) or "choose for me" (`"auto"`, the model takes the first pick and says why).
+- **1 323 entries instead of 784.** New: the 98 OPUSCAR film styles from lemo-opuscar (one per Best Picture winner, from silent tinted film to 65 mm epic, prompts embedded so `umd styles get` needs no network, stills CC BY 4.0) and 441 ready-made blocks and components from the HyperFrames registry (logo outros, charts, phone and app mock-ups, captions, transitions, shader backgrounds, text effects; Apache-2.0; installed with `npx hyperframes add <name>`). Items ported from transitions.dev are left out: that collection may not be repackaged.
+- **Every entry is tagged.** The 8 kinds of piece the plugin makes (promo, presentation, explainer, vertical short, logo, animated short film, animated web page, 3D shot), mood, look, format, technology, kind (full style, creator prompt, ready block, component) and a quality tier (reference, pro, inspiration). One vocabulary (`lib/facets.mjs`) serves the index, the library page and the matching. `umd styles` filters on all of it: `--project logo --tier 2`, `--format 9:16 --mood bold`, `--kind block`.
+- **A library page of its own.** https://1angelmicka.github.io/ultimate-motion-design/library/ leaves the docs shell: the 8 project types as the main filter, style filters with live counts (quality, kind, mood, look, format, technology, source), search in French or English, four sorts, active filter chips, filters in the address so a view can be shared, a detail panel with the preview, the prompt or the install command, and the licence. French and English on one page; on phones the filters open as a drawer. The old `bibliotheque.html` addresses redirect there and keep their `#id`.
+
 ## 0.6.1 — 2026-11-10
 
 - When a command run by `umd run` or a command route of `umd render` times out, the whole process tree is now killed (Windows: `taskkill /T`; Linux and macOS: the process group). Before, only the shell died and a render or an encoder it had started kept running. Found by the 0.6.0 code review, missed in 0.6.0; covered by a new test.

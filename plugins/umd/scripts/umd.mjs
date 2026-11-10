@@ -8,8 +8,10 @@
 //   init [--force]                      Create .motion/ (project.json, storyboard, tokens, assets lock) and BRIEF.md from templates
 //   rules [domain|group...]             Build rules of the domains that apply to this project (compact)
 // Make
-//   styles <words> [--source lemo|mg|opus] [--kind style|prompt]   Search 784 proven styles and prompts (no tokens spent)
-//   styles get <id>                                   Download that style prompt into .motion/styles/
+//   styles match [words] [--project p] [--limit 6]    Rank the library against BRIEF.md and project.json: looks and blocks, with reasons
+//   styles <words> [--project promo|presentation|explainer|social|logo|film|web|3d] [--mood m] [--medium m] [--format 9:16]
+//          [--tier 2] [--kind style|prompt|block|component] [--source lemo|oscar|mg|opus|hf]   Search 1323 styles, prompts and blocks (no tokens)
+//   styles get <id>                                   Copy that style prompt (or block card) into .motion/styles/
 //   moves <words> [--family transitions|camera|type|...]   120 named motion techniques (match cut, whip pan, split-flap…)
 //   commons <words> [--allow-sa] [--limit 12]         Wikimedia Commons media under PD, CC0 or CC BY (BY-SA on request)
 //   commons get "File:Name.jpg" [--dir assets/commons] [--width 1920]   Download it and record it in assets.lock.json
@@ -622,7 +624,12 @@ async function main() {
         if (!pos[1]) die("Usage: umd styles get <id>");
         return out(await getStyle(pos[1], { cwd }));
       }
-      return out(searchStyles(pos.join(" "), { source: opt("source"), kind: opt("kind"), limit: Number(opt("limit", 8)) }));
+      const filters = Object.fromEntries(["source", "kind", "tier", "project", "mood", "medium", "format", "tech", "use"].map((k) => [k, opt(k)]));
+      if (pos[0] === "match") {
+        const { matchStyles } = await import("./lib/styles.mjs");
+        return out(matchStyles(cwd, { words: pos.slice(1).join(" "), limit: Number(opt("limit", 6)), ...filters }));
+      }
+      return out(searchStyles(pos.join(" "), { limit: Number(opt("limit", 8)), ...filters }));
     }
     case "next": {
       const { nextStep } = await import("./lib/next.mjs");

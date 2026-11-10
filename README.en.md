@@ -32,7 +32,7 @@ What it brings:
   - Cuts happen on motion, never between two parked shots, and no more than one second of near-still picture per 30 s: two measured checks, calibrated with zero false alarm on 15 reference films scored 7 to 8 by an AI jury.
 - **The grammar of professional launch films.** Six rules and 16 mechanisms drawn from the analysis of 28 launch films: one persistent actor, every action producing a result, the foreground carrying the transition.
 - **Proven starting points, at no token cost.**
-  - 784 styles and prompts, with a preview of the result in the [online library](https://1angelmicka.github.io/ultimate-motion-design/en/bibliotheque.html) (`umd styles`).
+  - 1 323 styles, prompts and ready-made blocks, sorted by project type, mood, look and format, with a preview of the result in the [online library](https://1angelmicka.github.io/ultimate-motion-design/library/?lang=en). Your agent picks what fits your brief on its own (`umd styles match`), or offers you three options.
   - 120 named techniques, from match cut to split-flap, so you and the critic speak the same language (`umd moves`).
   - Free images from Wikimedia Commons, recorded automatically with their author and licence (`umd commons`).
 - **A real motion design skill, usable anywhere.** [`skills/motion-design`](skills/motion-design/SKILL.md) condenses the craft: the ten-step loop with three gates, twelve rules that separate craft from slop, the numbers that matter, type, colour, sound, camera, how to judge a piece. In Claude Code it triggers by itself as soon as you animate; it also installs in Codex, Cursor or any agent that reads skills, with its 52 guides.
@@ -162,7 +162,7 @@ All these commands rely on a zero-dependency CLI that you can also run yourself:
 - **rendering:** `capture`, `still`, `render`;
 - **analysis:** `analyze` (cuts, motion, dead air, flashes, loudness, contact sheet), `frames` (`--cuts`: 12 frames around each cut), `compare`, `vmaf`, `webperf`, `lint`, `licenses`;
 - **sound:** `mix` (ducking, loudness, `--backtime` to land the music's ending on the end card), `hits` (a track's final hits), `sync` (each sound against its picture), `normalize`, `loudness`, `captions`, `burn`;
-- **resources:** `styles` (784 styles and prompts), `moves` (120 named techniques), `commons` (free images from Wikimedia Commons);
+- **resources:** `styles` (1 323 styles, prompts and blocks; `styles match` picks from the brief), `moves` (120 named techniques), `commons` (free images from Wikimedia Commons);
 - **tracking:** `next`, `status`, `tokens`.
 
 ## Routes and technologies
@@ -186,7 +186,14 @@ On top of that:
 - **audio guides:** commercial-safe voices, music and sound effects, mixing, captions;
 - **practical guides:** assets, platform specs, licences.
 
-**784 proven styles and prompts** serve as starting points: 66 film styles from [lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar), 15 motion-design styles from [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) and 703 prompts from [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos). `/umd:storyboard` offers three that fit your brief, and `umd styles <words>` searches them at no token cost. To choose by eye: the [Style library](https://1angelmicka.github.io/ultimate-motion-design/en/bibliotheque.html) shows every style with a preview of the result (still or video) and its prompt to copy. Ready-to-copy prompts and advice: the [Tips and prompts](https://1angelmicka.github.io/ultimate-motion-design/en/astuces.html) page.
+**1 323 proven styles, prompts and blocks** serve as starting points:
+
+- 66 film styles and the 98 OPUSCAR styles (one per Best Picture winner) from [lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar);
+- 15 scored motion-design styles from [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15);
+- 703 creator prompts from [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos);
+- 441 ready-made blocks and components from the [HyperFrames](https://github.com/heygen-com/hyperframes) registry.
+
+Every entry is tagged by project type (promo, presentation, explainer, vertical short, logo, animated short, web page, 3D shot), mood, look, format and quality tier. **Your agent picks from the library on its own**: before fixing a look, the storyboard runs `umd styles match`, which ranks the whole library against your brief, then shows you the best three, or takes the first if you leave the choice to it. To choose by eye: the [Library](https://1angelmicka.github.io/ultimate-motion-design/library/?lang=en) filters everything by project type and style, with a preview of each result and its prompt to copy. Ready-to-copy prompts and advice: the [Tips and prompts](https://1angelmicka.github.io/ultimate-motion-design/en/astuces.html) page.
 
 Two files keep the trace of the research:
 

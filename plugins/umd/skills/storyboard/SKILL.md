@@ -15,11 +15,15 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). Talk in the project
 Naming a technique in the Motion column? `umd moves <words>` (no tokens) gives 120 named moves with one line each (match cut, whip pan, split-flap, cursor-led demo…); use their names so the critic and the user share the vocabulary.
 ## 0. Style (before any beat)
 
-If `project.json` has no `style` yet and the brief does not impose a strict brand system, start from a proven style rather than a blank page (`${CLAUDE_PLUGIN_ROOT}/references/styles.md`):
+**Rule: never invent a look from a blank page when the library has one that fits.** If `project.json` has no `style` yet, choose it from the library before any beat (`${CLAUDE_PLUGIN_ROOT}/references/styles.md`). A strict brand system does not skip this step: it narrows it (keep the brand's colours and type, take the motion and composition from the style).
 
-1. `umd styles <mood, use and medium words from the brief>` (for example `umd styles luxe sombre lancement produit`). Show the user the 3 best matches with their preview links and one line each on why it fits.
-2. On their choice: `umd styles get <id>` (its output gives `approx_tokens`: style prompts weigh 1 to 8 k tokens), read `.motion/styles/<id>.md` **once**, set `"style": "<id>"` in project.json, and write a `## Style card` in BRIEF.md: at most 200 words with the signature features you keep (materials, colour logic, type, motion rules, sound), what you adapt (story, product, copy, brand colours inside the style's colour logic) and the credit line. From then on every step and every critic reads the card, never the full prompt again.
-3. Web pages: also pick 2 or 3 references from the galleries listed in `references/styles.md` and say what you take from each.
+1. `umd styles match [a few words the brief leaves out]` (no tokens). It reads BRIEF.md and project.json (project type, format, mood, medium, ambition) and ranks the 1 323 entries: `looks` (full styles and creator prompts) and `blocks` (ready-made HyperFrames blocks and components), each with `why` and a `preview` link. Never pick from memory or from a plain word search instead.
+2. Choose:
+   - `style_choice: "ask"` (the default): show the user the first 3 looks, each with its preview link and the `why` in one line, and let them pick (or give an id they found on the library page).
+   - `style_choice: "auto"` (the user left it to you at kickoff): take look #1, unless its `why` does not mention the project type, then take the first one that does. Say in one line which one and why, with its preview link.
+   - Useful blocks (a logo outro, a chart, a phone mock-up): note them for the build; they install with their `install` command when the engine is HyperFrames, and serve as a reference otherwise.
+3. On the choice: `umd styles get <id>` (its output gives `approx_tokens`: style prompts weigh 1 to 8 k tokens), read `.motion/styles/<id>.md` **once**, set `"style": "<id>"` in project.json, and write a `## Style card` in BRIEF.md: at most 200 words with the signature features you keep (materials, colour logic, type, motion rules, sound), what you adapt (story, product, copy, brand colours inside the style's colour logic) and the credit line. From then on every step and every critic reads the card, never the full prompt again.
+4. Web pages: also pick 2 or 3 references from the galleries listed in `references/styles.md` and say what you take from each.
 
 ## 1. Beats
 

@@ -160,16 +160,16 @@ write(mj, JSON.stringify(market, null, 2) + "\n");
     REF: PR + "/references/",
     UMD_LINE: "\`umd\` means \`node \"" + PR + "/scripts/umd.mjs\"\`: it renders HTML to video on a virtual clock, measures, audits 64 checks and guards licences. For a whole piece from brief to delivery, read \`" + PR + "/skills/go/SKILL.md\` and follow it, as if the user had typed \`/umd:go\`: it runs the loop below with its gates and announces each step's token cost.",
     CHECKS_SECTION: pluginChecks,
-    STYLES_HINT: ", then \`umd styles <words>\` (784 styles and prompts with previews, no tokens) and \`umd styles get <id>\`",
+    STYLES_HINT: ". **Before deciding any look, run \`umd styles match\`**: it ranks 1 323 styles, prompts and blocks against BRIEF.md and project.json, with reasons and previews (no tokens); then \`umd styles get <id>\`",
     PLUGIN_ONLY: "\n## In a umd project\n\n- **Plain-words requests.** When the user asks, without a command, to make, continue, check or deliver a whole piece (\"fais-moi une vidéo de lancement\", \"on continue la vidéo\", \"vérifie la vidéo\"), read \`" + PR + "/skills/go/SKILL.md\` and follow it with their words as arguments.\n- Durations and easings come from \`.motion/motion-tokens.json\`; the style card is in \`BRIEF.md\`; the storyboard is \`.motion/storyboard.md\`; every asset goes in \`.motion/assets.lock.json\`.\n- \`umd rules [domain]\` prints this project's build rules per quality domain, in its language.\n",
   });
   write(join(PLUGIN, "skills", "motion", "SKILL.md"), plugin);
   const standalone = fill({
     NAME: "motion-design",
     REF: "references/",
-    UMD_LINE: "This skill works on its own in any coding agent. For deterministic HTML-to-video rendering, the 64-check audit scored out of 10, the 784-style library and the licence guard, add the Ultimate Motion Design plugin (Claude Code: \`/plugin marketplace add 1AngelMicka/ultimate-motion-design\`, then \`/plugin install umd@ultimate-motion-design\`; docs: https://1angelmicka.github.io/ultimate-motion-design/). The references below mention its \`umd\` commands; the plain-FFmpeg section gives the same checks without it.",
+    UMD_LINE: "This skill works on its own in any coding agent. For deterministic HTML-to-video rendering, the 64-check audit scored out of 10, the 1 323-entry style library and the licence guard, add the Ultimate Motion Design plugin (Claude Code: \`/plugin marketplace add 1AngelMicka/ultimate-motion-design\`, then \`/plugin install umd@ultimate-motion-design\`; docs: https://1angelmicka.github.io/ultimate-motion-design/). The references below mention its \`umd\` commands; the plain-FFmpeg section gives the same checks without it.",
     CHECKS_SECTION: standaloneChecks,
-    STYLES_HINT: " (the plugin searches 784 styles with previews: \`umd styles <words>\`)",
+    STYLES_HINT: " (with the plugin, \`umd styles match\` picks from 1 323 styles, prompts and blocks for the brief)",
     PLUGIN_ONLY: "",
   });
   const SK = join(ROOT, "skills", "motion-design");

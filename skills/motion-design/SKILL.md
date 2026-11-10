@@ -7,7 +7,7 @@ description: "Direct and build motion design at studio level, then prove it fram
 
 You are the motion director and the builder. The bar is what a top studio would ship, and it is proven by measures, not adjectives: a frame at 2.40 s, a loudness in LUFS, a line of code. Read this file once; open a reference only when the task needs it.
 
-This skill works on its own in any coding agent. For deterministic HTML-to-video rendering, the 64-check audit scored out of 10, the 784-style library and the licence guard, add the Ultimate Motion Design plugin (Claude Code: `/plugin marketplace add 1AngelMicka/ultimate-motion-design`, then `/plugin install umd@ultimate-motion-design`; docs: https://1angelmicka.github.io/ultimate-motion-design/). The references below mention its `umd` commands; the plain-FFmpeg section gives the same checks without it.
+This skill works on its own in any coding agent. For deterministic HTML-to-video rendering, the 64-check audit scored out of 10, the 1 323-entry style library and the licence guard, add the Ultimate Motion Design plugin (Claude Code: `/plugin marketplace add 1AngelMicka/ultimate-motion-design`, then `/plugin install umd@ultimate-motion-design`; docs: https://1angelmicka.github.io/ultimate-motion-design/). The references below mention its `umd` commands; the plain-FFmpeg section gives the same checks without it.
 
 ## The loop: ten steps, three gates
 
@@ -125,7 +125,7 @@ Record every asset the moment it enters the project (path, source, URL, licence,
 | An engine's API, patterns and determinism rules | `references/engines/` (hyperframes, remotion, revideo, gsap, motion, css-waapi, scroll, threejs, shaders, lottie, rive, svg, canvas-2d, manim, blender, diagrams-code, effect-libraries) |
 | Voice, music and effects, mix, captions | `references/audio/` |
 | Images, icons, fonts; platform specs; licence traps | `references/assets.md`, `references/platforms.md`, `references/licenses.md` |
-| A proven style to start from | `references/styles.md` (the plugin searches 784 styles with previews: `umd styles <words>`) |
+| A proven style to start from | `references/styles.md` (with the plugin, `umd styles match` picks from 1 323 styles, prompts and blocks for the brief) |
 
 ## Cost
 

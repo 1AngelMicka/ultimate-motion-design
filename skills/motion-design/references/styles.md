@@ -10,18 +10,26 @@ The films people share as "agency level" rarely start from a blank page. They st
 
 ## Setup
 
-Nothing to install. `umd styles` searches a local index of 784 entries (no tokens, no network):
+Nothing to install. `umd styles` searches a local index of 1 323 entries (no tokens, no network). Every entry is tagged with the same facets the library page filters on:
+
+- **project type**, the 8 kinds of piece the plugin makes: promo, presentation, explainer, social (vertical short), logo, film (animated short), web (animated page), 3d (3D shot);
+- **mood** (dark, light, playful, premium, retro, minimal, bold, organic, tech, cinematic, calm), **medium** (flat, 3d, drawn, print, photo, ui, dataviz, pixel, shader), **format** (16:9, 9:16, 1:1), **tech**;
+- **kind**: full style, creator prompt, ready block, component;
+- **tier**: 3 reference (curated styles with a reference film), 2 pro (a film or preview clip and a full prompt), 1 inspiration.
 
 | Source | What | Licence |
 | --- | --- | --- |
 | lemomo-ai/lemo-opuscar (66 styles) | Full style prompts (`STYLE.md`: essence, materials, colour logic, type, motion, sound) with a demo film each; categories: Graphic & Type, Hand-drawn & Painting, Materials & 3D, Information & Keynote, Edit & Documentary, Evidence Films… | Prompts MIT; demo films CC BY 4.0 (credit LemoLab if you reuse a film or still); films you make are yours |
 | Vincentwei1021/mg-styles-15 (15 styles) | 10 s motion-graphics prompts with a reference film with sound and a jury score (flat vector, line art, isometric, 3D render, cel boil, collage, liquid, morph, Bauhaus, synthwave, aurora glass, pixel, HUD…) | MIT |
 | yihui-dev/awesome-opus5-5-videos (703 prompts) | Prompts creators shared with their films: motion 369, 3D 117, explainer 116, interactive 101 | Index MIT; each prompt belongs to its author: credit the post |
+| lemo-opuscar OPUSCAR 98 (98 styles) | One film style per Best Picture winner, 1927 to 2025 (silent tinted, Technicolor, noir, gongbi, rubber-hose, 65 mm epic, 3D…), each with its prompt embedded in the index and a still | Prompts MIT; stills and film CC BY 4.0 (credit LemoLab) |
+| heygen-com/hyperframes registry (441 items) | Ready-made blocks and components with a preview clip: logo outros, charts, phone and app mock-ups, captions, transitions, shader backgrounds, text effects. Install one with `npx hyperframes add <name>` | Apache-2.0 (a few MIT or OFL); items ported from transitions.dev are left out |
 
 ## Core patterns
 
-1. **Search by mood, use and medium**, in any language: `umd styles luxe sombre lancement`, `umd styles explainer data`, `umd styles 3d product --kind style`, `umd styles logo --source mg`. Results show id, category, uses, a one-line essence, a `preview` link (the entry on the docs gallery: still or looping video, prompt, credit) and a `film` link. Show the user 3 options with their preview links; let them choose. Users can also browse everything at https://1angelmicka.github.io/ultimate-motion-design/bibliotheque.html and come back with an id.
-2. **Download only the chosen one**: `umd styles get lemo:dark-keynote` writes `.motion/styles/<id>.md` (1 200 to 7 700 tokens, median about 3 100; read it once, then work from the `## Style card` in BRIEF.md). Read it once.
+1. **Match the brief first**: `umd styles match` reads BRIEF.md and project.json and ranks the whole library for this project (type, format, mood, medium, ambition), with a `why` per pick and the best ready blocks apart. Add words the brief leaves out: `umd styles match verre premium`. This is the rule before any look decision (storyboard step 0). Show the user the first 3 with their `preview` links, or take #1 when `style_choice` is `auto`.
+   **Search by hand** when exploring: `umd styles luxe sombre --project promo --tier 2`, `umd styles --project logo --kind block`, `umd styles aquarelle --project film --medium drawn`, `umd styles --format 9:16 --mood bold`. Users can browse and filter everything at https://1angelmicka.github.io/ultimate-motion-design/library/ and come back with an id.
+2. **Download only the chosen one**: `umd styles get lemo:dark-keynote` writes `.motion/styles/<id>.md` (1 200 to 7 700 tokens, median about 3 100; read it once, then work from the `## Style card` in BRIEF.md). For a HyperFrames block it writes a short card with its variables and its `install` command.
 3. **Adapt, keep the signature**:
    - Keep the style's signature features, materials, colour logic and motion rules; they are what makes it read as premium.
    - Replace the creative seed: story, product, copy, brand colours (inside the style's colour logic), duration, aspect ratio.
@@ -68,4 +76,6 @@ Then use the `web-page` route, `recipes/hero-section.md`, `recipes/scrollytellin
 
 - https://github.com/lemomo-ai/lemo-opuscar (README, licence section, `styles/*/STYLE.md`, `style.json`; read 2026-11-10)
 - https://github.com/Vincentwei1021/mg-styles-15 (README, `prompts/`, `rubric.md`; read 2026-11-10)
+- https://github.com/lemomo-ai/lemo-opuscar/tree/main/styleboard (`opuscar98_styles.json`, licence section of the README; read 2026-11-10)
+- https://github.com/heygen-com/hyperframes/tree/main/registry (`registry-item.json` of each block and component, LICENSE; read 2026-11-10)
 - https://github.com/yihui-dev/awesome-opus5-5-videos (`data/videos.json`; read 2026-11-10)

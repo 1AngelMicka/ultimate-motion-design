@@ -28,6 +28,8 @@ Tell the user in one line: the step, why (`reason`) and what it will cost (`cost
 
 Read `${CLAUDE_PLUGIN_ROOT}/skills/<step>/SKILL.md` and follow it exactly, as if the user had typed `/umd:<step>`. Its `$ARGUMENTS` are the user's remaining words, or empty. Do not re-read a step file you have already followed in this conversation unless the step is new to you.
 
+**The look comes from the library.** Whatever step runs, a look (style, palette, type, motion) is never invented while `project.json` has no `style`: the storyboard step chooses it with `umd styles match` first.
+
 ## 4. Chain until a decision is needed
 
 After a step ends, run `umd next` again and continue with the new step **without asking**, except in these cases, where you stop and ask:

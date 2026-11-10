@@ -19,6 +19,7 @@
   "models": [],
   "thresholds": {},
   "style": null,
+  "style_choice": "ask",
   "quality_target": 8,
   "cost_confirm": "high",
   "audit_model": "inherit",

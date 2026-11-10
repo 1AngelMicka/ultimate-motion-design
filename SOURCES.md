@@ -6,11 +6,11 @@ Tous les liens partagés, testés ou utilisés pour construire Ultimate Motion D
 
 Dernière mise à jour : 2026-11-10.
 
-312 liens en tout, chacun listé une seule fois ci-dessous. Les liens propres à la recherche (dossiers research_notes/ et reports/, non publiés) et les 1 113 dépôts du catalogue ne sont pas répétés.
+313 liens en tout, chacun listé une seule fois ci-dessous. Les liens propres à la recherche (dossiers research_notes/ et reports/, non publiés) et les 1 113 dépôts du catalogue ne sont pas répétés.
 
 | Statut | Nombre |
 | --- | --- |
-| Lien de référence | 237 |
+| Lien de référence | 238 |
 | Écarté | 27 |
 | Compagnon | 20 |
 | Intégré | 14 |
@@ -57,14 +57,15 @@ Dernière mise à jour : 2026-11-10.
 | [1AngelMicka/quality-pack](https://github.com/1AngelMicka/quality-pack) | Same author's audit plugin (scoring /10, compact runner, auditor pattern) | `README.en.md`, `README.md`, `THIRD_PARTY_NOTICES.md` |
 | [carbon-design-system/carbon](https://github.com/carbon-design-system/carbon) | IBM Carbon @carbon/motion: duration and easing token values reproduced in craft/tokens.md (Apache-2.0) | `plugins/umd/references/craft/principles.md`, `plugins/umd/references/craft/tokens.md` |
 | [echris6/motion-video-kit](https://github.com/echris6/motion-video-kit) | Grammaire de 28 films de lancement, critique indépendante, musique calée sur la fin (MIT) | `THIRD_PARTY_NOTICES.md`, `plugins/umd/references/companions.md`, `plugins/umd/references/craft/motion-grammar.md` |
-| [lemomo-ai/lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar) | 66 film styles with prompts (MIT) and demo films (CC BY 4.0, LemoLab); imported into style index, stills on site | `README.en.md`, `README.md`, `THIRD_PARTY_NOTICES.md` |
+| [lemomo-ai/lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar) | 66 film styles and the 98 OPUSCAR styles (`styleboard/`) with prompts (MIT) and films and stills (CC BY 4.0, LemoLab); imported into style index, stills on site | `README.en.md`, `README.md`, `THIRD_PARTY_NOTICES.md` |
 | [motionvideohq/motionvideo.xyz](https://github.com/motionvideohq/motionvideo.xyz) | Glossaire de 120 techniques nommées (umd moves) (MIT) |  |
 | [Vincentwei1021/mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) | 15 motion-design style films by Opus 5.5 (MIT): calibration set, style index entries, posters/loops on site, jury rubric adapted | `README.en.md`, `README.md`, `THIRD_PARTY_NOTICES.md` |
 | [yihui-dev/awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos) | Index of 703 Opus 5.5 video prompts (MIT index); imported into the style index, prompts fetched on demand | `README.en.md`, `README.md`, `THIRD_PARTY_NOTICES.md` |
 | [lemomo-ai.github.io](https://lemomo-ai.github.io/) | lemo-opuscar gallery pages (style previews), linked per style | `plugins/umd/references/styles/index.json`, `site/content/en/tips.md`, `site/content/fr/tips.md` |
 | [media.skillry.dev](https://media.skillry.dev/) | Media host for awesome-opus5-5-videos prompts and thumbnails | `plugins/umd/references/styles/index.json` |
 | [motionvideo.xyz/fr](https://motionvideo.xyz/fr) | Galerie de vidéos motion IA, 120 techniques, MCP gratuit ; formules Pro payantes |  |
-| [skillry.dev](https://skillry.dev/) | Hosts the awesome-opus5-5-videos pages; creator thumbnails displayed from it, not copied | `THIRD_PARTY_NOTICES.md`, `plugins/umd/references/styles/index.json`, `site/content/en/library.md` |
+| [static.heygen.ai](https://static.heygen.ai/) | Media host of the HyperFrames registry previews (posters and clips), displayed from it, not copied | `THIRD_PARTY_NOTICES.md`, `plugins/umd/references/styles/index.json` |
+| [skillry.dev](https://skillry.dev/) | Hosts the awesome-opus5-5-videos pages; creator thumbnails displayed from it, not copied | `THIRD_PARTY_NOTICES.md`, `plugins/umd/references/styles/index.json` |
 
 ## Compagnons proposés
 
@@ -76,7 +77,7 @@ Dernière mise à jour : 2026-11-10.
 | [codepawl/creator-generalist](https://github.com/codepawl/creator-generalist) | Skills généralistes 2D/3D (très jeune) (MIT) |  |
 | [edenfunf/reelmimic](https://github.com/edenfunf/reelmimic) | Refait le style d'une vidéo ; registre des coupes (idée du contrôle TIM-06) (MIT) |  |
 | [greensock/gsap-skills](https://github.com/greensock/gsap-skills) | Official GSAP agent skills (MIT) | `README.en.md`, `README.md`, `plugins/umd/references/companions.md` |
-| [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) | HyperFrames: HTML to video skills, CLI and registry (Apache-2.0) | `README.en.md`, `README.md`, `plugins/umd/references/companions.md` |
+| [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) | HyperFrames: HTML to video skills, CLI and registry (Apache-2.0); 441 registry blocks and components imported into the style index (transitions.dev ports left out) | `README.en.md`, `README.md`, `plugins/umd/references/companions.md` |
 | [kajisho5/ffmpeg-skill](https://github.com/kajisho5/ffmpeg-skill) | 42 recettes FFmpeg et revue du montage (MIT) |  |
 | [kylezantos/design-motion-principles](https://github.com/kylezantos/design-motion-principles) | Motion build/audit skill with anti-AI-slop checklist (MIT) | `README.en.md`, `README.md`, `plugins/umd/references/companions.md` |
 | [Leonxlnx/cinetic](https://github.com/Leonxlnx/cinetic) | Films de lancement en Remotion/HyperFrames, 34 scènes, contrôle du script (MIT) |  |

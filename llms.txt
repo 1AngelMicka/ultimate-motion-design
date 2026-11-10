@@ -18,7 +18,7 @@ Install in Claude Code: `/plugin marketplace add 1AngelMicka/ultimate-motion-des
 - [Install](https://1angelmicka.github.io/ultimate-motion-design/en/installation.html): requirements, team install, update, uninstall
 - [First project](https://1angelmicka.github.io/ultimate-motion-design/en/premier-projet.html): from `/umd:go` to a delivered video
 - [Tips and prompts](https://1angelmicka.github.io/ultimate-motion-design/en/astuces.html): brief recipe, ready-to-copy prompts per kind of piece, styles by mood, what to say during production, a 20-minute real test
-- [Style library](https://1angelmicka.github.io/ultimate-motion-design/en/bibliotheque.html): 784 styles and prompts with a preview of the result (still or video) and the prompt; each entry has a link `bibliotheque.html#<id>`
+- [Style library](https://1angelmicka.github.io/ultimate-motion-design/library/?lang=en): 1 323 styles, prompts and ready-made blocks, filtered by project type, mood, look, format and quality, with a preview of the result and the prompt or install command; each entry has a link `library/#<id>`; `umd styles match` ranks it against a brief
 - [Commands](https://1angelmicka.github.io/ultimate-motion-design/en/commandes.html): every command, its arguments, the `umd` CLI and the files it creates
 - [Routes and tech](https://1angelmicka.github.io/ultimate-motion-design/en/routes.html): routes, recipes, engines and every guide
 - [Quality checks](https://1angelmicka.github.io/ultimate-motion-design/en/qualite.html): the 12 domains, 64 checks, profiles, thresholds and scoring

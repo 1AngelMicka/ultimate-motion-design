@@ -1,7 +1,7 @@
 // node --test tests/*.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, writeFileSync, mkdirSync } from "node:fs";
+import { mkdtempSync, writeFileSync, mkdirSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,6 +11,7 @@ import { compute } from "../plugins/umd/scripts/lib/score.mjs";
 import { countFlashes, deadAir, stillness, seams } from "../plugins/umd/scripts/lib/analyze.mjs";
 import { licenceClass } from "../plugins/umd/scripts/lib/commons.mjs";
 import { searchMoves } from "../plugins/umd/scripts/lib/moves.mjs";
+import { tagText, projectTypes, PROJECTS } from "../plugins/umd/scripts/lib/facets.mjs";
 import { parseCues, onsets, syncCues } from "../plugins/umd/scripts/lib/sync.mjs";
 import { lint, parseStoryboard } from "../plugins/umd/scripts/lib/lint.mjs";
 import { installTargets, classify, checkLicenses } from "../plugins/umd/scripts/lib/licenses.mjs";
@@ -168,10 +169,59 @@ test("next step follows the project state", () => {
   assert.equal(step(), "build");
 });
 
-test("style search ranks full styles for a mood query", () => {
+test("style search ranks curated styles first for a mood query", () => {
   const r = JSON.parse(umd(["styles", "luxe", "sombre", "lancement", "--limit", "3"], tmp()).stdout);
-  assert.ok(r.total > 700);
-  assert.ok(r.results.length === 3 && r.results[0].id.startsWith("lemo:"));
+  assert.ok(r.total > 1300);
+  assert.ok(r.results.length === 3 && r.results[0].tier === 3);
+});
+
+test("style search filters on project type, tier, format and kind", () => {
+  const r = JSON.parse(umd(["styles", "--project", "logo", "--tier", "2", "--limit", "50"], tmp()).stdout);
+  assert.ok(r.matches > 0 && r.results.every((x) => x.project.split(", ").includes("logo") && x.tier >= 2));
+  const v = JSON.parse(umd(["styles", "--format", "9:16", "--kind", "block", "--limit", "50"], tmp()).stdout);
+  assert.ok(v.matches > 0 && v.results.every((x) => x.format === "9:16" && x.kind === "block" && x.install.startsWith("npx hyperframes add ")));
+});
+
+test("every entry of the library serves at least one of the 8 project types, each type has quality picks", () => {
+  const idx = JSON.parse(readFileSync(join(ROOT, "plugins", "umd", "references", "styles", "index.json"), "utf8"));
+  const good = {};
+  for (const e of idx.entries) {
+    assert.ok(e.facets.project.length, e.id);
+    assert.ok([1, 2, 3].includes(e.tier), e.id);
+    if (e.tier >= 2) for (const p of e.facets.project) good[p] = (good[p] || 0) + 1;
+  }
+  for (const p of Object.keys(PROJECTS)) assert.ok(good[p] >= 10, `${p}: ${good[p] || 0} quality entries`);
+  assert.ok(!idx.entries.some((e) => (e.tags || []).includes("transitions-dev-port")), "transitions.dev ports must stay out");
+});
+
+test("facets: word starts only, and project types follow the facets", () => {
+  assert.deepEqual(tagText("une page web animée", { only: ["medium"] }).medium, []); // "animée" is not "anime"
+  assert.ok(tagText("logo reveal for a bakery").use.includes("brand"));
+  assert.deepEqual(projectTypes({ use: ["social"], format: ["9:16"], medium: ["3d"] }), ["social", "3d"]);
+});
+
+test("styles match reads the brief and the project, with reasons", () => {
+  const d = tmp();
+  mkdirSync(join(d, ".motion"));
+  writeFileSync(join(d, ".motion", "project.json"), JSON.stringify({ profile: "social", format: { aspect: "9:16" }, quality_target: 8 }));
+  writeFileSync(join(d, "BRIEF.md"), "# Brief\n\nA vertical teaser for a music festival, bold and energetic.\n");
+  const r = JSON.parse(umd(["styles", "match", "--limit", "4"], d).stdout);
+  assert.deepEqual(r.needs.project, ["social"]);
+  assert.equal(r.needs.aspect, "9:16");
+  assert.ok(r.needs.mood.includes("bold"));
+  assert.equal(r.looks.length, 4);
+  for (const x of [...r.looks, ...r.blocks]) { assert.ok(x.project.includes("social"), x.id); assert.match(x.why, /vertical short/); }
+  assert.ok(r.blocks.every((b) => b.format === "9:16"), "blocks are built for their size");
+  assert.match(umd(["styles", "match"], tmp()).stdout, /Nothing to match/);
+});
+
+test("styles get writes an embedded prompt without the network", () => {
+  const d = tmp();
+  mkdirSync(join(d, ".motion"));
+  const id = JSON.parse(umd(["styles", "--source", "oscar", "--limit", "1"], d).stdout).results[0].id;
+  const r = JSON.parse(umd(["styles", "get", id], d).stdout);
+  assert.ok(r.file.replace(/\\/g, "/").startsWith(".motion/styles/") && r.bytes > 200);
+  assert.match(readFileSync(join(d, r.file), "utf8"), /OPUSCAR 98/);
 });
 
 test("CLI: init, rules, deliver refused without audit", () => {
