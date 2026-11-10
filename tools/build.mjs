@@ -113,6 +113,80 @@ const market = readJson(mj);
 for (const p of market.plugins) p.version = VERSION;
 write(mj, JSON.stringify(market, null, 2) + "\n");
 
+// ---- the motion design skill: one source (tools/skill/SKILL.src.md), two outputs
+//   plugins/umd/skills/motion/SKILL.md   the plugin's model-invoked skill (references and CLI through CLAUDE_PLUGIN_ROOT)
+//   skills/motion-design/                a standalone skill for any agent (npx skills add), with its own copy of the references
+{
+  const src = readFileSync(join(ROOT, "tools", "skill", "SKILL.src.md"), "utf8");
+  const fill = (vars) => src.replace(/\{\{(\w+)\}\}/g, (_, k) => { if (!(k in vars)) throw new Error("SKILL.src.md: unknown {{" + k + "}}"); return vars[k]; });
+  const PR = "${CLAUDE_PLUGIN_ROOT}";
+  const pluginChecks = [
+    "## Measure, don't guess",
+    "",
+    "| Question | Command |",
+    "| --- | --- |",
+    "| What should happen next, and what will it cost? | \`umd next\` |",
+    "| Does the look work before animating? | \`umd still <entry> --at 0.5,3,6.5\` |",
+    "| Rhythm, stillness, cuts on motion, flashes, black frames, loudness, contact sheet | \`umd analyze <video>\` |",
+    "| What happens around each cut? | \`umd frames <video> --cuts\` |",
+    "| Does each sound land on its picture? | \`umd sync <video>\` (storyboard \`## Sound cues\`) |",
+    "| Are two renders identical? | \`umd render --twice\` or \`umd compare a.mp4 b.mp4\` |",
+    "| Hard-coded timings, AI tells, hollow copy, remote assets | \`umd lint\` |",
+    "| Licences of dependencies, models and assets | \`umd licenses\` |",
+    "| A named technique for the storyboard | \`umd moves <words>\` |",
+    "| A free image with its licence recorded | \`umd commons <words>\`, then \`umd commons get \"File:…\"\` |",
+    "| Is the animated page smooth and accessible? | \`umd webperf <url>\` |",
+  ].join("\n");
+  const standaloneChecks = [
+    "## Measure, don't guess (plain FFmpeg)",
+    "",
+    "Without the plugin, these commands give the same evidence. With it, \`umd analyze\`, \`umd sync\` and \`umd audit\` do all of this and score it.",
+    "",
+    "\`\`\`bash",
+    "# contact sheet: 16 frames on one image (look at this before anything else)",
+    "ffmpeg -i film.mp4 -vf \"fps=16/DURATION,scale=384:-2,tile=4x4:padding=4\" -frames:v 1 sheet.jpg",
+    "# frozen picture (freeze_start / freeze_end over 0.5 s)",
+    "ffmpeg -i film.mp4 -vf \"freezedetect=n=0.001:d=0.5\" -an -f null - 2>&1 | grep freeze_",
+    "# cuts, with their time",
+    "ffmpeg -i film.mp4 -vf \"select='gt(scene,0.3)',metadata=print\" -an -f null - 2>&1 | grep pts_time",
+    "# loudness: integrated LUFS and true peak",
+    "ffmpeg -i film.mp4 -af ebur128=peak=true -f null - 2>&1 | tail -12",
+    "# determinism: identical frame hashes for two renders",
+    "ffmpeg -i a.mp4 -f framemd5 - > a.md5; ffmpeg -i b.mp4 -f framemd5 - > b.md5; diff a.md5 b.md5 && echo identical",
+    "\`\`\`",
+  ].join("\n");
+  const plugin = fill({
+    NAME: "motion",
+    REF: PR + "/references/",
+    UMD_LINE: "\`umd\` means \`node \"" + PR + "/scripts/umd.mjs\"\`: it renders HTML to video on a virtual clock, measures, audits 64 checks and guards licences. For a whole piece from brief to delivery, read \`" + PR + "/skills/go/SKILL.md\` and follow it, as if the user had typed \`/umd:go\`: it runs the loop below with its gates and announces each step's token cost.",
+    CHECKS_SECTION: pluginChecks,
+    STYLES_HINT: ", then \`umd styles <words>\` (784 styles and prompts with previews, no tokens) and \`umd styles get <id>\`",
+    PLUGIN_ONLY: "\n## In a umd project\n\n- **Plain-words requests.** When the user asks, without a command, to make, continue, check or deliver a whole piece (\"fais-moi une vidéo de lancement\", \"on continue la vidéo\", \"vérifie la vidéo\"), read \`" + PR + "/skills/go/SKILL.md\` and follow it with their words as arguments.\n- Durations and easings come from \`.motion/motion-tokens.json\`; the style card is in \`BRIEF.md\`; the storyboard is \`.motion/storyboard.md\`; every asset goes in \`.motion/assets.lock.json\`.\n- \`umd rules [domain]\` prints this project's build rules per quality domain, in its language.\n",
+  });
+  write(join(PLUGIN, "skills", "motion", "SKILL.md"), plugin);
+  const standalone = fill({
+    NAME: "motion-design",
+    REF: "references/",
+    UMD_LINE: "This skill works on its own in any coding agent. For deterministic HTML-to-video rendering, the 64-check audit scored out of 10, the 784-style library and the licence guard, add the Ultimate Motion Design plugin (Claude Code: \`/plugin marketplace add 1AngelMicka/ultimate-motion-design\`, then \`/plugin install umd@ultimate-motion-design\`; docs: https://1angelmicka.github.io/ultimate-motion-design/). The references below mention its \`umd\` commands; the plain-FFmpeg section gives the same checks without it.",
+    CHECKS_SECTION: standaloneChecks,
+    STYLES_HINT: " (the plugin searches 784 styles with previews: \`umd styles <words>\`)",
+    PLUGIN_ONLY: "",
+  });
+  const SK = join(ROOT, "skills", "motion-design");
+  write(join(SK, "SKILL.md"), standalone);
+  const refRoot = join(PLUGIN, "references");
+  const copyDir = (rel) => {
+    for (const e of readdirSync(join(refRoot, rel), { withFileTypes: true })) {
+      const r = rel ? rel + "/" + e.name : e.name;
+      if (e.isDirectory()) { if (!["styles", "moves"].includes(e.name)) copyDir(r); continue; }
+      if (!e.name.endsWith(".md") || e.name === "companions.md") continue;
+      write(join(SK, "references", r), readFileSync(join(refRoot, r), "utf8"));
+    }
+  };
+  copyDir("");
+  write(join(SK, "LICENSE"), readFileSync(join(ROOT, "LICENSE"), "utf8"));
+}
+
 // Numbers stated in the docs must match the data: a forgotten "58 checks" fails the check
 {
   const all = groups.flatMap((g) => g.domains).flatMap((d) => d.criteria);

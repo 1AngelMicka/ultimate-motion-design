@@ -9,6 +9,10 @@ Install in Claude Code: `/plugin marketplace add 1AngelMicka/ultimate-motion-des
 - [AGENTS.md](https://github.com/1AngelMicka/ultimate-motion-design/blob/main/AGENTS.md): how to install, check and guide a user, and how to use the CLI without Claude Code
 - [llms-full.txt](https://1angelmicka.github.io/ultimate-motion-design/llms-full.txt): the whole documentation in one file
 
+## Skill
+
+- [skills/motion-design/SKILL.md](https://github.com/1AngelMicka/ultimate-motion-design/blob/main/skills/motion-design/SKILL.md): the standalone motion design skill (method, rules, numbers, craft, how to judge), usable by any agent
+
 ## Docs
 
 - [Install](https://1angelmicka.github.io/ultimate-motion-design/en/installation.html): requirements, team install, update, uninstall

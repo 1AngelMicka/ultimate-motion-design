@@ -35,8 +35,9 @@ Ses points forts :
   - 784 styles et prompts, avec un aperçu du résultat dans la [bibliothèque en ligne](https://1angelmicka.github.io/ultimate-motion-design/bibliotheque.html) (`umd styles`).
   - 120 techniques nommées, du match cut au split-flap, pour parler le même langage que le critique (`umd moves`).
   - Des images libres de droits sur Wikimedia Commons, inscrites automatiquement avec leur auteur et leur licence (`umd commons`).
+- **Un vrai skill de motion design, utilisable partout.** [`skills/motion-design`](skills/motion-design/SKILL.md) condense le métier : la boucle en dix étapes et trois validations, douze règles qui séparent le savoir-faire du « slop », les chiffres qui comptent, la typo, la couleur, le son, la caméra, comment juger un travail. Dans Claude Code, il se déclenche tout seul dès qu'on anime ; il s'installe aussi dans Codex, Cursor ou tout agent qui lit les skills, avec ses 52 guides.
 - **Économe et transparent sur les tokens.**
-  - Environ 250 tokens chargés en permanence.
+  - Environ 270 tokens chargés en permanence.
   - Les vérifications mesurables sont faites par le code, sans agent.
   - Une planche contact remplace des dizaines d'images.
   - `/umd:tokens` montre ce que chaque commande a consommé. Voir [Économie de tokens](#économie-de-tokens).
@@ -273,7 +274,7 @@ Le plugin réduit les tokens à trois endroits :
 
 | Mécanisme | Effet |
 | --- | --- |
-| **Presque rien en permanence** | Environ 250 tokens chargés en permanence : la description du skill `motion` et celles des deux agents. Les onze commandes `/umd:*` ne coûtent rien tant qu'on ne les lance pas. Dans un projet umd, le hook de démarrage ajoute environ 150 tokens de contexte. |
+| **Presque rien en permanence** | Environ 270 tokens chargés en permanence : la description du skill `motion` et celles des deux agents. Les onze commandes `/umd:*` ne coûtent rien tant qu'on ne les lance pas. Dans un projet umd, le hook de démarrage ajoute environ 150 tokens de contexte. |
 | **Références à la demande** | 53 guides de 800 à 2 300 tokens chacun, lus un par un, seulement quand ils servent : par exemple la route du projet, puis le guide de son moteur. |
 | **Vérifications faites par le code** | 29 vérifications sur 64 sont décidées par la CLI à partir des mesures FFmpeg, du lint, des licences et des tests navigateur. Les auditeurs ne regardent que ce qui demande un œil. |
 | **Planche contact** | Chaque rendu produit une planche de 16 images, soit une seule image à lire. Claude n'extrait ensuite que 2 à 6 images ciblées si un doute reste. |

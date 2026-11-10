@@ -27,3 +27,5 @@ It must never install anything system-wide without asking you, nor add a licence
 ## With an agent other than Claude Code
 
 The plugin is built for Claude Code, but its engine is a zero-dependency Node CLI: any agent can use it to render an HTML page to video, analyse a video or check licences. The method's steps are plain Markdown files that anyone can read. Details in [AGENTS.md](AGENTS.md).
+
+**The skill alone.** The [`skills/motion-design`](https://github.com/1AngelMicka/ultimate-motion-design/tree/main/skills/motion-design) folder is a standalone skill (one `SKILL.md` and its 52 guides): copy it into your agent's skills folder (`~/.claude/skills/`, `~/.codex/skills/`…), or install it with `npx skills add 1AngelMicka/ultimate-motion-design` and pick `motion-design`. It brings the method and the craft; the plugin adds reproducible rendering, the scored audit and the licence guard.

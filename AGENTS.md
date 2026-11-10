@@ -51,6 +51,8 @@ Do not run `claude plugin …` from inside a running Claude Code session: nested
 
 ## Use without Claude Code (other agents)
 
+**The skill alone:** `skills/motion-design/` is a standalone skill (SKILL.md plus 52 reference guides, generated from the plugin by `tools/build.mjs`). Copy it into the agent's skills folder, or `npx skills add 1AngelMicka/ultimate-motion-design` and pick `motion-design`. It carries the method and the craft; the CLI below adds rendering, measures and the audit.
+
 The engine is a zero-dependency Node CLI usable by any agent:
 
 ```bash

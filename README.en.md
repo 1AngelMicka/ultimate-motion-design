@@ -35,8 +35,9 @@ What it brings:
   - 784 styles and prompts, with a preview of the result in the [online library](https://1angelmicka.github.io/ultimate-motion-design/en/bibliotheque.html) (`umd styles`).
   - 120 named techniques, from match cut to split-flap, so you and the critic speak the same language (`umd moves`).
   - Free images from Wikimedia Commons, recorded automatically with their author and licence (`umd commons`).
+- **A real motion design skill, usable anywhere.** [`skills/motion-design`](skills/motion-design/SKILL.md) condenses the craft: the ten-step loop with three gates, twelve rules that separate craft from slop, the numbers that matter, type, colour, sound, camera, how to judge a piece. In Claude Code it triggers by itself as soon as you animate; it also installs in Codex, Cursor or any agent that reads skills, with its 52 guides.
 - **Token-frugal and transparent.**
-  - About 250 tokens loaded at all times.
+  - About 270 tokens loaded at all times.
   - Measurable checks are done in code, without an agent.
   - A contact sheet replaces dozens of frames.
   - `/umd:tokens` shows what each command used. See [Token economy](#token-economy).
@@ -273,7 +274,7 @@ The plugin cuts tokens in three places:
 
 | Mechanism | Effect |
 | --- | --- |
-| **Almost nothing loaded at all times** | About 250 tokens loaded at all times: the description of the `motion` skill and those of the two agents. The eleven `/umd:*` commands cost nothing until you run them. In a umd project, the startup hook adds about 150 tokens of context. |
+| **Almost nothing loaded at all times** | About 270 tokens loaded at all times: the description of the `motion` skill and those of the two agents. The eleven `/umd:*` commands cost nothing until you run them. In a umd project, the startup hook adds about 150 tokens of context. |
 | **References on demand** | 53 guides of 800 to 2,300 tokens each, read one at a time, only when needed: for example the project's route, then its engine's guide. |
 | **Checks done in code** | 29 of the 64 checks are decided by the CLI from FFmpeg measures, lint, licences and browser tests. The auditors only look at what needs eyes. |
 | **Contact sheet** | Each render produces a 16-frame sheet: a single image to read. Claude then extracts only 2 to 6 targeted frames if a doubt remains. |
