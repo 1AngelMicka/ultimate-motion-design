@@ -10,7 +10,7 @@
 //   plugins/umd/references/**       the index of routes, recipes and engines
 //   plugins/umd/skills/*/SKILL.md   the command list
 //   AGENTS.md, llms.txt             copied to the site root; llms-full.txt is assembled here
-import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync, copyFileSync, rmSync, statSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync, copyFileSync, cpSync, rmSync, statSync } from "node:fs";
 import { join, dirname, resolve, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -120,6 +120,7 @@ const PAGES = [
   { slug: "installation", nav: { fr: "Installation", en: "Install" }, sections: ["install"] },
   { slug: "premier-projet", nav: { fr: "Premier projet", en: "First project" }, content: "first-project.md" },
   { slug: "astuces", nav: { fr: "Astuces et prompts", en: "Tips and prompts" }, content: "tips.md" },
+  { slug: "bibliotheque", nav: { fr: "Bibliothèque de styles", en: "Style library" }, content: "library.md", wide: true },
   { slug: "commandes", nav: { fr: "Commandes", en: "Commands" }, sections: ["commands", "files"], extra: "cli" },
   { slug: "routes", nav: { fr: "Routes et technos", en: "Routes and tech" }, sections: ["routes"], extra: "references" },
   { slug: "qualite", nav: { fr: "Contrôle qualité", en: "Quality checks" }, sections: ["checks"], extra: "referential" },
@@ -211,7 +212,7 @@ function shell({ lang, page, title, html, toc, pagePath }) {
   const up = "../".repeat(pagePath.split("/").length - 1);
   const otherPath = `${LANGS[T.other].base}${page.slug}.html`;
   const nav = PAGES.map((p) => `<a href="${up}${T.base}${p.slug}.html"${p.slug === page.slug ? ' aria-current="page"' : ""}>${p.nav[lang]}</a>`).join("");
-  const tocHtml = toc.filter((x) => x.level === 2).length > 1
+  const tocHtml = !page.wide && toc.filter((x) => x.level === 2).length > 1
     ? `<nav class="toc" aria-label="${T.on}"><p>${T.on}</p>${toc.filter((x) => x.level === 2).map((x) => `<a href="#${x.id}">${x.text}</a>`).join("")}</nav>` : "";
   const desc = lang === "fr" ? "Plugin Claude Code pour produire et auditer du motion design de haute qualité : vidéos, pages animées, 3D. Rendu déterministe, contrôle qualité noté sur 10, licences, tokens." : "Claude Code plugin to make and audit high-end motion design: videos, animated pages, 3D. Deterministic rendering, quality checks scored out of 10, licences, tokens.";
   return `<!doctype html>
@@ -228,7 +229,7 @@ function shell({ lang, page, title, html, toc, pagePath }) {
 <link rel="stylesheet" href="${up}assets/site.css?v=${VERSION}">
 <script>try{const t=localStorage.getItem("umd-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 </head>
-<body${page.hero ? ' class="home"' : ""}>
+<body${page.hero ? ' class="home"' : page.wide ? ' class="wide"' : ""}>
 <a class="skip" href="#main">${T.skip}</a>
 <header class="top">
   <a class="brand" href="${up}${T.base}index.html"><svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><rect x="2" y="5" width="20" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="12" r="2.5" fill="var(--rec)"/><path d="M13 9.5h6M13 12h4M13 14.5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="long">Ultimate Motion Design</span><span class="short">UMD</span></a>
@@ -252,7 +253,8 @@ ${html}
   </main>
   ${tocHtml}
 </div>
-<script src="${up}assets/site.js?v=${VERSION}"></script>
+<script src="${up}assets/site.js?v=${VERSION}"></script>${page.wide ? `
+<script src="${up}assets/library.js?v=${VERSION}"></script>` : ""}
 </body>
 </html>
 `;
@@ -277,11 +279,49 @@ function heroHtml(lang) {
 </section>`;
 }
 
+function galleryHtml(lang) {
+  const fr = lang === "fr";
+  const idx = readJson("plugins/umd/references/styles/index.json");
+  const n = idx.counts;
+  const src = [
+    ["all", fr ? "Tout" : "All", idx.entries.length],
+    ["lemo-opuscar", fr ? "Styles de film" : "Film styles", n["lemo-opuscar"]],
+    ["mg-styles-15", fr ? "Motion graphics notés" : "Scored motion graphics", n["mg-styles-15"]],
+    ["awesome-opus5-5-videos", fr ? "Prompts de créateurs" : "Creators' prompts", n["awesome-opus5-5-videos"]],
+  ];
+  return `<div class="lib" data-src="${lang === "fr" ? "" : "../"}assets/library.json">
+  <div class="lib-bar" role="search">
+    <label class="lib-search"><span class="sr">${fr ? "Rechercher" : "Search"}</span><input type="search" placeholder="${fr ? "Rechercher : néon, papier, keynote, logo, 3D…" : "Search: neon, paper, keynote, logo, 3D…"}" autocomplete="off"></label>
+    <div class="lib-src" role="group" aria-label="${fr ? "Source" : "Source"}">${src.map(([k, l, c], i) => `<button type="button" data-src="${k}" aria-pressed="${i === 0}">${l} <span>${c}</span></button>`).join("")}</div>
+    <label class="lib-cat"><span class="sr">${fr ? "Catégorie" : "Category"}</span><select><option value="">${fr ? "Toutes les catégories" : "All categories"}</option></select></label>
+  </div>
+  <p class="lib-count" aria-live="polite"></p>
+  <ul class="lib-grid"></ul>
+  <p class="lib-more-wrap"><button type="button" class="lib-more" hidden>${fr ? "Afficher plus" : "Show more"}</button></p>
+  <noscript><p>${fr ? "La bibliothèque a besoin de JavaScript. Sans lui : <code>umd styles &lt;mots&gt;</code> dans un terminal." : "The library needs JavaScript. Without it: <code>umd styles &lt;words&gt;</code> in a terminal."}</p></noscript>
+</div>
+<dialog class="lib-dlg" aria-labelledby="lib-dlg-title">
+  <div class="lib-dlg-head"><h2 id="lib-dlg-title"></h2><button type="button" class="lib-close" aria-label="${fr ? "Fermer" : "Close"}">×</button></div>
+  <div class="lib-dlg-body"></div>
+</dialog>`;
+}
+
 // ---------------------------------------------------------------- build
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(join(OUT, "assets"), { recursive: true });
 mkdirSync(join(OUT, "en"), { recursive: true });
-for (const f of readdirSync(join(ROOT, "site", "assets"))) copyFileSync(join(ROOT, "site", "assets", f), join(OUT, "assets", f));
+cpSync(join(ROOT, "site", "assets"), join(OUT, "assets"), { recursive: true });
+// Gallery data: the style index, trimmed to what a card needs; site-hosted previews become relative paths
+{
+  const idx = readJson("plugins/umd/references/styles/index.json");
+  const rel = (u) => (u && u.startsWith(SITE + "/") ? u.slice(SITE.length + 1) : u || null);
+  const items = idx.entries.map((e) => ({
+    id: e.id, s: e.source, k: e.kind, n: e.name, c: e.category, l: e.line, f: e.film || null, d: e.duration_s || null, j: e.jury_score || null,
+    a: e.author || null, t: e.tags || e.uses || [], pp: !!e.partial, p: rel(e.poster_url), v: rel(e.clip_url), w: e.film_url || e.preview_url,
+    g: e.preview_url, x: e.post_url || null, u: e.prompt_url,
+  }));
+  writeFileSync(join(OUT, "assets", "library.json"), JSON.stringify({ generated: idx.generated, items }));
+}
 let pageCount = 0;
 const fullText = { fr: [], en: [] };
 for (const lang of ["fr", "en"]) {
@@ -298,7 +338,8 @@ for (const lang of ["fr", "en"]) {
     if (page.extra === "cli") src += "\n\n" + cliSection(lang);
     if (page.extra === "references") src += "\n\n" + referencesSection(lang);
     if (page.extra === "referential") src += "\n\n" + referentialSection(lang);
-    const { html, toc } = markdown(src, ctx);
+    let { html, toc } = markdown(src, ctx);
+    if (page.wide) html = html.replace("<p>@@GALLERY@@</p>", galleryHtml(lang));
     const h1 = page.hero ? "" : `<h1>${page.nav[lang]}</h1>\n`;
     const body = page.hero ? heroHtml(lang) + "\n" + html : h1 + html;
     const title = page.hero ? `Ultimate Motion Design — ${T.tagline}` : `${page.nav[lang]} · Ultimate Motion Design`;

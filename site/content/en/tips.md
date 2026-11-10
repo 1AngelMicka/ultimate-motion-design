@@ -72,7 +72,7 @@ Replace what is in brackets.
 
 ## Choose a style
 
-Starting from a proven style is the shortest path to a high-end result. `/umd:storyboard` offers you three. You can also search yourself, at no token cost:
+Starting from a proven style is the shortest path to a high-end result. `/umd:storyboard` offers you three. To choose by eye, browse the [Style library](site:bibliotheque): each style has a preview of the result and its prompt. You can also search in a terminal, at no token cost:
 
 ```
 node <plugin>/scripts/umd.mjs styles luxury dark launch

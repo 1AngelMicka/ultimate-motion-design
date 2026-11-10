@@ -166,7 +166,7 @@ S'y ajoutent :
 - **des guides audio :** voix commercialisables, musique et effets sonores, mixage, sous-titres ;
 - **des guides pratiques :** assets, spécifications par plateforme, licences.
 
-**784 styles et prompts éprouvés** servent de point de départ : 66 styles de films de [lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar), 15 styles de motion design de [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) et 703 prompts de [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos). `/umd:storyboard` en propose trois adaptés à ton brief, et `umd styles <mots>` les cherche sans dépenser de tokens. Prompts prêts à copier et conseils : page [Astuces et prompts](https://1angelmicka.github.io/ultimate-motion-design/astuces.html).
+**784 styles et prompts éprouvés** servent de point de départ : 66 styles de films de [lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar), 15 styles de motion design de [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) et 703 prompts de [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos). `/umd:storyboard` en propose trois adaptés à ton brief, et `umd styles <mots>` les cherche sans dépenser de tokens. Pour choisir à l'œil : la [Bibliothèque de styles](https://1angelmicka.github.io/ultimate-motion-design/bibliotheque.html) montre chaque style avec un aperçu du résultat (image ou vidéo) et son prompt à copier. Prompts prêts à copier et conseils : page [Astuces et prompts](https://1angelmicka.github.io/ultimate-motion-design/astuces.html).
 
 Le fichier [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) recense **1 073 dépôts GitHub** vérifiés le 9 novembre 2026, avec des alertes de licence.
 

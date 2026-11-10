@@ -4,6 +4,9 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, relative } from "node:path";
 import { PLUGIN_ROOT } from "./ref.mjs";
 
+// Each entry has a page on the docs site with its still or video and its prompt
+const gallery = (id) => `https://1angelmicka.github.io/ultimate-motion-design/bibliotheque.html#${encodeURIComponent(id)}`;
+
 const fold = (s) => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 const SYN = {
   luxe: "luxury", luxueux: "luxury", premium: "luxury", sombre: "dark", noir: "dark", lumineux: "bright", ludique: "playful", fun: "playful",
@@ -39,7 +42,7 @@ export function searchStyles(query, { source = null, kind = null, limit = 8 } = 
     query, total: idx.entries.length, matches: scored.length,
     results: scored.slice(0, limit).map(({ e, score }) => ({
       id: e.id, name: e.name, category: e.category, line: e.line?.slice(0, 160), uses: e.uses?.length ? e.uses.join(", ") : undefined,
-      tags: e.tags?.length ? e.tags.join(", ") : undefined, jury_score: e.jury_score ?? undefined, preview: e.preview_url, score: Math.round(score * 10) / 10,
+      tags: e.tags?.length ? e.tags.join(", ") : undefined, jury_score: e.jury_score ?? undefined, preview: gallery(e.id), film: e.film_url ?? e.preview_url, score: Math.round(score * 10) / 10,
     })),
     next: "umd styles get <id> downloads the prompt into the project",
   };
@@ -57,5 +60,5 @@ export async function getStyle(id, { cwd = process.cwd() } = {}) {
   const credit = e.source === "awesome-opus5-5-videos" ? `Prompt by ${e.name.split(" by ").pop()} (${e.post_url}), via yihui-dev/awesome-opus5-5-videos`
     : e.source === "lemo-opuscar" ? "Style prompt from lemomo-ai/lemo-opuscar (MIT) by LemoLab" : "Style prompt from Vincentwei1021/mg-styles-15 (MIT)";
   writeFileSync(file, `<!-- ${id} · ${credit} · ${e.prompt_url} -->\n\n${text}`);
-  return { id, name: e.name, file: relative(cwd, file), bytes: text.length, approx_tokens: Math.ceil(text.length / 4), licence: e.licence, credit, preview: e.preview_url };
+  return { id, name: e.name, file: relative(cwd, file), bytes: text.length, approx_tokens: Math.ceil(text.length / 4), licence: e.licence, credit, preview: gallery(id), film: e.film_url ?? e.preview_url };
 }

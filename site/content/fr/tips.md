@@ -72,7 +72,7 @@ Remplace ce qui est entre crochets.
 
 ## Choisir un style
 
-Partir d'un style éprouvé est le raccourci le plus efficace vers un rendu haut de gamme. `/umd:storyboard` te propose trois styles. Tu peux aussi chercher toi-même, sans dépenser de tokens :
+Partir d'un style éprouvé est le raccourci le plus efficace vers un rendu haut de gamme. `/umd:storyboard` te propose trois styles. Pour choisir à l'œil, parcours la [Bibliothèque de styles](site:bibliotheque) : chaque style y a un aperçu du résultat et son prompt. Tu peux aussi chercher dans un terminal, sans dépenser de tokens :
 
 ```
 node <plugin>/scripts/umd.mjs styles luxe sombre lancement

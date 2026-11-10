@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1 — 2026-11-10
+
+- Style library page on the docs site (`bibliotheque.html`, French and English): the 784 styles and prompts as cards with a preview of the result (LemoLab stills, mg-styles-15 silent loops on hover, creators' thumbnails), search in French or English, filters by source and category, and a panel per entry with the film, the credit, `umd styles get <id>` and the prompt read live from its source, ready to copy. Each entry has its own link (`#<id>`).
+- `umd styles` and `umd styles get` now give a `preview` link to that gallery entry and a `film` link.
+- `tools/styles-index.mjs --media` builds the gallery previews (ffmpeg).
+
 ## 0.3.0 — 2026-11-10
 
 - Style library: `umd styles <words>` searches 784 proven styles and prompts (lemo-opuscar 66, mg-styles-15 15, awesome-opus5-5-videos 703) locally, at no token cost; `umd styles get <id>` downloads the chosen prompt. `/umd:storyboard` now starts by offering three styles that fit the brief; `references/styles.md` explains how to adapt a style and lists web reference galleries (free and paid).
