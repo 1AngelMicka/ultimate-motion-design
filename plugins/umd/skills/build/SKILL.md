@@ -15,6 +15,7 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). References: `${CLAU
 
 - Read `.motion/project.json`, `.motion/storyboard.md`, the token file. If the storyboard has no `Stills validated` line, say so and offer `/umd:storyboard` first (the audit blocks without it).
 - Read `routes/<route>.md` and `engines/<engine>.md`. Follow the `motion` skill rules (load it if not loaded).
+- Blender route: before the first draft of the whole film, run the engine A/B on 2 or 3 key frames (EEVEE against Cycles, side by side, `references/engines/blender.md`), write the verdict in `BRIEF.md` and set `render.engine`. EEVEE unless the images show it cannot carry glass, caustics, bounce-lit interiors or dense volumes.
 - `umd rules` prints this project's build rules per domain.
 - Promo, launch, demo, explainer or presentation: read `craft/motion-grammar.md` once (six rules, mechanisms, pacing).
 
@@ -28,7 +29,7 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). References: `${CLAU
 - Audio (when flags say so), with the matching `audio/*.md`:
   1. voice-over from the script (commercial-safe TTS, `audio/voice.md`);
   2. word timestamps (forced alignment when the script is known), then `umd captions words.json --out .motion/captions.ass`, then `umd captions-check`; set `captions.file` and `captions.words` in project.json;
-  3. music and SFX (`audio/music-sfx.md`): place each effect on its cue time from the storyboard's `## Sound cues`;
+  3. music and SFX (`audio/sound-design.md`, then `audio/music-sfx.md` for music): effects from `umd sfx <kind>` (synthesised, no licence) or `umd sounds <words> --cc0` then `umd sounds get <id>`; music from `umd sounds <mood> --music` (offer 3 to 5 candidates by ear), ACE-Step or a MIDI score; place each effect on its cue time from the storyboard's `## Sound cues`;
   4. `umd mix --voice … --music … --sfx file@t … --out audio/mix.wav --backtime` (ducking, fades, −14 LUFS, length = duration_s; `--backtime` makes the track's own ending land on the end card instead of a fade or a cut; `umd hits <music>` lists its final hits, then `--hit s --card s` picks one); set `render.audio` to the mix;
   5. after the next render, `umd sync <video>`: every cue within ±45 ms, otherwise move the effect.
 

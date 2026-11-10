@@ -8,7 +8,7 @@ Claude scripts the scene in `bpy` as files, Blender renders frames headless, FFm
 | --- | --- |
 | Photoreal or physically lit products, packshots, materials (glass, metal, fabric) | Flat graphic, UI or type piece → [html-video.md](html-video.md) |
 | Rigged characters, cloth, fluids, Geometry Nodes motion graphics | Stylised small 3D world that should stay web-native → [threejs-film.md](threejs-film.md) |
-| A model or material library (BlenderKit, Poly Haven) gives the look | No GPU and a short deadline: Cycles frames take minutes each |
+| A model or material library (BlenderKit, Poly Haven) gives the look | No GPU and a short deadline: even EEVEE needs a GPU to be quick |
 
 ## Setup
 
@@ -48,7 +48,9 @@ bpy.ops.wm.save_mainfile()
 
 **5. Life**: keyframe secondary motion (light drift, a slow camera dolly, idle breathing on characters); eyes lead the body by 6–10 frames; nothing frozen on the final shot ([../craft/principles.md](../craft/principles.md)).
 
-**6. Draft fast, final slow.** Stills and drafts at low samples and half resolution; the final at full samples with Cycles.
+**6. EEVEE by default, Cycles when the image needs it.** Drafts and stylised finals (motion design, varnished objects, UI plates, miniatures) render in EEVEE; Cycles only for glass, caustics, interiors carried by bounce light and dense volumes. Decide on an A/B of 2 or 3 key frames, not on principle ([../engines/blender.md](../engines/blender.md), with costs measured on a real project). On that project EEVEE was about 10× faster at the same size for a nearly identical image on varnished objects and UI plates.
+
+**7. 24 or 30 fps for rendered 3D.** Every frame costs render time: 60 → 30 fps halves it. With motion blur (shutter 0.5) slow camera moves stay smooth. Keep 60 fps for HTML pieces, where frames are cheap; agree on it at kickoff.
 
 ### The loop
 
@@ -57,10 +59,11 @@ bpy.ops.wm.save_mainfile()
 | 1. Brief | Reference image, materials list, shot lengths | `BRIEF.md` |
 | 2. Storyboard | Shots with camera, lens, event per shot | `storyboard.md` |
 | 3. Stills | `blender -b scene.blend -f 48` per key frame, next to the reference, fix, repeat | PNG side by side |
+| 3b. Engine | A/B on 2 or 3 key frames (`"engine": "ab"` in the shot config), verdict in `BRIEF.md` | `ab/side_*.png` |
 | 4. Build | Animation keys in `build.py`, assets locked | `scene/`, `assets.lock.json` |
-| 5. Draft render | Low samples, half size, `umd render --draft` | frames + MP4 |
+| 5. Draft render | EEVEE, half size, `umd render --draft` | frames + MP4 |
 | 6. Critique | `umd frames <video> --sheet`, compare to stills | contact sheet |
-| 7. Final | `umd render` (Cycles), then audio mix | MP4 |
+| 7. Final | `umd render --engine <the A/B verdict>`, then audio mix | MP4 |
 | 8. Audit | `/umd:audit` → `/umd:fix` → `umd deliver` | `audit.json` |
 
 ### Cost
@@ -71,10 +74,13 @@ Token cost is moderate (scripts are short; screenshots dominate). Time cost is r
 
 ```json
 {
-  "command": "blender -b scene/scene.blend -E CYCLES -a && ffmpeg -y -framerate 30 -i scene/renders/frame_%04d.png -c:v libx264 -pix_fmt yuv420p -crf 16 out/film.mp4",
+  "engine": "eevee",
+  "command": "blender -b scene/scene.blend --python scene/render.py -a && ffmpeg -y -framerate 30 -i scene/renders/frame_%04d.png -c:v libx264 -pix_fmt yuv420p -crf 16 out/film.mp4",
   "output": "out/film.mp4"
 }
 ```
+
+`umd render` passes the engine to the command in the `UMD_ENGINE` variable (`BLENDER_EEVEE` or `CYCLES`): from `render.engine` in project.json, or `umd render --engine cycles` for one run. `scene/render.py` reads it and sets the engine (the template does: `templates/blender/shot.py`), so the same scene renders with either engine.
 
 `-b` background, `-E` render engine, `-a` animation, `-f N` one frame; options are read in order, so put `-a`/`-f` last. Render a PNG sequence (resumable after a crash), encode once.
 

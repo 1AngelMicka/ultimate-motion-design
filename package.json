@@ -1,6 +1,6 @@
 {
   "name": "ultimate-motion-design",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "The umd CLI of the Ultimate Motion Design plugin: deterministic HTML-to-video rendering, measures, audit, style library. Zero dependencies.",
   "license": "MIT",
   "private": true,

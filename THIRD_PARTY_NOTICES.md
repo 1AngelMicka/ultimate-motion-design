@@ -14,6 +14,8 @@ The style index (`plugins/umd/references/styles/index.json`) lists names, one-li
 
 `plugins/umd/references/moves/index.json` is derived from `apps/web/src/data/moves.json` of [motionvideohq/motionvideo.xyz](https://github.com/motionvideohq/motionvideo.xyz) (MIT License, Copyright (c) 2026 Aniket Pawar; summaries shortened). The seam check (TIM-06) follows the idea of edenfunf/reelmimic's seam ledger; `umd commons` and the narration rules follow Moh4696/cinematic-skill (MIT); the copy rules follow Leonxlnx/cinetic's copy check (MIT); `recipes/series.md` rewrites ideas from @bonsaixbt's article. No code was copied from these projects.
 
+`umd sounds` searches Openverse (WordPress/openverse) and downloads effects and music into the user's project only, under CC0, CC BY or public domain, each with its credit line in the assets lock; nothing from it is bundled. The sound samples on the docs site (`site/assets/sfx/`) are made by `umd sfx` with FFmpeg and are part of this repository (MIT).
+
 The demo film (`site/demo/`) uses Inter (© The Inter Project Authors) and JetBrains Mono (© The JetBrains Mono Project Authors), both under the SIL Open Font License 1.1; their licence files are in `site/demo/fonts/`.
 
 The scoring mechanics, the compact command runner and the auditor pattern come from [quality-pack](https://github.com/1AngelMicka/quality-pack) (MIT, same author).

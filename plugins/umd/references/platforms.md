@@ -67,6 +67,7 @@ ffmpeg -i master.mov -an -vf "scale=1920:-2" -c:v libx264 -pix_fmt yuv420p -crf 
 ## Pitfalls
 
 - 25 or 50 fps sources converted to 30 by frame duplication: judder. Render at the target fps.
+- **Frame rate is a cost decision, made at kickoff.** HTML and UI pieces: 60 fps is cheap and keeps fast type and scrolling crisp. Rendered 3D: 24 or 30 fps with motion blur (shutter 0.5) stays smooth on slow camera moves, and 60 → 30 fps halves the render time. A mixed piece can render its 3D at 30 and its HTML at 60 only if the final is 60 and the 3D frames are each shown twice; usually pick 30 for the whole film.
 - HDR or 10-bit masters uploaded to platforms expecting SDR 8-bit 4:2:0: washed-out colours. Encode yuv420p SDR unless the brief asks for HDR.
 - Duration over a platform limit discovered at upload: check the brief against this table at kickoff.
 - Vertical video with text in platform UI zones (`craft/composition.md`).

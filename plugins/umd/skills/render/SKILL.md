@@ -11,7 +11,7 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). Talk in the project
 
 **Cost:** low in tokens (the CLI returns a compact summary; logs stay on disk), long in wall time for big renders: run it in the background when it may exceed 2 minutes.
 
-1. Read `.motion/project.json` → `render`. If missing, read `routes/<route>.md` (section "Rendering to video with umd") and set it: `{"capture": {"entry": "index.html"}}` for HTML routes, or `{"command": "<engine render command>", "output": "<file>"}`; `render.audio` = the mix if any.
+1. Read `.motion/project.json` → `render`. If missing, read `routes/<route>.md` (section "Rendering to video with umd") and set it: `{"capture": {"entry": "index.html"}}` for HTML routes, or `{"command": "<engine render command>", "output": "<file>"}`; `render.audio` = the mix if any. Blender route: `render.engine` is the A/B verdict written in `BRIEF.md` (`eevee` by default, `cycles` only when the A/B showed EEVEE cannot carry the image); `umd render --engine cycles` overrides it for one run. Before a long 3D final, `umd estimate` gives the time; `--twice` doubles it, so on a render of more than about an hour, check determinism on a short frame range instead and say so.
 2. If `$ARGUMENTS` is `draft`: `umd render --draft` and stop after step 4.
 3. Final: `umd render --twice` (renders twice and compares frame hashes: REN-01 needs it). Web-only projects (`is_web` without `is_video`) skip rendering: say so and go to `/umd:audit`.
 4. Read the JSON summary only. If `ok` is false, read the `signal_lines`, then the log file around the error, fix, render again.

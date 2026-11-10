@@ -18,10 +18,14 @@
 //   still <html|url> --at 0,1.5 [--out dir] [--width W --height H]      Key stills on virtual time
 //   capture <html|url> --out f.mp4 [--fps 30] [--duration s] [--width 1920 --height 1080] [--from s]
 //           [--draft] [--transparent] [--format mp4|webm|mov|gif|png] [--audio f] [--seed n]   Deterministic HTML → video
-//   render [--draft] [--twice] [--no-analyze]                          Render the project (project.json "render"), then analyze
+//   render [--draft] [--twice] [--no-analyze] [--engine eevee|cycles]  Render the project (project.json "render"), then analyze; --engine reaches a
+//           Blender command as UMD_ENGINE (default: render.engine)
 //   mix --voice v.wav --music m.wav [--sfx a.wav@1.2 ...] --out mix.wav [--duck 9] [--lufs -14] [--length s]  (length defaults to duration_s)
 //       [--backtime | --hit s --card s | --music-start s]   Back-time the music: its own ending lands on the end card, one continuous piece
 //   hits <music>                                    Strong attacks near the end of a track (candidates for its final hit)
+//   sounds <words> [--music] [--max 8] [--cc0]      Free sound effects (Freesound, Wikimedia) or music (Jamendo) via Openverse: CC0, CC BY, public domain only
+//   sounds get <id> [--dir assets/audio]            Download as 48 kHz WAV, record author, licence and credit line in assets.lock.json
+//   sfx [<kind>] [--dur s] [--seed n] [--gain dB]   Synthesise an effect (whoosh, swipe, riser, impact, subdrop, click, tick, pop, chime, shimmer, glitch, roomtone)
 //   normalize <in> <out> [--lufs -14] [--tp -1]      loudness <file>
 //   captions <words.json> --out subs.ass|srt|vtt [--style karaoke|pop|line] [--max-chars 32] [--width --height --font --color --highlight]
 //   burn <video> <subs.ass> --out f.mp4             Burn captions in (libass)
@@ -60,7 +64,7 @@ const flags = new Set();
 const opts = {};
 const pos = [];
 // boolean flags never take a value, so `umd capture --draft page.html` keeps page.html as the input
-const BOOL = new Set(["allow-sa", "backtime", "blender", "cuts", "draft", "fix", "force", "incremental", "json", "no-analyze", "sheet", "transparent", "twice"]);
+const BOOL = new Set(["allow-sa", "backtime", "blender", "cc0", "cuts", "music", "draft", "fix", "force", "incremental", "json", "no-analyze", "sheet", "transparent", "twice"]);
 for (let i = 0; i < argv.length; i++) {
   const a = argv[i];
   if (a.startsWith("--")) {
@@ -357,7 +361,11 @@ async function render() {
   const dir = join(md, "renders", id);
   mkdirSync(dir, { recursive: true });
   const fmt = project.format || {};
-  const info = { id, draft, started_at: new Date().toISOString() };
+  // 3D engine for command routes (Blender): passed to the command as UMD_ENGINE; --engine wins over render.engine
+  const ENGINE_IDS = { eevee: "BLENDER_EEVEE", cycles: "CYCLES" };
+  const engineName = String(opt("engine") || r.engine || "").toLowerCase() || null;
+  if (engineName && !ENGINE_IDS[engineName]) die(`--engine must be eevee or cycles (got "${engineName}")`);
+  const info = { id, draft, engine: engineName || undefined, started_at: new Date().toISOString() };
   const doRender = async (suffix) => {
     if (r.capture) {
       const { capture } = await import("./lib/capture.mjs");
@@ -371,7 +379,7 @@ async function render() {
     if (r.command) {
       const { runCommand } = await import("./lib/run.mjs");
       const command = (draft && r.draft_command) || r.command;
-      const res = runCommand(`render${suffix}`, command, { cwd, logDir: join(dir, "logs"), statsFile: statsFile() });
+      const res = runCommand(`render${suffix}`, command, { cwd, logDir: join(dir, "logs"), statsFile: statsFile(), env: engineName ? { UMD_ENGINE: ENGINE_IDS[engineName] } : {} });
       if (res.exit_code !== 0) return { error: res };
       const output = r.output;
       if (!output || !existsSync(resolve(cwd, output))) return { error: { ...res, note: `render.output "${output}" not found after the command` } };
@@ -412,8 +420,8 @@ async function render() {
   const posix = (x) => String(x).split("\\").join("/"); // portable between Windows, macOS and Linux
   info.output = posix(info.output);
   writeFileSync(join(dir, "render.json"), JSON.stringify(info, null, 2));
-  writeFileSync(join(md, "renders", "latest.json"), JSON.stringify({ id, dir: posix(rel(dir)), output: posix(a.output), draft, probe: info.probe || null }, null, 2));
-  out({ id, ok: true, output: a.output, seconds: info.seconds, page_errors: a.capture?.page_errors?.length ? a.capture.page_errors : undefined,
+  writeFileSync(join(md, "renders", "latest.json"), JSON.stringify({ id, dir: posix(rel(dir)), output: posix(a.output), draft, engine: engineName || undefined, probe: info.probe || null }, null, 2));
+  out({ id, ok: true, output: a.output, engine: engineName || undefined, seconds: info.seconds, page_errors: a.capture?.page_errors?.length ? a.capture.page_errors : undefined,
     determinism: determinism ? { identical: determinism.identical, ssim: determinism.ssim } : undefined, analysis: analysisSummary(analysis) });
 }
 
@@ -550,6 +558,21 @@ async function main() {
       }
       if (!pos.length) die("Usage: umd commons <words> [--allow-sa] [--limit 12]   |   umd commons get \"File:…\"");
       return out(await c.searchCommons(pos.join(" "), { limit: Number(opt("limit", 12)), allowSa: flags.has("allow-sa") }));
+    }
+    case "sounds": {
+      const so = await import("./lib/sounds.mjs");
+      if (pos[0] === "get") {
+        if (!pos[1]) die("Usage: umd sounds get <id> [--dir assets/audio] [--name file-name]");
+        return out(await so.getSound(pos[1], { cwd, dir: opt("dir", "assets/audio"), name: opt("name") }));
+      }
+      if (!pos.length) die("Usage: umd sounds <words> [--music] [--max 8] [--min 1] [--cc0] [--limit 10]   |   umd sounds get <id>");
+      return out(await so.searchSounds(pos.join(" "), { music: flags.has("music"), limit: Number(opt("limit", 10)), maxSeconds: opt("max") ? Number(opt("max")) : null,
+        minSeconds: opt("min") ? Number(opt("min")) : null, cc0: flags.has("cc0") }));
+    }
+    case "sfx": {
+      const { KINDS, makeSfx } = await import("./lib/sfx.mjs");
+      if (!pos[0]) return out({ kinds: Object.fromEntries(Object.entries(KINDS).map(([k, v]) => [k, `${v.d} s: ${v.use}`])), usage: "umd sfx <kind> [--out assets/audio/sfx-<kind>.wav] [--dur s] [--seed n] [--gain dB]" });
+      return out(makeSfx(pos[0], { cwd, out: opt("out"), dur: opt("dur") ? Number(opt("dur")) : null, seed: Number(opt("seed", 7)), gainDb: Number(opt("gain", 0)) }));
     }
     case "hits": {
       if (!pos[0]) die("Usage: umd hits <music>");

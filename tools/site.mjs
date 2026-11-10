@@ -122,6 +122,7 @@ const PAGES = [
   { slug: "premier-projet", nav: { fr: "Premier projet", en: "First project" }, content: "first-project.md" },
   { slug: "astuces", nav: { fr: "Astuces et prompts", en: "Tips and prompts" }, content: "tips.md" },
   { slug: "bibliotheque", nav: { fr: "Bibliothèque de styles ↗", en: "Style library ↗" }, redirect: "library/" },
+  { slug: "son", nav: { fr: "Son et musique", en: "Sound and music" }, content: "sound.md", sfx: true },
   { slug: "commandes", nav: { fr: "Commandes", en: "Commands" }, sections: ["commands", "files"], extra: "cli" },
   { slug: "routes", nav: { fr: "Routes et technos", en: "Routes and tech" }, sections: ["routes"], extra: "references" },
   { slug: "qualite", nav: { fr: "Contrôle qualité", en: "Quality checks" }, sections: ["checks"], extra: "referential" },
@@ -279,6 +280,19 @@ function heroHtml(lang) {
 </section>`;
 }
 
+// the synthesised effects palette (umd sfx), with a player per sound; samples in site/assets/sfx/
+async function sfxHtml(lang, up) {
+  const { KINDS } = await import(pathToFileURL(join(ROOT, "plugins", "umd", "scripts", "lib", "sfx.mjs")).href);
+  const FR = { whoosh: "un mouvement qui traverse l'image, une transition ; culmine à l'arrivée", swipe: "un glissement rapide, une carte qu'on chasse, un swipe d'interface",
+    riser: "la tension avant une révélation ; finit pile sur l'image du coup", impact: "le moment fort, un logo qui se pose, une coupe franche sur un temps",
+    subdrop: "du poids sous un impact ou un changement de scène, plus senti qu'entendu", click: "un clic de curseur, un interrupteur, une touche",
+    tick: "un pas de compteur, une horloge, un élément de liste qui apparaît", pop: "une bulle, une icône ou un badge qui apparaît",
+    chime: "un état réussi, une notification, une fin douce", shimmer: "une brillance sur une révélation haut de gamme, la lumière qui passe sur du verre",
+    glitch: "une coupure numérique, une erreur, une transition tech", roomtone: "un souffle de pièce sous les silences (ici remonté de 22 dB pour l'écoute)" };
+  const cards = Object.entries(KINDS).map(([k, v]) => `<li class="sfx"><div class="sfx-head"><code>umd sfx ${k}</code><span>${v.d} s</span></div><p>${lang === "fr" ? FR[k] : v.use + (k === "roomtone" ? " (raised 22 dB here so you can hear it)" : "")}</p><audio controls preload="none" src="${up}assets/sfx/${k}.mp3"></audio></li>`);
+  return `<ul class="sfx-grid">${cards.join("")}</ul>`;
+}
+
 // ---------------------------------------------------------------- build
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(join(OUT, "assets"), { recursive: true });
@@ -338,6 +352,7 @@ for (const lang of ["fr", "en"]) {
     if (page.extra === "references") src += "\n\n" + referencesSection(lang);
     if (page.extra === "referential") src += "\n\n" + referentialSection(lang);
     let { html, toc } = markdown(src, ctx);
+    if (page.sfx) html = html.replace("<p>@@SFX@@</p>", await sfxHtml(lang, "../".repeat(pagePath.split("/").length - 1)));
     const h1 = page.hero ? "" : `<h1>${page.nav[lang]}</h1>\n`;
     const body = page.hero ? heroHtml(lang) + "\n" + html : h1 + html;
     const title = page.hero ? `Ultimate Motion Design — ${T.tagline}` : `${page.nav[lang]} · Ultimate Motion Design`;

@@ -122,7 +122,7 @@ Record every asset the moment it enters the project (path, source, URL, licence,
 | A proven structure for a kind of piece | `${CLAUDE_PLUGIN_ROOT}/references/recipes/` (concepts, launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions, narrative-short, series, match-reference) |
 | How to produce the whole piece in a route | `${CLAUDE_PLUGIN_ROOT}/references/routes/` (html-video, threejs-film, blender, director, web-page, explainer) |
 | An engine's API, patterns and determinism rules | `${CLAUDE_PLUGIN_ROOT}/references/engines/` (hyperframes, remotion, revideo, gsap, motion, css-waapi, scroll, threejs, shaders, lottie, rive, svg, canvas-2d, manim, blender, diagrams-code, effect-libraries) |
-| Voice, music and effects, mix, captions | `${CLAUDE_PLUGIN_ROOT}/references/audio/` |
+| Voice, music and effects, mix, captions; which sound on which picture event | `${CLAUDE_PLUGIN_ROOT}/references/audio/` (start with `sound-design.md`) |
 | Images, icons, fonts; platform specs; licence traps | `${CLAUDE_PLUGIN_ROOT}/references/assets.md`, `${CLAUDE_PLUGIN_ROOT}/references/platforms.md`, `${CLAUDE_PLUGIN_ROOT}/references/licenses.md` |
 | A proven style to start from | `${CLAUDE_PLUGIN_ROOT}/references/styles.md`. **Before deciding any look, run `umd styles match`**: it ranks 1 323 styles, prompts and blocks against BRIEF.md and project.json, with reasons and previews (no tokens); then `umd styles get <id>` |
 

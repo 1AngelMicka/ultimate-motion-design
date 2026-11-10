@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.0 — 2026-11-10
+
+- **Sound, from picture events to a finished soundtrack.**
+  - `umd sfx <kind>`: twelve effects synthesised by FFmpeg (whoosh, swipe, riser, impact, sub drop, click, tick, pop, chime, shimmer, glitch, room tone). Deterministic, the same peak level for all, no download and no licence to track; recorded in the assets lock with the recipe that made them.
+  - `umd sounds <words>` and `umd sounds get <id>`: recorded effects (Freesound, Wikimedia Commons) and music (Jamendo, `--music`) through Openverse, CC0, CC BY and public domain only. A download becomes 48 kHz WAV and is recorded with author, licence and ready credit line; `umd licenses` lists the credits to publish.
+  - A new guide, `audio/sound-design.md`: the four layers and their levels, what each project type needs, a picture event → sound table with timings, where files come from, a cue sheet, and the full command chain. Kickoff asks about sound; the storyboard picks each cue from the table; the build uses the new commands.
+  - A "Sound and music" page on the site, with the palette to listen to.
+- **Blender: EEVEE by default** (field report 3.13). Drafts and stylised finals render in EEVEE; Cycles only for glass, caustics, interiors carried by bounce light and dense volumes, decided by an A/B on 2 or 3 key frames. The guides carry the costs measured on one real project with their context (Blender 5.1.2, Radeon RX 7900 XTX with HIP, i7-13700K: about 10× faster at the same size on that project), the EEVEE settings that hold up on 5.1 and the engine id `BLENDER_EEVEE`. `umd render --engine eevee|cycles` (or `render.engine`) passes the engine to the command as `UMD_ENGINE`; the template `templates/blender/shot.py` reads it, renders a sequence for `umd render` and has an A/B mode. Checked by real renders with both engines.
+- **Frame rate at kickoff** (3.14): 60 fps for HTML, 24 or 30 fps with motion blur for rendered 3D, since 60 → 30 halves the render.
+- **Style search**: entries holding every word come first, French and English synonyms (argile/clay, maquette/diorama/miniature, personnage/character, pièce/room…), and each result says why it matched. "clay stop motion" now finds the stop-motion styles first.
+
 ## 0.7.1 — 2026-11-10
 
 Fixes from the first real project made with the plugin (a presentation film, Windows 11, Blender 5.1.2, Radeon RX 7900 XTX).

@@ -278,6 +278,48 @@ test("styles get writes into .motion/styles even before init; the npx bin exists
   assert.ok(readFileSync(join(ROOT, pkg.bin.umd), "utf8").startsWith("#!/usr/bin/env node"));
 });
 
+test("umd sfx makes every kind at its length and level, the same file twice", { skip: !hasFfmpeg() && "ffmpeg not installed" }, () => {
+  const d = tmp();
+  const kinds = Object.keys(JSON.parse(umd(["sfx"], d).stdout).kinds);
+  assert.ok(kinds.length >= 12 && kinds.includes("riser") && kinds.includes("impact"));
+  for (const k of kinds) {
+    const r = umd(["sfx", k, "--out", `a/${k}.wav`], d);
+    assert.equal(r.status, 0, `${k}: ${r.stderr}`);
+    const st = spawnSync("ffmpeg", ["-hide_banner", "-i", join(d, "a", `${k}.wav`), "-af", "astats=metadata=0:measure_perchannel=none", "-f", "null", "-"], { encoding: "utf8" }).stderr;
+    const peak = Number((st.match(/Peak level dB:\s*(-?[\d.]+)/) || [])[1]);
+    if (k === "roomtone") assert.ok(peak < -30, `${k} peak ${peak}`); else assert.ok(peak > -2.5 && peak < -0.9, `${k} peak ${peak}`);
+  }
+  umd(["sfx", "whoosh", "--out", "b/whoosh.wav"], d);
+  assert.deepEqual(readFileSync(join(d, "a", "whoosh.wav")), readFileSync(join(d, "b", "whoosh.wav")));
+  const lock = JSON.parse(readFileSync(join(d, ".motion", "assets.lock.json"), "utf8"));
+  assert.ok(lock.assets.some((a) => a.path === "a/riser.wav" && a.license === "own work"));
+  assert.notEqual(umd(["sfx", "kazoo"], d).status, 0);
+});
+
+test("umd render passes the 3D engine to a command route", () => {
+  const d = tmp();
+  assert.equal(umd(["init"], d).status, 0);
+  const pf = join(d, ".motion", "project.json");
+  const p = JSON.parse(readFileSync(pf, "utf8"));
+  p.render = { engine: "eevee", command: `"${process.execPath}" -e "require('fs').writeFileSync('engine.txt', process.env.UMD_ENGINE || 'none')"`, output: "engine.txt" };
+  writeFileSync(pf, JSON.stringify(p));
+  const a = JSON.parse(umd(["render", "--no-analyze"], d).stdout);
+  assert.equal(a.engine, "eevee");
+  assert.equal(readFileSync(join(d, "engine.txt"), "utf8"), "BLENDER_EEVEE");
+  umd(["render", "--no-analyze", "--engine", "cycles"], d);
+  assert.equal(readFileSync(join(d, "engine.txt"), "utf8"), "CYCLES");
+  assert.equal(JSON.parse(readFileSync(join(d, ".motion", "renders", "latest.json"), "utf8")).engine, "cycles");
+  assert.notEqual(umd(["render", "--no-analyze", "--engine", "vray"], d).status, 0);
+});
+
+test("style search puts entries holding every word first, with French synonyms", () => {
+  const s1 = JSON.parse(umd(["styles", "clay", "stop", "motion", "--limit", "3"], tmp()).stdout);
+  assert.ok(s1.results.every((r) => r.why.startsWith("2/2")), JSON.stringify(s1.results.map((r) => r.id)));
+  assert.ok(!s1.results.some((r) => r.id === "mg:01-flat-vector"));
+  const s2 = JSON.parse(umd(["styles", "argile", "maquette", "--limit", "5"], tmp()).stdout);
+  assert.ok(s2.matches > 0 && s2.results.some((r) => /diorama|miniature|tilt/.test(r.id + r.name.toLowerCase())));
+});
+
 test("umd sync measures cues on a synthetic clip", { skip: !hasFfmpeg() && "ffmpeg not installed" }, () => {
   const dir = mkdtempSync(join(tmpdir(), "umd-sync-"));
   const f = join(dir, "beeps.mp4");

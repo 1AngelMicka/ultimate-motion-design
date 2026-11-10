@@ -205,3 +205,11 @@ body.wide main { max-width: 1120px; }
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
 }
+
+/* ---- sound palette */
+.sfx-grid { list-style: none; margin: var(--s6) 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--s4); }
+.sfx { padding: var(--s3) var(--s4) var(--s4); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); display: flex; flex-direction: column; gap: var(--s2); }
+.sfx-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s2); }
+.sfx-head span { color: var(--muted); font: 12px var(--mono); }
+.sfx p { margin: 0; font-size: 14px; color: var(--muted); flex: 1 1 auto; }
+.sfx audio { width: 100%; height: 36px; }

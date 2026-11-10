@@ -47,11 +47,11 @@ Do not run `claude plugin …` from inside a running Claude Code session: nested
 2. From then on the user types `/umd:go` to continue. It runs the next step (storyboard, build, render, audit, fix, deliver) and stops at decisions that belong to the user: approving the key stills, accepting a licence exception, delivering.
 3. Results: the audit report is `.motion/AUDIT.md` (score out of 10, blockers, fixes); renders and their contact sheets are in `.motion/renders/<id>/`; deliverables in `deliverables/`.
 4. Token use: `/umd:tokens`. Cheapest audit: `/umd:audit quick` (automatic checks only, no agent).
-5. Resources, at no token cost: `umd styles match` (ranks 1 323 styles, prompts and blocks against the brief), `umd styles <words> [--project logo --tier 2 …]` (previews at https://1angelmicka.github.io/ultimate-motion-design/library/), `umd moves <words>` (120 named techniques), `umd commons <words>` (free images, recorded in the assets lock). Every link the project used is in `SOURCES.md`.
+5. Resources, at no token cost: `umd styles match` (ranks 1 323 styles, prompts and blocks against the brief), `umd styles <words> [--project logo --tier 2 …]` (previews at https://1angelmicka.github.io/ultimate-motion-design/library/), `umd moves <words>` (120 named techniques), `umd commons <words>` (free images, recorded in the assets lock), `umd sounds <words> [--music]` (free effects and music, CC0/CC BY, recorded with their credit line), `umd sfx <kind>` (effects synthesised on the spot). Every link the project used is in `SOURCES.md`.
 
 ## Use without Claude Code (other agents)
 
-**The skill alone:** `skills/motion-design/` is a standalone skill (SKILL.md plus 53 reference guides, generated from the plugin by `tools/build.mjs`). Copy it into the agent's skills folder, or `npx skills add 1AngelMicka/ultimate-motion-design` and pick `motion-design`. It carries the method and the craft; the CLI below adds rendering, measures and the audit.
+**The skill alone:** `skills/motion-design/` is a standalone skill (SKILL.md plus 54 reference guides, generated from the plugin by `tools/build.mjs`). Copy it into the agent's skills folder, or `npx skills add 1AngelMicka/ultimate-motion-design` and pick `motion-design`. It carries the method and the craft; the CLI below adds rendering, measures and the audit.
 
 The engine is a zero-dependency Node CLI usable by any agent:
 

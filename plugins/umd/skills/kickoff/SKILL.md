@@ -22,9 +22,10 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (written `umd` below). Refer
 ## 2. Ask (one AskUserQuestion call, up to 4 questions, skip what `$ARGUMENTS` or the files already answer)
 
 - **What**: promo / product launch · presentation video · explainer · social short (9:16) · narrative animated short · logo animation · animated web page. → `profile`: promo, presentation, explainer, social, film, logo, web.
-- **Format and length**: platform(s), aspect (16:9, 9:16, 1:1, 4:5), target duration, sound on or off by default.
+- **Format and length**: platform(s), aspect (16:9, 9:16, 1:1, 4:5), target duration, sound on or off by default, and the **frame rate**, with its cost: HTML pieces render cheaply at 60 fps (fast UI and type stay crisp); rendered 3D (Blender, a heavy three.js scene) at 24 or 30 fps with motion blur, since 60 → 30 fps halves the render time. Decide it now: changing it later costs hours of rendering. → `format.fps`.
 - **Look**: references described in words (shot length, camera, how things enter, palette, type), brand assets available, and who picks the style from the library: "show me 3 options" (`style_choice: "ask"`, default) or "choose for me" (`"auto"`). Put the mood and medium words in BRIEF.md: `umd styles match` reads them.
 - **Characters on screen?** (people, mascots, animals). Say the cost: made in code (HTML, three.js, Blender scripts) they often look stiff and take the most rounds; a concept without characters (objects, hands, cursors, silhouettes, type) is safer. → `flags.has_characters`.
+- **Sound**: music (library, generated, composed, or none), voice-over, the feel of the effects (clean UI clicks, cinematic hits, real foley), and whether the piece must work muted (social) or stay silent until a click (web). → `flags.has_music`, `has_voice`; the answer goes in `BRIEF.md` under `## Sound`.
 - **Use and licences**: commercial? team size if Remotion is an option (free up to 3 employees, company licence above)? Voice-over? Music?
 - **Ambition** (only if unclear): professional (`quality_target` 7, fewer rounds), agency (8, default) or award level (9, more rounds and tokens).
 

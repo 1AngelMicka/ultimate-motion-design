@@ -65,17 +65,22 @@ export async function getCommons(title, { cwd = process.cwd(), dir = "assets/com
   const file = join(absDir, name.replace(/\.\w+$/, "") + ext);
   writeFileSync(file, buf);
   const rel = relative(cwd, file).replace(/\\/g, "/");
+  const entry = { path: rel, source: "Wikimedia Commons", url: it.page, license: it.licence, author: it.author, credit_line: `${t.slice(5)} by ${it.author}, ${it.licence}, via Wikimedia Commons`, ...(it.class === "sa" ? { note: "share-alike: adaptations must use the same licence" } : {}) };
+  return { file: rel, bytes: buf.length, ...entry, lock: recordAsset(cwd, entry) };
+}
+
+// add or replace one entry (by path) in .motion/assets.lock.json; never rewrites a lock that is not valid JSON
+export function recordAsset(cwd, entry) {
   const lockFile = join(cwd, ".motion", "assets.lock.json");
   let lock = { assets: [] };
   if (existsSync(lockFile)) {
     try { lock = JSON.parse(readFileSync(lockFile, "utf8")); }
-    catch (e) { throw new Error(`${shown(cwd, lockFile)} is not valid JSON (${e.message}): fix it first, nothing was changed. The file was downloaded to ${rel}.`); }
+    catch (e) { throw new Error(`${shown(cwd, lockFile)} is not valid JSON (${e.message}): fix it first, nothing was changed. The file was downloaded to ${entry.path}.`); }
   }
   const list = Array.isArray(lock) ? lock : (lock.assets ||= []);
-  const entry = { path: rel, source: "Wikimedia Commons", url: it.page, license: it.licence, author: it.author, credit_line: `${t.slice(5)} by ${it.author}, ${it.licence}, via Wikimedia Commons`, ...(it.class === "sa" ? { note: "share-alike: adaptations must use the same licence" } : {}) };
-  const i = list.findIndex((a) => a.path === rel);
+  const i = list.findIndex((a) => a.path === entry.path);
   if (i >= 0) list[i] = entry; else list.push(entry);
   mkdirSync(join(cwd, ".motion"), { recursive: true });
   writeFileSync(lockFile, JSON.stringify(Array.isArray(lock) ? list : lock, null, 2) + "\n");
-  return { file: rel, bytes: buf.length, ...entry, lock: shown(cwd, lockFile) };
+  return shown(cwd, lockFile);
 }

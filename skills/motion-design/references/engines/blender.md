@@ -29,9 +29,55 @@ Full 3D DCC driven from Python: modelling, materials, lights, keyframes, Geometr
 
 A user who declines the MCP loses nothing essential: the route runs on scripts. Start from `${CLAUDE_PLUGIN_ROOT}/templates/blender/shot.py` (tested on Blender 5.1): GPU set-up, animation, camera, compositor and a one-frame check, with the patterns below.
 
+## EEVEE by default, Cycles when the image needs it
+
+| Engine | Default for | Choose it when |
+| --- | --- | --- |
+| **EEVEE** (`BLENDER_EEVEE`) | Drafts **and** stylised finals: motion design, varnished or painted objects, UI and interface plates, miniatures, type in 3D | Almost always first: the A/B test below decides |
+| **Cycles** (`CYCLES`) | Only what EEVEE cannot carry | Glass and liquids seen through, caustics, an interior whose look comes from bounce light, dense volumes (fog, smoke) in the light |
+
+The scene, materials and lights are the same for both: the engine is picked at render time, nothing is rebuilt. `templates/blender/shot.py` reads it from its config or from `UMD_ENGINE`, which `umd render --engine eevee|cycles` sets.
+
+**A/B test before choosing, on images, not on principle.** Pick 2 or 3 key frames that carry the look (the hero object, the darkest interior, the most reflective surface), render them with both engines, put them side by side:
+
+```bash
+blender -b --factory-startup --python shot.py -- --shot-config ab.json      # {"engine": "ab", "frames": [1, 45, 90], "ab_dir": "//ab"}
+ffmpeg -i ab/f0045_eevee.png -i ab/f0045_cycles.png -filter_complex hstack ab/side_0045.png
+```
+
+Write the verdict in `BRIEF.md` (engine, why, exposure offset if any) and render the film with it. If only one shot needs Cycles, render that shot in Cycles and the rest in EEVEE.
+
+**EEVEE settings that hold up for a final** (`scene.eevee`, checked on 5.1.2):
+
+```python
+e = scene.eevee
+e.taa_render_samples = 64
+e.use_raytracing = True; e.ray_tracing_options.use_denoise = True
+e.use_shadows = True; e.shadow_ray_count = 2; e.shadow_step_count = 8
+e.use_fast_gi = True; e.fast_gi_method = "GLOBAL_ILLUMINATION"
+e.use_volumetric_shadows = True
+scene.view_settings.exposure = 0.5   # only if the A/B shows EEVEE darker (bounce-lit interiors)
+```
+
+### Measured costs (one machine, one project: read them as an order of magnitude)
+
+Measured on a real presentation film, 2026-11-10: Blender 5.1.2, Radeon RX 7900 XTX with HIP, Core i7-13700K, Windows 11. Same scene, same 174-frame shot, whole-process time with start-up. The EEVEE run happened while a Cycles render was still using the GPU, so EEVEE alone is likely faster.
+
+| Engine | Size | Settings | Shot (174 frames) | Per frame |
+| --- | --- | --- | --- | --- |
+| Cycles | 1280×720 | 24 samples + OIDN denoiser | 6 min 32 s | ~2.3 s |
+| EEVEE | 1920×1080 | 64 samples, screen-space ray tracing + denoise, fast GI | 1 min 34 s | ~0.5 s |
+
+At the same size EEVEE was about 10 times faster on that machine. Extrapolated to that project's 43 s film at 30 fps (1,290 frames per format): about 12 minutes in EEVEE at 1080p against an estimated 8 to 12 hours in Cycles at delivery quality. Two formats went from two nights of rendering to half an hour, so the whole film could be iterated several times a day. Your figures depend on the GPU, the scene and the settings: time one frame of your own scene with `umd estimate`.
+
+What it looked like on that project (same frames, Cycles 96 samples against EEVEE):
+
+- a varnished hero object (red, light edges, floor reflections) and UI plates floating in space: nearly identical;
+- a living-room interior lit by bounce light in the evening: EEVEE clearly darker (less light from the walls) and slightly grainy in the blacks; +0.5 EV exposure was enough for a preview.
+
 ## GPU: Cycles renders on the CPU until told otherwise
 
-In `-b` mode Cycles uses the CPU unless the script picks a device. Call this before rendering; it tries each backend and keeps the first that has a device:
+EEVEE uses the GPU by itself; this section is for Cycles. In `-b` mode Cycles uses the CPU unless the script picks a device. Call this before rendering; it tries each backend and keeps the first that has a device:
 
 ```python
 def setup_gpu(scene):
@@ -63,7 +109,7 @@ AMD cards use **HIP** (Windows and Linux, recent drivers), NVIDIA **OptiX** (RTX
 | `glare.glare_type = "BLOOM"`, node options as attributes | Options are inputs: `glare.inputs["Type"].default_value = "Bloom"`, `"Threshold"`, `"Strength"`, `"Size"`, `"Quality"` |
 | `obj.animation_data.action.fcurves` to tweak keys | Actions are slotted: insert keys on the owner (`keyframe_insert`) and leave the F-curves alone unless you need handles |
 | `mat.use_nodes = True` | A new material already has its node tree (`use_nodes` is deprecated, removed in 6.0) |
-| EEVEE id `BLENDER_EEVEE_NEXT` | Check `blender -b -E help` for this version's ids |
+| EEVEE id `BLENDER_EEVEE_NEXT` (4.2 to 4.4) | `BLENDER_EEVEE` (checked with `blender -b -E help` on 5.1.2: `BLENDER_EEVEE`, `BLENDER_WORKBENCH`, `CYCLES`) |
 
 The compositor recipe, tested on 5.1:
 
@@ -135,21 +181,18 @@ Check one frame before the sequence: `scene.frame_set(n)`, then `bpy.ops.render.
 Render frames headless, then encode. Argument order matters: options apply to the render actions that follow them, so put `-o`, `-F`, `-E`, `-s`, `-e` **before** `-a` or `-f`.
 
 ```bash
-blender -b scene.blend -E CYCLES -o //frames/f_#### -F PNG -s 1 -e 150 -a   # animation
+blender -b scene.blend -E BLENDER_EEVEE -o //frames/f_#### -F PNG -s 1 -e 150 -a   # animation (EEVEE; CYCLES when the A/B says so)
 blender -b scene.blend -o //stills/s_#### -F PNG -f 75                       # one frame (look check)
 blender -b scene.blend --python setup_render.py -a                            # script sets samples, engine, then renders
 blender -b -E help                                                             # list engine ids for this version
 ffmpeg -framerate 30 -i frames/f_%04d.png -c:v libx264 -crf 16 -pix_fmt yuv420p out/shot.mp4
 ```
 
-`-b` background, `-E` engine (`CYCLES`; get the exact EEVEE id from `-E help`, it changed between 4.x and 5.x), `-o` output path (`//` = relative to the .blend, `####` = frame number), `-F` format, `-s/-e` start/end, `-a` render animation, `-f N` single frame, `-P`/`--python` run a script, `--python-exit-code 1` to fail the process on a Python error. Then `umd analyze out/shot.mp4`.
+`-b` background, `-E` engine (`BLENDER_EEVEE` or `CYCLES` in 5.x; `BLENDER_EEVEE_NEXT` in 4.2 to 4.4), `-o` output path (`//` = relative to the .blend, `####` = frame number), `-F` format, `-s/-e` start/end, `-a` render animation, `-f N` single frame, `-P`/`--python` run a script, `--python-exit-code 1` to fail the process on a Python error. Then `umd analyze out/shot.mp4`.
 
-| Engine | Use | Typical cost (1080p, mid GPU) |
-| --- | --- | --- |
-| EEVEE | Stylised, motion graphics, previews, most product spins | Fractions of a second to a few seconds per frame |
-| Cycles | Glass, caustics, accurate GI, hero shots | Seconds to minutes per frame; use denoising + adaptive sampling, cap samples (128–512) |
+Engine choice and measured costs: see "EEVEE by default, Cycles when the image needs it" above. Cycles finals: denoising and adaptive sampling on, samples capped (128 to 512).
 
-Always render a draft first (EEVEE or Cycles at 25–50% resolution, low samples), check a contact sheet (`umd frames --sheet`), then the final. Keep the PNG sequence: a crash mid-render resumes from the last frame (`-s`).
+Always render a draft first (EEVEE at 50% resolution), check a contact sheet (`umd frames --sheet`), then the final. Keep the PNG sequence: a crash mid-render resumes from the last frame (`-s`).
 
 ## Pitfalls
 
@@ -161,6 +204,9 @@ Always render a draft first (EEVEE or Cycles at 25–50% resolution, low samples
 | Flicker between frames (animated noise seed, adaptive sampling) | Fixed seed or "animated seed" deliberately; same settings for every frame |
 | Missing textures on the render machine | `File → External Data → Pack Resources` or relative paths; local assets only |
 | Tencent/Hunyuan or unknown-licence assets in client work | Use CC0/royalty-free sources; `umd licenses` (LIC) |
+| Hours of Cycles for a stylised film | EEVEE, after an A/B on 2 or 3 key frames |
+| EEVEE darker on an interior | Bounce light: +0.5 EV exposure, or Cycles for that shot only |
+| 60 fps asked for a 3D film | 24 or 30 fps with motion blur (`render.use_motion_blur`, shutter 0.5) halves the render; keep 60 fps for HTML |
 | Long render discovered wrong at the end | Stills at key frames first (`-f`), then a draft animation; `umd estimate` times one frame and multiplies |
 | Render is slow, Cycles on the CPU | `setup_gpu()` above; the log must print `GPU HIP/OPTIX/…` |
 | `AttributeError: 'Scene' object has no attribute 'node_tree'` | Blender 5.x compositor: `scene.compositing_node_group` (above) |

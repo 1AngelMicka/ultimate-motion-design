@@ -39,22 +39,48 @@ function passes(e, { source, kind, tier, ...facets }) {
   return true;
 }
 
+// search: a query word → the words that count as the same thing, French and English
+const ALT_GROUPS = [
+  ["clay", "argile", "claymation", "plasticine", "pate a modeler", "stop-motion"],
+  ["stop-motion", "stop motion", "claymation", "brick"],
+  ["diorama", "maquette", "miniature", "tilt-shift"],
+  ["character", "personnage", "personnages", "characters", "mascot", "mascotte", "figure"],
+  ["room", "salon", "interior", "interieur", "living room"],
+  ["glass", "verre"], ["paper", "papier", "collage"], ["watercolor", "aquarelle"], ["ink", "encre"], ["neon", "néon"],
+  ["data", "donnees", "chart", "graphique"], ["map", "carte"], ["logo", "ident", "sting"], ["type", "typo", "typographie", "texte", "kinetic"],
+];
+const ALT = {};
+for (const g of ALT_GROUPS) for (const w of g) ALT[fold(w)] = [...new Set([...(ALT[fold(w)] || []), ...g.map(fold)])];
+const SEARCH_STOP = new Set("une des les pour avec dans sur the and for with from video videos animation animee motion design style".split(" "));
+
 export function searchStyles(query, { limit = 8, ...filters } = {}) {
   const idx = loadStyles();
-  const terms = fold(query).split(/[^a-z0-9:-]+/).filter((t) => t.length > 1).map((t) => SYN[t] || t);
+  const q = fold(query).replace(/stop[\s-]+motion/g, "stop-motion");
+  const terms = [...new Set(q.split(/[^a-z0-9:-]+/).filter((t) => t.length > 1 && !SEARCH_STOP.has(t)))];
+  const alts = terms.map((t) => [...new Set([t, ...(ALT[t] || []), ...(SYN[t] ? [SYN[t]] : [])])]);
+  const words = (x) => ` ${fold(x).replace(/[^a-z0-9:-]+/g, " ")} `;
   const scored = [];
   for (const e of idx.entries) {
     if (!passes(e, filters)) continue;
-    const fields = [[e.name, 4], [e.category, 3], [(e.uses || []).join(" "), 3], [(e.tags || []).join(" "), 2], [Object.values(e.facets || {}).flat().join(" "), 2], [e.line, 1], [e.film, 1]];
-    let score = 0;
-    for (const t of terms) for (const [f, w] of fields) if (fold(f).includes(t)) score += w;
-    if (!terms.length) score = 1;
-    if (score > 0) scored.push({ e, score: score + (e.tier || 1) * 1.2 });
+    const fields = [["name", e.name, 4], ["category", e.category, 3], ["uses", (e.uses || []).join(" "), 3], ["tags", (e.tags || []).join(" "), 2],
+      ["facets", Object.values(e.facets || {}).flat().join(" "), 2], ["line", e.line, 1], ["film", e.film, 1]].map(([n, v, w]) => [n, words(v), w]);
+    // each query word counts once, in its best field; entries holding more of the words come first
+    let matched = 0, weight = 0;
+    const why = [];
+    alts.forEach((alt, i) => {
+      for (const [n, hay, w] of fields) {
+        const hit = alt.find((a) => hay.includes(` ${a}`));
+        if (hit) { matched++; weight += w; why.push(`${terms[i]}${hit !== terms[i] ? `→${hit}` : ""} (${n})`); break; }
+      }
+    });
+    if (terms.length && !matched) continue;
+    scored.push({ e, matched, score: matched * 10 + weight + (e.tier || 1) * 1.2, why });
   }
-  scored.sort((a, b) => b.score - a.score || a.e.id.localeCompare(b.e.id));
+  scored.sort((a, b) => b.matched - a.matched || b.score - a.score || a.e.id.localeCompare(b.e.id));
   return {
     query, filters: Object.fromEntries(Object.entries(filters).filter(([, v]) => v)), total: idx.entries.length, matches: scored.length,
-    results: scored.slice(0, limit).map(({ e, score }) => card(e, { score: Math.round(score * 10) / 10 })),
+    results: scored.slice(0, limit).map(({ e, score, matched, why }) => card(e, { score: Math.round(score * 10) / 10,
+      why: terms.length ? `${matched}/${terms.length} words: ${why.join(", ")}` : undefined })),
     next: "umd styles get <id> copies the prompt into the project; umd styles match ranks the library against the brief",
   };
 }

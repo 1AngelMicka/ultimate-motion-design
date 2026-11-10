@@ -6,11 +6,11 @@ Tous les liens partagés, testés ou utilisés pour construire Ultimate Motion D
 
 Dernière mise à jour : 2026-11-10.
 
-313 liens en tout, chacun listé une seule fois ci-dessous. Les liens propres à la recherche (dossiers research_notes/ et reports/, non publiés) et les 1 113 dépôts du catalogue ne sont pas répétés.
+315 liens en tout, chacun listé une seule fois ci-dessous. Les liens propres à la recherche (dossiers research_notes/ et reports/, non publiés) et les 1 113 dépôts du catalogue ne sont pas répétés.
 
 | Statut | Nombre |
 | --- | --- |
-| Lien de référence | 238 |
+| Lien de référence | 240 |
 | Écarté | 27 |
 | Compagnon | 20 |
 | Intégré | 14 |
@@ -342,9 +342,11 @@ Documentation officielle (outils, plateformes, normes) citée par les guides du 
 | [docs.x.com](https://docs.x.com/) | 1 | `references/platforms.md` |
 | [en.wikipedia.org](https://en.wikipedia.org/) | 1 | `references/craft/anti-slop.md` |
 | [ffmpeg.org](https://ffmpeg.org/) | 2 | `README.en.md`, `README.md`, `references/audio/mix.md` |
-| [freesound.org](https://freesound.org/) | 1 | `references/audio/music-sfx.md` |
+| [freesound.org](https://freesound.org/) | 1 | `references/audio/music-sfx.md`, `references/audio/sound-design.md` |
+| [api.openverse.org](https://api.openverse.org/v1/) | 1 | `plugins/umd/scripts/lib/sounds.mjs`, `references/audio/sound-design.md` |
 | [gsap.com](https://gsap.com/) | 6 | `references/craft/tokens.md`, `references/engines/gsap.md`, `references/engines/scroll.md` |
 | [incompetech.com](https://incompetech.com/) | 1 | `references/audio/music-sfx.md` |
+| [jamendo.com](https://www.jamendo.com/) | 1 | `references/audio/sound-design.md` (music under CC BY, through Openverse) |
 | [knowlify.com](https://knowlify.com/) | 1 | `references/craft/composition.md` |
 | [linkedin.com](https://linkedin.com/) | 1 | `references/platforms.md` |
 | [m3.material.io](https://m3.material.io/) | 1 | `references/craft/principles.md` |

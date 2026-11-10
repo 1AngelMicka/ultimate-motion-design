@@ -123,7 +123,7 @@ Record every asset the moment it enters the project (path, source, URL, licence,
 | A proven structure for a kind of piece | `references/recipes/` (concepts, launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions, narrative-short, series, match-reference) |
 | How to produce the whole piece in a route | `references/routes/` (html-video, threejs-film, blender, director, web-page, explainer) |
 | An engine's API, patterns and determinism rules | `references/engines/` (hyperframes, remotion, revideo, gsap, motion, css-waapi, scroll, threejs, shaders, lottie, rive, svg, canvas-2d, manim, blender, diagrams-code, effect-libraries) |
-| Voice, music and effects, mix, captions | `references/audio/` |
+| Voice, music and effects, mix, captions; which sound on which picture event | `references/audio/` (start with `sound-design.md`) |
 | Images, icons, fonts; platform specs; licence traps | `references/assets.md`, `references/platforms.md`, `references/licenses.md` |
 | A proven style to start from | `references/styles.md` (with the plugin, `umd styles match` picks from 1 323 styles, prompts and blocks for the brief) |
 

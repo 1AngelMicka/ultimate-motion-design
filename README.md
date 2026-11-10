@@ -29,13 +29,14 @@ Ses points forts :
   - Un agent critique note chaque brouillon comme un jury (7 = pro, 8 = agence, 9 = sélection en festival) et fait recommencer jusqu'à la note visée. Un nouveau critique à chaque tour, qui ne voit jamais le raisonnement du constructeur et vérifie point par point les corrections du tour précédent.
   - Le savoir-faire compte dans la note : l'idée et le moment fort, la typographie, la couleur et le design sonore sont jugés contre la note visée du projet (8 par défaut).
   - Le son est mesuré contre l'image : chaque effet tombe sur son événement à ±45 ms (`umd sync`), et la vraie fin de la musique tombe sur le carton final (`umd mix --backtime`).
+- **Une vraie partie son.** Douze effets fabriqués sur place, sans licence à gérer (`umd sfx whoosh`, `riser`, `impact`…), des effets et des musiques libres cherchés et crédités automatiquement (`umd sounds`, CC0 et CC BY seulement), et un guide qui dit quel son poser sur quel événement à l'image, selon le type de projet. À écouter sur la page [Son et musique](https://1angelmicka.github.io/ultimate-motion-design/son.html).
   - Les coupes se font sur du mouvement, jamais entre deux plans arrêtés, et pas plus d'une seconde d'image quasi figée par tranche de 30 s : deux contrôles mesurés, calibrés sans fausse alerte sur 15 films de référence notés 7 à 8 sur 10 par un jury IA.
 - **La grammaire des films de lancement pro.** Six règles et 16 mécanismes tirés de l'analyse de 28 films de lancement : un acteur qui persiste, chaque action qui produit un résultat, le premier plan qui porte la transition.
 - **Des points de départ éprouvés, sans dépenser de tokens.**
   - 1 323 styles, prompts et blocs prêts à l'emploi, classés par type de projet, ambiance, rendu et format, avec un aperçu du résultat dans la [bibliothèque en ligne](https://1angelmicka.github.io/ultimate-motion-design/library/). Ton agent y choisit seul ce qui colle à ton brief (`umd styles match`), ou te propose trois options.
   - 120 techniques nommées, du match cut au split-flap, pour parler le même langage que le critique (`umd moves`).
   - Des images libres de droits sur Wikimedia Commons, inscrites automatiquement avec leur auteur et leur licence (`umd commons`).
-- **Un vrai skill de motion design, utilisable partout.** [`skills/motion-design`](skills/motion-design/SKILL.md) condense le métier : la boucle en dix étapes et trois validations, douze règles qui séparent le savoir-faire du « slop », les chiffres qui comptent, la typo, la couleur, le son, la caméra, comment juger un travail. Dans Claude Code, il se déclenche tout seul dès qu'on anime ; il s'installe aussi dans Codex, Cursor ou tout agent qui lit les skills, avec ses 53 guides.
+- **Un vrai skill de motion design, utilisable partout.** [`skills/motion-design`](skills/motion-design/SKILL.md) condense le métier : la boucle en dix étapes et trois validations, douze règles qui séparent le savoir-faire du « slop », les chiffres qui comptent, la typo, la couleur, le son, la caméra, comment juger un travail. Dans Claude Code, il se déclenche tout seul dès qu'on anime ; il s'installe aussi dans Codex, Cursor ou tout agent qui lit les skills, avec ses 54 guides.
 - **Économe et transparent sur les tokens.**
   - Environ 270 tokens chargés en permanence.
   - Les vérifications mesurables sont faites par le code, sans agent.
@@ -190,7 +191,7 @@ Toutes ces commandes s'appuient sur une CLI sans dépendance, que tu peux aussi 
 - **rendu :** `capture`, `still`, `render` ;
 - **analyse :** `analyze` (coupes, mouvement, temps morts, flashs, loudness, planche contact), `frames` (`--cuts` : 12 images autour de chaque coupe), `compare`, `vmaf`, `webperf`, `lint`, `licenses` ;
 - **son :** `mix` (ducking, loudness, `--backtime` pour caler la fin de la musique sur le carton final), `hits` (les coups finaux d'un morceau), `sync` (chaque son contre son image), `normalize`, `loudness`, `captions`, `burn` ;
-- **ressources :** `styles` (1 323 styles, prompts et blocs ; `styles match` choisit d'après le brief), `moves` (120 techniques nommées), `commons` (images libres de Wikimedia Commons) ;
+- **ressources :** `styles` (1 323 styles, prompts et blocs ; `styles match` choisit d'après le brief), `moves` (120 techniques nommées), `commons` (images libres de Wikimedia Commons), `sounds` (effets et musiques libres), `sfx` (effets fabriqués sur place) ;
 - **suivi :** `next`, `status`, `tokens`, `estimate` (durée d'un rendu à partir d'une image test).
 
 ## Routes et technos
@@ -211,7 +212,7 @@ S'y ajoutent :
 - **15 recettes éprouvées :** lancement produit, démo produit, vidéo de présentation, explainer, logo animé, typographie cinétique, short vertical, data story, section hero, transitions de page, scrollytelling, micro-interactions, court métrage narratif, série animée récurrente, et reproduire une animation de référence (analysée plan par plan) ;
 - **17 guides de moteur,** dont un tri de 60 librairies d'effets, de 3D, de physique, de son et de montage, avec leur licence et ce qu'il faut surveiller pour un rendu reproductible ;
 - **des guides de métier :** grammaire des films de lancement, principes d'animation, tokens de mouvement, composition et zones sûres, texte à l'écran (et un texte qu'un inconnu comprend en 3 s), anti-« AI slop » ;
-- **des guides audio :** voix commercialisables, musique et effets sonores, mixage, sous-titres ;
+- **des guides audio :** sound design (quel son sur quel événement), voix commercialisables, musique et effets sonores, mixage, sous-titres ;
 - **des guides pratiques :** assets, spécifications par plateforme, licences.
 
 **1 323 styles, prompts et blocs éprouvés** servent de point de départ :
@@ -310,7 +311,7 @@ Le plugin réduit les tokens à trois endroits :
 | Mécanisme | Effet |
 | --- | --- |
 | **Presque rien en permanence** | Environ 270 tokens chargés en permanence : la description du skill `motion` et celles des deux agents. Les onze commandes `/umd:*` ne coûtent rien tant qu'on ne les lance pas. Dans un projet umd, le hook de démarrage ajoute environ 150 tokens de contexte. |
-| **Références à la demande** | 54 guides de 800 à 2 300 tokens chacun, lus un par un, seulement quand ils servent : par exemple la route du projet, puis le guide de son moteur. |
+| **Références à la demande** | 55 guides de 800 à 2 300 tokens chacun, lus un par un, seulement quand ils servent : par exemple la route du projet, puis le guide de son moteur. |
 | **Vérifications faites par le code** | 29 vérifications sur 64 sont décidées par la CLI à partir des mesures FFmpeg, du lint, des licences et des tests navigateur. Les auditeurs ne regardent que ce qui demande un œil. |
 | **Planche contact** | Chaque rendu produit une planche de 16 images, soit une seule image à lire. Claude n'extrait ensuite que 2 à 6 images ciblées si un doute reste. |
 | **Sorties compactes** | Rendus, encodages et analyses écrivent leur sortie complète sur le disque et ne renvoient qu'un résumé. Sur notre test, 3 commandes passent d'environ 3 700 tokens de sortie à environ 700. |

@@ -108,7 +108,7 @@ Record every asset the moment it enters the project (path, source, URL, licence,
 | A proven structure for a kind of piece | `{{REF}}recipes/` (concepts, launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions, narrative-short, series, match-reference) |
 | How to produce the whole piece in a route | `{{REF}}routes/` (html-video, threejs-film, blender, director, web-page, explainer) |
 | An engine's API, patterns and determinism rules | `{{REF}}engines/` (hyperframes, remotion, revideo, gsap, motion, css-waapi, scroll, threejs, shaders, lottie, rive, svg, canvas-2d, manim, blender, diagrams-code, effect-libraries) |
-| Voice, music and effects, mix, captions | `{{REF}}audio/` |
+| Voice, music and effects, mix, captions; which sound on which picture event | `{{REF}}audio/` (start with `sound-design.md`) |
 | Images, icons, fonts; platform specs; licence traps | `{{REF}}assets.md`, `{{REF}}platforms.md`, `{{REF}}licenses.md` |
 | A proven style to start from | `{{REF}}styles.md`{{STYLES_HINT}} |
 
