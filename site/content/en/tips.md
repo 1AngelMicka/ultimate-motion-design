@@ -100,6 +100,37 @@ When `/umd:go` shows you stills or a draft, be precise: a moment, a problem, wha
 - "One more round of critique, target 9."
 - "It looks like a template: change style, show me three others."
 
+For a precise correction, give four things: **where** (a moment or a frame), **what you see**, **the change**, **what must not move**. Claude then changes one thing and checks the frames around it.
+
+```
+At 7 s (frame 210) the cursor covers the file label.
+Change only the cursor's path after the click: stop 24 px away from the label.
+Keep the click at 6.5 s, the file reveal and the copy as they are.
+```
+
+## Beat the template look
+
+What separates a launch film people share from a run of animated slides. The "Motion grammar" reference has the detail; the essentials:
+
+- **One persistent actor**: a cursor, a card or a shape leads the eye from shot to shot.
+- **Every action produces a result**: the start state, the cursor on the button, the press, the result, then time to read it.
+- **The foreground carries the transition**: the title or logo travels through the camera while the next scene is already in place.
+- **Speed changes**: an arrival that slows so you can read, a quick exit. Never a constant drift.
+- **The subject fills 60 to 85 % of the frame** in product shots, and frame 0 is already a finished composition.
+- **The music ends with the film**: its real ending lands on the end card (`umd mix --backtime`) instead of a fade or a cut.
+
+## Sell a video
+
+The plugin is enough to offer a small service. The simplest format to sell: a 20 s **launch clip** for one feature.
+
+- **One** feature, **one** approved script, **one** square video (1080 × 1080), **one** cover image taken from the film, **one** revision round (timing, copy, sound).
+- Make a complete sample first, with your own product or one whose owner agrees. Show it with its three key frames (opening, result, ending).
+- Time the real job (preparation, feedback, rendering, delivery) before setting a price. Public anchors gathered in September 2026 by motion-video-kit: AI tools around $30, reels around $150, a 15 to 30 s product video around $455. Generic clips compete with AI tools; what sells is accuracy to the client's real product and quality control. Check your market.
+- Before starting, agree in writing on: script, supplied files, date, payment, number of revisions, where the client may use the video and whether you may show it in your portfolio.
+- During production: the three key frames to approve the direction, then the draft, then the final render. Feedback is given by moment ("at 7 s…"), which keeps the revision round clear.
+- `.motion/LEDGER.md` (each critique round, what changed, the measures) and the audit report show the care taken: attach them to the delivery if the client values it.
+- Remotion, if you use it, needs a paid licence above 3 people in the company: `umd capture` and HyperFrames have no such limit.
+
 ## What gives away an AI-made video
 
 | Tell | Instead |

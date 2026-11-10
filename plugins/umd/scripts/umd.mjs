@@ -15,12 +15,15 @@
 //           [--draft] [--transparent] [--format mp4|webm|mov|gif|png] [--audio f] [--seed n]   Deterministic HTML → video
 //   render [--draft] [--twice] [--no-analyze]                          Render the project (project.json "render"), then analyze
 //   mix --voice v.wav --music m.wav [--sfx a.wav@1.2 ...] --out mix.wav [--duck 9] [--lufs -14] [--length s]  (length defaults to duration_s)
+//       [--backtime | --hit s --card s | --music-start s]   Back-time the music: its own ending lands on the end card, one continuous piece
+//   hits <music>                                    Strong attacks near the end of a track (candidates for its final hit)
 //   normalize <in> <out> [--lufs -14] [--tp -1]      loudness <file>
 //   captions <words.json> --out subs.ass|srt|vtt [--style karaoke|pop|line] [--max-chars 32] [--width --height --font --color --highlight]
 //   burn <video> <subs.ass> --out f.mp4             Burn captions in (libass)
 // Check
 //   analyze <video> [--out dir]                     Probe, cuts, freezes, dead air, black, flashes, loudness, contact sheet
-//   frames <video> --at 1,2.5 | --every 2 [--out dir]
+//   frames <video> --at 1,2.5 | --every 2 | --cuts [--out dir]   (--cuts: 12 frames around each cut, where collisions hide)
+//   sync <video> [--cues storyboard.md]             Do the sound hits land on their visual events? (storyboard "## Sound cues")
 //   compare <a> <b>                                 Frame-hash equality + SSIM       vmaf <encode> <master>
 //   lint [dir]   licenses   webperf <url>   captions-check <subs> <words.json>
 //   evidence [--date D]                             All automatic checks for the audit + statuses of auto criteria
@@ -90,7 +93,7 @@ function analysisSummary(a) {
   return {
     file: a.file, duration: a.probe?.duration, size: a.probe?.width ? `${a.probe.width}x${a.probe.height}@${a.probe.fps}` : null,
     scenes: a.scenes?.count, dead_air: a.dead_air, freezes: (a.freezes || []).filter((x) => x.duration >= 1), black: a.black,
-    flashes_max_per_s: a.flashes?.max_per_s, loudness: a.loudness ? { lufs: a.loudness.integrated, true_peak: a.loudness.true_peak } : null,
+    flashes_max_per_s: a.flashes?.max_per_s, stillness: a.stillness ? `${a.stillness.per_30s}s per 30 s, longest ${a.stillness.longest_s}s` : null, loudness: a.loudness ? { lufs: a.loudness.integrated, true_peak: a.loudness.true_peak, lra: a.loudness.lra } : null,
     abrupt_end: a.audio_end?.abrupt, motion_mean: a.motion?.mean, sheet: a.sheet ? `${a.sheet.file} (${a.sheet.layout}, times ${a.sheet.times.join(" ")})` : null,
   };
 }
@@ -151,6 +154,14 @@ async function evidence() {
   if (fl.has("has_master") && project.master && lr?.output) {
     try { const { vmaf } = await import("./lib/compare.mjs"); ev.vmaf = vmaf(lr.output, project.master, { cwd }); }
     catch (e) { notes.push(`vmaf failed: ${e.message.split("\n")[0]}`); }
+  }
+  const sbf = join(cwd, ".motion", "storyboard.md");
+  if (lr?.output && ev.analysis?.probe?.audio && existsSync(sbf)) {
+    try {
+      const { parseCues, syncCues } = await import("./lib/sync.mjs");
+      const cues = parseCues(readFileSync(sbf, "utf8"), project.format?.fps || 30);
+      if (cues.length) ev.sync = syncCues(lr.output, cues, { cwd, fps: project.format?.fps, toleranceMs: th.sync_tolerance_ms ?? 45 });
+    } catch (e) { notes.push(`sync failed: ${e.message.split(/\r?\n/)[0]}`); }
   }
   const { autocheck } = await import("./lib/autocheck.mjs");
   const planned = new Set(allDomains(ref).filter((d) => (ref.profiles[project.profile].weights[d.id] ?? 0) > 0 && applies(d, fl))
@@ -480,8 +491,28 @@ async function main() {
       if (!pos[0]) die("Usage: umd frames <video> --at 1,2.5 | --every 2 [--out dir]");
       const { frames, contactSheet } = await import("./lib/analyze.mjs");
       const dir = resolve(cwd, opt("out", join(existsSync(md) ? ".motion" : ".", "frames", basename(pos[0]).replace(/\W+/g, "-"))));
+      if (flags.has("cuts")) {
+        const { analyze: an, cutStrips } = await import("./lib/analyze.mjs");
+        const cuts = (an(pos[0], { cwd, sheet: false }).scenes?.cuts || []).map((c) => c.t ?? c.time ?? c);
+        return out(cutStrips(pos[0], { cwd, cuts, outDir: dir }));
+      }
       if (flags.has("sheet")) { const { probe } = await import("./lib/ffmpeg.mjs"); mkdirSync(dir, { recursive: true }); const s = contactSheet(resolve(cwd, pos[0]), probe(resolve(cwd, pos[0])), join(dir, "sheet.jpg")); return out({ ...s, file: relative(cwd, s.file) }); }
       return out(frames(pos[0], { cwd, at: list("at").map(Number), every: opt("every") ? Number(opt("every")) : null, outDir: dir, width: Number(opt("width", 960)) }));
+    }
+    case "sync": {
+      if (!pos[0]) die("Usage: umd sync <video|audio> [--cues .motion/storyboard.md] [--tolerance-ms 45]");
+      const { parseCues, syncCues } = await import("./lib/sync.mjs");
+      const p = loadProject(cwd);
+      const sbf = resolve(cwd, opt("cues", join(".motion", "storyboard.md")));
+      if (!existsSync(sbf)) die(`No ${relative(cwd, sbf)}: list the cues under "## Sound cues" (one per line: "6.5s click: cursor press" or "f195 click").`);
+      const cues = parseCues(readFileSync(sbf, "utf8"), p?.format?.fps || 30);
+      if (!cues.length) die(`No cue in ${relative(cwd, sbf)}: add a "## Sound cues" section (one per line: "6.5s click: cursor press").`);
+      return out(syncCues(pos[0], cues, { cwd, fps: p?.format?.fps, toleranceMs: Number(opt("tolerance-ms", thresholds(p, ref).sync_tolerance_ms ?? 45)) }));
+    }
+    case "hits": {
+      if (!pos[0]) die("Usage: umd hits <music>");
+      const { finalHits } = await import("./lib/sync.mjs");
+      return out(finalHits(pos[0], { cwd }));
     }
     case "compare": {
       if (pos.length < 2) die("Usage: umd compare <a> <b>");
@@ -506,7 +537,14 @@ async function main() {
     case "mix": {
       const { mix } = await import("./lib/audio.mjs");
       if (!opt("out")) die("Usage: umd mix --voice v.wav --music m.wav [--sfx a.wav@1.2] --out mix.wav [--duck 9]");
-      return out(mix({ cwd, voice: opt("voice"), music: opt("music"), sfx: opts.sfx || [], out: opt("out"), duck: Number(opt("duck", 9)), musicGainDb: Number(opt("music-gain", -6)), lufs: Number(opt("lufs", -14)), tp: Number(opt("tp", -1)), length: opt("length", loadProject(cwd)?.duration_s ?? null) }));
+      const length = opt("length", loadProject(cwd)?.duration_s ?? null);
+      let musicStart = Number(opt("music-start", 0));
+      if (opt("music") && (flags.has("backtime") || opt("hit"))) {
+        if (!opt("hit") && !length) die("--backtime needs the film length: --length s or duration_s in project.json");
+        const { backtimeStart } = await import("./lib/audio.mjs");
+        musicStart = backtimeStart({ cwd, music: opt("music"), length, hit: opt("hit"), card: opt("card", opt("hit") ? (length ?? null) : null) });
+      }
+      return out(mix({ cwd, voice: opt("voice"), music: opt("music"), sfx: opts.sfx || [], out: opt("out"), duck: Number(opt("duck", 9)), musicGainDb: Number(opt("music-gain", -6)), lufs: Number(opt("lufs", -14)), tp: Number(opt("tp", -1)), length, musicStart }));
     }
     case "captions": {
       if (!pos[0] || !opt("out")) die("Usage: umd captions <words.json> --out subs.ass [--style karaoke|pop|line]");

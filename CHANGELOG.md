@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0 — 2026-11-10
+
+- Motion grammar of premium launch films (`references/craft/motion-grammar.md`): six rules, 16 reusable mechanisms, pacing for a 30 s film, the shot written as an event, layout for the longest copy, and the checks critics miss and clients catch. Adapted from echris6/motion-video-kit (MIT, 28 launch films studied) and beamnxw's "Motion Engineering with Opus 5.5".
+- New check LIF-05 (59 checks, 28 automatic): under 1 s of near-still picture per 30 s, end card excluded. Zero false alarm on the 15 calibration films. `umd analyze` adds `stillness`; loudness range is shown but stays informative (it would flag 6 award films out of 15).
+- `umd sync <video>`: the storyboard's new `## Sound cues` section (`6.5s click`, `f210 reveal`) is measured against the audio onsets; AUD-03 is decided in code when cues exist (±45 ms, new threshold `sync_tolerance_ms`).
+- Music back-timing: `umd hits <music>` lists the final hits of a track, `umd mix --backtime` or `--hit s --card s` makes the track's own ending land on the end card, one continuous piece, nothing cut or looped.
+- `umd frames <video> --cuts`: one strip of 12 frames around each cut, where text over text, splices and pops hide.
+- Critic rounds in the "Gauntlet" way: a fresh critic every round that never sees the builder's reasoning, verification of the previous report (FIXED / PARTLY / STILL PRESENT, then SHIP or ONE MORE PASS), scoped fixes (where, observed, change, what stays fixed) and a `.motion/LEDGER.md` of rounds and measures.
+- Storyboard template: event frames, layout limits, sound cues, review frames. Reference analysis labels values measured, estimated or proposed.
+- Docs: "Beat the template look", "Sell a video" and precise-correction wording on the Tips page; more web galleries (Refero styles, saaspo, posts.design, Mobbin, inspora, curate, brandguidelines, backgrounds.supply, horizonx, scrollshaders); companions motion-video-kit and refero_skill.
+
 ## 0.3.1 — 2026-11-10
 
 - Style library page on the docs site (`bibliotheque.html`, French and English): the 784 styles and prompts as cards with a preview of the result (LemoLab stills, mg-styles-15 silent loops on hover, creators' thumbnails), search in French or English, filters by source and category, and a panel per entry with the film, the credit, `umd styles get <id>` and the prompt read live from its source, ready to copy. Each entry has its own link (`#<id>`).

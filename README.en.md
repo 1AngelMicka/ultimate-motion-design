@@ -19,10 +19,12 @@ What it brings:
   - Claude picks the right route for each project.
 - **Built-in deterministic rendering.** `umd capture` turns any animated HTML page into a video, frame by frame, with no Remotion licence. Two renders give identical frames.
 - **Real quality control.**
-  - 12 domains and 58 checks, from narrative to licences.
+  - 12 domains and 59 checks, from narrative to licences.
   - Every passed check has evidence: a frame at t = 2.40 s, a LUFS measure, a line of code.
   - Score out of 10. An open blocker caps the score and locks delivery.
-  - A critic agent scores every draft like a jury (7 = professional, 8 = agency, 9 = award) and sends it back until it reaches the target.
+  - A critic agent scores every draft like a jury (7 = professional, 8 = agency, 9 = award) and sends it back until it reaches the target. A fresh critic every round, which never sees the builder's reasoning and checks the previous round's fixes item by item.
+  - Sound is measured against picture: each effect lands on its event within ±45 ms (`umd sync`), and the music's real ending lands on the end card (`umd mix --backtime`).
+- **The grammar of professional launch films.** Six rules and 16 mechanisms drawn from the analysis of 28 launch films: one persistent actor, every action producing a result, the foreground carrying the transition.
 - **Token-frugal and transparent.**
   - About 250 tokens loaded at all times.
   - Measurable checks are done in code, without an agent.
@@ -168,7 +170,7 @@ On top of that:
 
 **784 proven styles and prompts** serve as starting points: 66 film styles from [lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar), 15 motion-design styles from [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) and 703 prompts from [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos). `/umd:storyboard` offers three that fit your brief, and `umd styles <words>` searches them at no token cost. To choose by eye: the [Style library](https://1angelmicka.github.io/ultimate-motion-design/en/bibliotheque.html) shows every style with a preview of the result (still or video) and its prompt to copy. Ready-to-copy prompts and advice: the [Tips and prompts](https://1angelmicka.github.io/ultimate-motion-design/en/astuces.html) page.
 
-The file [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) lists **1,073 GitHub repositories**, checked on 9 November 2026, with licence warnings.
+The file [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) lists **1,075 GitHub repositories**, checked on 9 and 10 November 2026, with licence warnings.
 
 ### Deterministic rendering
 
@@ -191,10 +193,11 @@ On every frame it pauses every CSS and Web Animations animation and every `<vide
 
 Every rule and check is detailed in [docs/en/REFERENTIAL.md](docs/en/REFERENTIAL.md).
 
-27 of the 58 checks are measured in code, without an agent (which ones apply depends on the profile):
+28 of the 59 checks are measured in code, without an agent (which ones apply depends on the profile):
 
 - output length and format;
-- frozen frames and dead air;
+- frozen frames, dead air and total near-still time (under 1 s per 30 s, end card excluded);
+- sounds landing on their picture, when the storyboard lists sound cues (`umd sync`);
 - black frames;
 - flashes, as a full-frame approximation of WCAG 2.3.1;
 - loudness and true peak;
@@ -248,7 +251,7 @@ The plugin cuts tokens in three places:
 | --- | --- |
 | **Almost nothing loaded at all times** | About 250 tokens loaded at all times: the description of the `motion` skill and those of the two agents. The eleven `/umd:*` commands cost nothing until you run them. In a umd project, the startup hook adds about 150 tokens of context. |
 | **References on demand** | 49 guides of 1,200 to 2,100 tokens each, read one at a time, only when needed: for example the project's route, then its engine's guide. |
-| **Checks done in code** | 27 of the 58 checks are decided by the CLI from FFmpeg measures, lint, licences and browser tests. The auditors only look at what needs eyes. |
+| **Checks done in code** | 28 of the 59 checks are decided by the CLI from FFmpeg measures, lint, licences and browser tests. The auditors only look at what needs eyes. |
 | **Contact sheet** | Each render produces a 16-frame sheet: a single image to read. Claude then extracts only 2 to 6 targeted frames if a doubt remains. |
 | **Compact output** | Renders, encodes and analyses write their full output to disk and return only a summary. In our test, 3 commands went from about 3,700 tokens of output to about 700. |
 | **Incremental audit by default** | Only the checks that a changed file or a new render can affect are re-checked. If nothing changed, no auditor is started. |

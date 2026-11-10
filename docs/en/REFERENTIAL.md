@@ -4,7 +4,7 @@
 
 Criteria audited by `/umd:audit`. Method `auto`: decided in code from measurements; `inspect`: judged by an auditor agent with evidence.
 
-**12 domains · 58 criteria · v0.3.1**
+**12 domains · 59 criteria · v0.4.0**
 
 ## Profiles and domain weights
 
@@ -45,6 +45,9 @@ Criteria audited by `/umd:audit`. Method `auto`: decided in code from measuremen
 | `fonts_max` | 2 |
 | `black_frames_max_s` | 0.1 |
 | `silence_edge_max_s` | 0.5 |
+| `still_per_30s_max` | 1 |
+| `end_card_s` | 2 |
+| `sync_tolerance_ms` | 45 |
 
 ## Story, rhythm and art direction
 
@@ -109,6 +112,7 @@ Applies if: always
 | LIF-02 | Visual variety between scenes | major | inspect | Contact sheet: no two scenes with the same composition, framing and entrance. |
 | LIF-03 | Eyes lead the body, breathing and blinks _(has_characters)_ | minor | inspect | Frames around a reaction (umd frames --at): gaze 6 to 10 frames before the body; blinks present. |
 | LIF-04 | Offset motions, no mechanical unison | minor | inspect | Code (stagger, delays) and successive frames: elements of a group start and end at different times. |
+| LIF-05 | Under 1 s of near-still picture per 30 s, end card excluded _(is_video)_ | major | auto (analyze) | umd analyze: stillness.per_30s ≤ thresholds.still_per_30s_max (0.5 s buckets below motion_floor, the last end_card_s seconds excluded). |
 
 ### ART — Art direction
 
@@ -237,7 +241,7 @@ Applies if: has_audio
 | --- | --- | --- | --- | --- |
 | AUD-01 | Compliant loudness and true peak under the ceiling | blocker | auto (analyze) | umd analyze: loudness.integrated within ±thresholds.loudness_tolerance_lu of thresholds.loudness_lufs and loudness.true_peak ≤ thresholds.true_peak_dbtp. |
 | AUD-02 | Music ducks under the voice _(has_voice, has_music)_ | major | inspect | Mix command (umd mix or sidechaincompress) in render.json or the logs, and listening to a spoken passage: the voice clearly dominates. |
-| AUD-03 | Sound effects in sync, 0 to 1 frame after the image | minor | inspect | SFX timestamps (umd mix --sfx a.wav@t) compared with the event frames (umd frames --at). |
+| AUD-03 | Sound effects in sync, 0 to 1 frame after the image | minor | inspect | With a "## Sound cues" section in the storyboard: umd sync measures each sound's attack against its event (±sync_tolerance_ms) and decides on its own. Without cues: watch the cuts and impacts; the sound lands 0 to 1 frame after the picture. |
 | AUD-04 | No leading silence or abrupt cut | major | auto (analyze) | umd analyze: silence.leading_s and silence.trailing_s ≤ thresholds.silence_edge_max_s, and audio_end.abrupt is false. |
 | AUD-05 | Clear, natural voice, names pronounced right _(has_voice)_ | major | inspect | Listening and transcript: no robotic artefacts, 140–170 words/min, brand names correct. |
 | AUD-06 | Delivery audio format | minor | auto (analyze) | umd analyze: probe.audio at 48 kHz, 2 channels, AAC ≥ 192 kb/s or Opus. |

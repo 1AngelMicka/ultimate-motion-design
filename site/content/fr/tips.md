@@ -100,6 +100,37 @@ Quand `/umd:go` te montre les images fixes ou un brouillon, sois précis : un in
 - « Encore un tour de critique, objectif 9. »
 - « Ça fait template : change de style, propose-m'en trois autres. »
 
+Pour une correction précise, donne quatre choses : **où** (un instant ou une image), **ce que tu vois**, **le changement**, **ce qui ne doit pas bouger**. Claude modifie alors une seule chose et vérifie les images autour.
+
+```
+À 7 s (image 210), le curseur recouvre l'étiquette du fichier.
+Change seulement le trajet du curseur après le clic : qu'il s'arrête à 24 px de l'étiquette.
+Ne touche ni au clic à 6,5 s, ni à l'apparition du fichier, ni au texte.
+```
+
+## Faire mieux qu'un template
+
+Ce qui distingue un film de lancement qu'on partage d'une suite de slides animées. La page « Grammaire du mouvement » des références en donne le détail ; l'essentiel :
+
+- **Un acteur qui persiste** : un curseur, une carte ou une forme guide l'œil d'un plan à l'autre.
+- **Chaque action produit un résultat** : on voit l'état de départ, le curseur sur le bouton, le clic, le résultat, puis le temps de le lire.
+- **Le premier plan porte la transition** : le titre ou le logo traverse la caméra pendant que la scène suivante est déjà en place.
+- **La vitesse change** : arrivée qui ralentit pour qu'on lise, sortie rapide. Jamais une dérive constante.
+- **Le sujet remplit 60 à 85 % du cadre** dans les plans produit, et l'image 0 est déjà une composition finie.
+- **La musique finit avec le film** : sa vraie fin tombe sur le carton final (`umd mix --backtime`), au lieu d'un fondu ou d'une coupe.
+
+## Vendre une vidéo
+
+Le plugin suffit pour proposer un petit service. Le format le plus simple à vendre : un **clip de lancement** de 20 s pour une seule fonctionnalité.
+
+- **Une** fonctionnalité, **un** script validé, **une** vidéo carrée (1080 × 1080), **une** image de couverture tirée du film, **un** tour de retouches (rythme, texte, son).
+- Fais d'abord un exemple complet avec ton propre produit, ou un produit dont le propriétaire est d'accord. Montre-le avec ses trois images clés (ouverture, résultat, fin).
+- Chronomètre le travail réel (préparation, retours, rendu, livraison) avant de fixer un prix. Repères publics relevés en septembre 2026 par motion-video-kit : outils IA vers 30 $, reels vers 150 $, vidéo produit de 15 à 30 s vers 455 $. Le clip générique est concurrencé par l'IA ; ce qui se vend, c'est la justesse sur le vrai produit du client et le contrôle qualité. Vérifie ton marché.
+- Avant de commencer, mets par écrit : script, fichiers fournis, date, paiement, nombre de retouches, où le client peut utiliser la vidéo et si tu peux la montrer dans ton portfolio.
+- Pendant la production : les trois images clés pour valider la direction, puis le brouillon, puis le rendu final. Les retours se donnent par instant (« à 7 s… »), ce qui garde le tour de retouches clair.
+- Le fichier `.motion/LEDGER.md` (chaque tour de critique, ce qui a changé, les mesures) et le rapport d'audit montrent le soin apporté : joins-les à la livraison si le client les apprécie.
+- Remotion, si tu l'utilises, demande une licence payante au-delà de 3 personnes dans l'entreprise : `umd capture` et HyperFrames n'ont pas cette limite.
+
 ## Ce qui trahit une vidéo faite par une IA
 
 | Signe | À la place |

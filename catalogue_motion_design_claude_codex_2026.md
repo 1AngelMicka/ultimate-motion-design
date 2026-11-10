@@ -1,6 +1,6 @@
 # Catalogue GitHub — Motion design avec Claude Code et Codex
 
-**Édition : 9 novembre 2026** · **1073 dépôts GitHub** · Descriptions volontairement courtes.
+**Édition : 9 novembre 2026** · **1075 dépôts GitHub** · Descriptions volontairement courtes.
 **Périmètre :** skills agents, motion graphics codés, vidéos, React/GSAP, animation 2D/3D, outils MCP, shaders, montage, rendu et capture, contrôle qualité, voix, musique, assets et références.
 
 > **Comment lire ce catalogue :** certains dépôts sont des **skills à installer** dans Claude/Codex, d’autres sont des **bibliothèques, logiciels ou modèles** à leur faire utiliser par code. Un dépôt n’est pas nécessairement gratuit pour tous les usages : vérifie sa licence, ses API éventuelles et ses prérequis matériels avant de l’intégrer.
@@ -27,7 +27,7 @@
 
 ---
 
-## 01. Skills et agents spécialement conçus pour le motion design (134)
+## 01. Skills et agents spécialement conçus pour le motion design (136)
 
 ### Skills et kits motion polyvalents
 
@@ -91,6 +91,7 @@
 
 ### Principes, goût et critique
 
+- **[referodesign/refero_skill](https://github.com/referodesign/refero_skill)** — Design guidé par la recherche : 150 000 écrans réels et styles DESIGN.md via le MCP Refero (MIT, compte requis).
 - **[kylezantos/design-motion-principles](https://github.com/kylezantos/design-motion-principles)** — Skill motion à deux modes : construire avec intention ou auditer des animations existantes.
 - **[Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)** — Donne du « goût » à l'agent : direction artistique, images de référence, vérification navigateur.
 - **[agiwhitelist/auteur](https://github.com/agiwhitelist/auteur)** — Réalise un site web comme un film, avec un linter anti-slop qui bloque chaque étape.
@@ -104,6 +105,7 @@
 
 ### Lancement, promo, explainers et styles
 
+- **[echris6/motion-video-kit](https://github.com/echris6/motion-video-kit)** — Films de lancement pour vraies entreprises : grammaire tirée de 28 films, critique indépendante, musique calée sur la fin (MIT).
 - **[AbubakrChan/product-launch-motion](https://github.com/AbubakrChan/product-launch-motion)** — Vidéos de lancement niveau Dribbble en code : ressorts, curseur pilote, synchro au beat.
 - **[krisyangdev/motionboard](https://github.com/krisyangdev/motionboard)** — Langage de plan des films de lancement Apple/Linear recodé : 38 recettes + une skill.
 - **[Alisa0808/vox-director](https://github.com/Alisa0808/vox-director)** — D'un sujet à une vidéo explainer style Vox (collage papier), de bout en bout, via Atlas Cloud + ffmpeg.

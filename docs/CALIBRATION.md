@@ -26,6 +26,13 @@ The 15 films of [Vincentwei1021/mg-styles-15](https://github.com/Vincentwei1021/
 
 **Result: 0 false alarm out of 15** for TIM-01 (dead air), LIF-01 (frozen picture), SAF-01 (flashes), AUD-01 (loudness and true peak) and AUD-04 (leading silence, abrupt end).
 
+## Added in 0.4.0: near-still time and loudness range
+
+| Measure | 15 reference films | Decision |
+| --- | --- | --- |
+| Near-still time (0.5 s buckets below `motion_floor`, last 2 s excluded), per 30 s | 0 s for all 15; longest still run 0 s | LIF-05 added: at most `still_per_30s_max` = 1 s per 30 s. Zero false alarm; the budget comes from echris6/motion-video-kit, where a draft with 10 s frozen out of 36 s passed every builder check |
+| Loudness range (LRA) | 1.0 to 9.0 LU; 6 films under 3 LU (line art 1.6, 3D render 2.3, collage 1.2, morph 2.7, Bauhaus 2.5, paperclip 2.5, pixel 1.0) | Not a criterion: a "≥ 3 LU for energetic scores" rule would flag 6 award films out of 15. Shown in `umd analyze` and read by the critic only |
+
 ## Negative checks: what the thresholds do catch
 
 | Case | Measure | Caught by |

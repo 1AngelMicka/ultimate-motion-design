@@ -23,9 +23,14 @@ npx skills add NiazMorshed2007/reanimate -g -a claude-code
 
 ## Core patterns
 
+0. **Give the reference one job.** Pick it for one thing to understand: a card entrance with a controlled landing, a transition that keeps the product in view, a cursor action that makes the result obvious. Follow the main object from its first visible position to its landing: what moves first, where the eye lands, how long the result stays readable. You collect decisions for your own scene, not a look to copy.
 1. **Scope in three lines** (reanimate writes them to `.reanimate/<name>/spec.md`): target (URL + selector, or file + time range), destination (file and stack), fidelity: `motion-faithful` (default: trigger, order, stagger, timing ±80 ms, easing family, distance), `pixel-faithful` (adds fonts, colours, spacing, ≤ 2 % mean pixel mismatch), or `mixed` (clone + additions).
 2. **Capture the reference** with a fixed viewport, fps, trigger and duration: `bun <skill>/scripts/capture.ts --url … --out ref --selector <section> --trigger load|scroll|hover|click|none --duration 3000 --track "<moving elements>"`. For canvas/WebGL/3D add `--clock virtual --gl --assets` (exact, repeatable frames; shader sources, uniforms and animated channels in `gl-track.json`). For video/gif: `frames.ts --in file --out ref/frames --start … --end … --crop …`. A Lottie file is already the spec: read it.
 3. **Write the motion spec**: one row per element per property (start, duration, from → to, easing, stagger). Numbers come first from the page's declared animations (`inspect.json`), then from `easing.ts` fits on tracked elements, then from reading frames. A "?" means the frames are not read yet.
+   - Tag every value **measured** (declared or tracked), **estimated** (read by eye on frames: Claude's spatial estimates are approximate, so check positions against the extracted images) or **proposed** (your creative choice for the new piece). For an uncertain value, name the frames that would settle it.
+   - Keep the reference's timestamps in its own frame rate: a 0.5 s move is 15 frames at 30 fps and 30 at 60 fps. Note entrance, landing, readable hold and cut as source frame numbers, with the object's bounding box at start and landing.
+   - Video reference without reanimate: `umd analyze ref.mp4` (probe, cuts), `umd frames ref.mp4 --every 0.5` for the overview, then `umd frames ref.mp4 --at …` on consecutive frames around the entrance and the landing.
+   - Return the shot plan (layout, focal point, entrance, product response, reading hold, missing assets) before writing code.
 4. **Convert the spec into umd files** (this is where umd takes over):
    - durations and curves → `.motion/motion-tokens.json` (DTCG `duration` and `cubicBezier`; name them by role, e.g. `entrance-reference`);
    - sequence and stagger → rows of `.motion/storyboard.md` (time, motion, intent);

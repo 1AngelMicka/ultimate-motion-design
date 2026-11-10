@@ -4,7 +4,7 @@
 
 Critères audités par `/umd:audit`. Méthode `auto` : décidé dans le code à partir des mesures ; `inspect` : jugé par un agent auditeur avec une preuve.
 
-**12 domains · 58 criteria · v0.3.1**
+**12 domains · 59 criteria · v0.4.0**
 
 ## Profils et poids des domaines
 
@@ -45,6 +45,9 @@ Critères audités par `/umd:audit`. Méthode `auto` : décidé dans le code à 
 | `fonts_max` | 2 |
 | `black_frames_max_s` | 0.1 |
 | `silence_edge_max_s` | 0.5 |
+| `still_per_30s_max` | 1 |
+| `end_card_s` | 2 |
+| `sync_tolerance_ms` | 45 |
 
 ## Histoire, rythme et direction artistique
 
@@ -109,6 +112,7 @@ S'applique si: toujours
 | LIF-02 | Variété visuelle entre les scènes | majeur | inspect | Planche contact : pas deux scènes avec la même composition, le même cadrage et la même entrée. |
 | LIF-03 | Les yeux mènent le corps, respiration et clignements _(has_characters)_ | mineur | inspect | Images extraites autour d'une réaction (umd frames --at) : regard 6 à 10 images avant le corps ; clignements présents. |
 | LIF-04 | Mouvements décalés, pas d'unisson mécanique | mineur | inspect | Code (stagger, delays) et images successives : les éléments d'un groupe démarrent et finissent à des instants différents. |
+| LIF-05 | Moins d'1 s d'image quasi figée par 30 s, carton final exclu _(is_video)_ | majeur | auto (analyze) | umd analyze : stillness.per_30s ≤ thresholds.still_per_30s_max (tranches de 0,5 s sous motion_floor, les end_card_s dernières secondes exclues). |
 
 ### ART — Direction artistique
 
@@ -237,7 +241,7 @@ S'applique si: has_audio
 | --- | --- | --- | --- | --- |
 | AUD-01 | Niveau sonore conforme et crête vraie sous le plafond | bloquant | auto (analyze) | umd analyze : loudness.integrated à ±thresholds.loudness_tolerance_lu de thresholds.loudness_lufs et loudness.true_peak ≤ thresholds.true_peak_dbtp. |
 | AUD-02 | La musique s'efface sous la voix _(has_voice, has_music)_ | majeur | inspect | Commande de mix (umd mix ou sidechaincompress) dans render.json ou les logs, et écoute d'un passage parlé : la voix domine nettement. |
-| AUD-03 | Effets sonores synchrones, 0 à 1 image après l'image | mineur | inspect | Horodatages des SFX (umd mix --sfx a.wav@t) comparés aux images des événements (umd frames --at). |
+| AUD-03 | Effets sonores synchrones, 0 à 1 image après l'image | mineur | inspect | Avec une section « ## Sound cues » dans le storyboard : umd sync mesure l'attaque de chaque son contre son image (±sync_tolerance_ms) et décide seul. Sans repères : regarder les coupes et les impacts, le son arrive 0 à 1 image après l'image. |
 | AUD-04 | Pas de silence de tête ni de coupure brutale | majeur | auto (analyze) | umd analyze : silence.leading_s et silence.trailing_s ≤ thresholds.silence_edge_max_s, et audio_end.abrupt vaut false. |
 | AUD-05 | Voix claire et naturelle, noms bien prononcés _(has_voice)_ | majeur | inspect | Écoute et transcription : pas d'artefact robotique, rythme 140–170 mots/min, noms de marque corrects. |
 | AUD-06 | Format audio de diffusion | mineur | auto (analyze) | umd analyze : probe.audio à 48 kHz, 2 canaux, AAC ≥ 192 kb/s ou Opus. |

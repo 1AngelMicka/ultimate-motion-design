@@ -8,7 +8,8 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { loadReferential } from "../plugins/umd/scripts/lib/ref.mjs";
 import { compute } from "../plugins/umd/scripts/lib/score.mjs";
-import { countFlashes, deadAir } from "../plugins/umd/scripts/lib/analyze.mjs";
+import { countFlashes, deadAir, stillness } from "../plugins/umd/scripts/lib/analyze.mjs";
+import { parseCues, onsets, syncCues } from "../plugins/umd/scripts/lib/sync.mjs";
 import { lint, parseStoryboard } from "../plugins/umd/scripts/lib/lint.mjs";
 import { installTargets, classify, checkLicenses } from "../plugins/umd/scripts/lib/licenses.mjs";
 import { groupCues, toAss, toSrt } from "../plugins/umd/scripts/lib/captions.mjs";
@@ -54,6 +55,23 @@ test("flash counter: 5 Hz strobe is flagged, slow fade is not", () => {
 test("dead air detection", () => {
   const tl = [2, 2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 2];
   assert.deepEqual(deadAir(tl, 0.5, 0.4, 3), [{ start: 1, end: 4.5, duration: 3.5 }]);
+});
+
+test("stillness: near-still buckets per 30 s, end card excluded", () => {
+  const t = [2, 2, 0.1, 0.1, 0.1, 2, 2, 2, 2, 2, 2, 2, 0.1, 0.1, 0.1, 0.1]; // 8 s, last 2 s still (end card)
+  const s = stillness(t, 0.5, 0.4, 2);
+  assert.equal(s.still_s, 1.5);
+  assert.equal(s.longest_s, 1.5);
+  assert.equal(s.longest_at, 1);
+  assert.equal(s.per_30s, 7.5);
+});
+
+test("sound cues: storyboard parsing and onset detection", () => {
+  const md = ["## Sound cues", "<!-- 9s ignored -->", "- 6.5s click: press", "- f210 reveal", "- 00:14.40 settle", "## Stills", "- 3s not a cue"].join("\n");
+  assert.deepEqual(parseCues(md, 30).map((c) => c.t), [6.5, 7, 14.4]);
+  const env = new Float64Array(300).fill(-60);
+  for (const at of [50, 120, 200]) for (let i = at; i < at + 8; i++) env[i] = -20;
+  assert.deepEqual(onsets(env).map((o) => o.t), [0.5, 1.2, 2]);
 });
 
 test("lint finds hard-coded motion, AI tells, layout props and slop", () => {
@@ -155,6 +173,17 @@ test("FFmpeg analysis of a synthetic clip", { skip: !hasFfmpeg() && "ffmpeg not 
   const s = JSON.parse(r.stdout);
   assert.ok(s.freezes.some((x) => x.start >= 1.9 && x.duration >= 1.5));
   assert.ok(s.loudness.lufs < -5);
+});
+
+test("umd sync measures cues on a synthetic clip", { skip: !hasFfmpeg() && "ffmpeg not installed" }, () => {
+  const dir = mkdtempSync(join(tmpdir(), "umd-sync-"));
+  const f = join(dir, "beeps.mp4");
+  const r = spawnSync("ffmpeg", ["-v", "error", "-y", "-f", "lavfi", "-i", "color=black:s=320x180:r=30:d=4", "-f", "lavfi", "-i", "anoisesrc=a=0.01:d=4", "-f", "lavfi", "-i", "sine=f=880:d=0.08",
+    "-filter_complex", "[2:a]asplit=2[a][b];[a]adelay=1000|1000[a1];[b]adelay=2530|2530[b1];[1:a][a1][b1]amix=inputs=3:normalize=0[o]", "-map", "0:v", "-map", "[o]", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", "-shortest", f]);
+  assert.equal(r.status, 0);
+  const res = syncCues(f, [{ t: 1, label: "press" }, { t: 2.5, label: "reveal" }, { t: 3.4, label: "none" }], { cwd: dir });
+  assert.deepEqual(res.rows.map((x) => x.status), ["ok", "ok", "missing"]);
+  assert.ok(Math.abs(res.rows[1].offset_ms - 30) <= 15);
 });
 
 test("deterministic HTML capture", { skip: (!hasFfmpeg() || !resolvePlaywright(process.cwd())) && "ffmpeg or Playwright missing (umd doctor --fix)" }, () => {

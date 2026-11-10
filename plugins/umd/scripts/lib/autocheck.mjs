@@ -49,6 +49,11 @@ export function autocheck(ev, th, project) {
       const longFreeze = (a.freezes || []).filter((x) => x.duration > th.freeze_s);
       set("LIF-01", longFreeze.length ? "fail" : "pass", longFreeze.length ? `${src}: frozen ${longFreeze.map((x) => `${x.start}–${x.end}s`).join(", ")}` : `${src}: no frozen segment over ${th.freeze_s}s`,
         "Keep something alive in these shots (breathing, ambient particles, slow drift), including the last shot.");
+      const st = a.stillness;
+      if (st) set("LIF-05", st.per_30s <= th.still_per_30s_max ? "pass" : st.per_30s <= th.still_per_30s_max * 2 ? "partial" : "fail",
+        `${src}: ${st.still_s}s near-still (motion < ${th.motion_floor}) = ${st.per_30s}s per 30 s, longest ${st.longest_s}s${st.longest_at != null ? ` at ${st.longest_at}s` : ""}, last ${st.end_card_excluded_s}s excluded`,
+        "Keep the frame alive between events: a slow 3–5 % push, a drifting light, a supporting stagger; hold still only on the end card.");
+      else unknown("LIF-05", "analysis.json has no stillness block (rendered with an older umd)", "Run umd analyze on the render again.");
       const fl = a.flashes || { max_per_s: 0 };
       set("SAF-01", fl.max_per_s <= th.flashes_per_s ? "pass" : "fail", `${src}: max ${fl.max_per_s} flash(es) per second${fl.at != null ? ` at ${fl.at}s` : ""} (full-frame luminance)`,
         "Slow down or soften the flashing (fewer than 3 per second, smaller luminance change).");
@@ -84,6 +89,12 @@ export function autocheck(ev, th, project) {
     for (const id of ["TIM-01", "LIF-01", "SAF-01", "REN-02", "REN-05", "TIM-04", "AUD-01", "AUD-04", "AUD-06"])
       unknown(id, "no render analysed", "Run /umd:render (or umd analyze <video>) before the audit.");
   }
+
+  // --- sound cues (decided here only when the storyboard lists cues; otherwise the auditor watches)
+  const sy = ev.sync;
+  if (sy && sy.cues) set("AUD-03", sy.off + sy.missing === 0 ? "pass" : sy.missing === 0 && sy.off <= Math.ceil(sy.cues / 4) ? "partial" : "fail",
+    `sync: ${sy.ok}/${sy.cues} cue(s) within ±${sy.tolerance_ms} ms, ${sy.off} off, ${sy.missing} missing, worst ${sy.worst_ms} ms${sy.rows.filter((r) => r.status !== "ok").slice(0, 3).map((r) => ` · ${r.label} @${r.t}s ${r.offset_ms ?? "no hit"}`).join("")}`,
+    "Move each sound so its attack starts on the event frame (0 to 1 frame after the picture): umd mix --sfx file.wav@<event time>, then umd sync.");
 
   // --- determinism and VMAF
   if (det) set("REN-01", det.identical || (det.ssim != null && det.ssim >= 0.999) ? "pass" : "fail",

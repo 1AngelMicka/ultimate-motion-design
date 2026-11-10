@@ -46,6 +46,9 @@ Record every file in `.motion/assets.lock.json` (format in `assets.md`).
 4. **SFX lands 0–1 frame after the image** it underlines (AUD); whooshes start before the move and peak on the arrival frame.
 5. **UI demos:** soft clicks and toggles from soundcn or Kenney, one sound family per video, no layered "magic" sparkles.
 6. **Loops:** cut at zero crossings and crossfade 10–50 ms (convention) to avoid clicks.
+7. **Back-time the music instead of cutting it.** Line the track up so its own ending (or its final hit) lands on the end card, and play it as one continuous piece from film frame 0: the film opens mid-track, nothing is looped or spliced. `umd hits music.wav` lists the strong attacks near the end (the "button" is usually a loud attack followed by a big drop: confirm by ear), then `umd mix --music music.wav --hit 96.02 --card 16.0 …` puts that hit on the end-card cut; `--backtime` alone aligns the file's end with the film's end. Clients reject dead stops and spliced hits as "sudden cuts".
+8. **Offer tracks by ear.** Claude cannot listen. Mix 3 to 5 back-timed candidates under the same picture at the same loudness, name the files by track, and let the user pick.
+9. **Write cues, then measure them.** List each important sound in the storyboard's `## Sound cues` (`6.5s click: cursor press`, `f210 reveal`), place the files with `--sfx file@time`, and run `umd sync <video>`: each attack must start within ±45 ms of its event (AUD-03). The hero moments must stay audible on a laptop speaker with the music on; effects about +4 dB over the music in their own band, never spiking 10 dB at 2–8 kHz.
 
 ```bash
 # ACE-Step 1.5 REST: submit, then poll /query_result with the task_id
@@ -84,7 +87,8 @@ tempo, beats = librosa.beat.beat_track(y=y, sr=sr, units="time")  # fallback whe
 ## Checks
 
 - TIM: cuts on beats (scene cuts from `umd analyze` vs beat list).
-- AUD: SFX land 0–1 frame after the image; no clicks at loop points; no abrupt end.
+- AUD: SFX land 0–1 frame after the image (`umd sync`, measured when the storyboard lists cues); no clicks at loop points; no abrupt end; music back-timed rather than faded or cut.
+- Loudness range (`lra` in `umd analyze`): an energetic score around 3 LU or more sounds alive, under 1.5 LU reads as a flat wall. Informative only: 6 of the 15 calibration films sit under 3 LU (docs/CALIBRATION.md).
 - LIC: every music/SFX file in `assets.lock.json` with licence and URL; `umd licenses` passes; no NC model.
 
 ## Sources

@@ -1,156 +1,471 @@
 {
   "group": "story",
-  "label": { "fr": "Histoire, rythme et direction artistique", "en": "Story, rhythm and art direction" },
+  "label": {
+    "fr": "Histoire, rythme et direction artistique",
+    "en": "Story, rhythm and art direction"
+  },
   "domains": [
     {
       "id": "narrative",
       "code": "NAR",
-      "label": { "fr": "Brief et narration", "en": "Brief and narrative" },
-      "summary": { "fr": "Un objectif, un public, une structure qui tient et un script sans tournures IA.", "en": "One goal, one audience, a structure that holds and a script without AI phrasing." },
+      "label": {
+        "fr": "Brief et narration",
+        "en": "Brief and narrative"
+      },
+      "summary": {
+        "fr": "Un objectif, un public, une structure qui tient et un script sans tournures IA.",
+        "en": "One goal, one audience, a structure that holds and a script without AI phrasing."
+      },
       "build": [
-        { "fr": "Écrire l'objectif, le public et l'action attendue dans BRIEF.md avant tout plan.", "en": "Write the goal, the audience and the expected action in BRIEF.md before any shot." },
-        { "fr": "Structure : accroche, développement, résolution (ou appel à l'action). En film : le personnage veut une petite chose, essaie, un imprévu survient, il regarde la caméra.", "en": "Structure: hook, development, payoff (or call to action). In film: the character wants something small, tries, something unexpected happens, it looks at the camera." },
-        { "fr": "Chaque beat du storyboard a une durée et une seule intention, écrite en bout de ligne.", "en": "Every storyboard beat has a duration and a single intent, written at the end of the line." },
-        { "fr": "L'information clé doit se comprendre son coupé : elle est aussi à l'écran.", "en": "Key information must be understood with the sound off: it is also on screen." }
+        {
+          "fr": "Écrire l'objectif, le public et l'action attendue dans BRIEF.md avant tout plan.",
+          "en": "Write the goal, the audience and the expected action in BRIEF.md before any shot."
+        },
+        {
+          "fr": "Structure : accroche, développement, résolution (ou appel à l'action). En film : le personnage veut une petite chose, essaie, un imprévu survient, il regarde la caméra.",
+          "en": "Structure: hook, development, payoff (or call to action). In film: the character wants something small, tries, something unexpected happens, it looks at the camera."
+        },
+        {
+          "fr": "Chaque beat du storyboard a une durée et une seule intention, écrite en bout de ligne.",
+          "en": "Every storyboard beat has a duration and a single intent, written at the end of the line."
+        },
+        {
+          "fr": "L'information clé doit se comprendre son coupé : elle est aussi à l'écran.",
+          "en": "Key information must be understood with the sound off: it is also on screen."
+        }
       ],
       "criteria": [
         {
-          "id": "NAR-01", "severity": "major", "check": { "method": "inspect" },
-          "label": { "fr": "Un objectif et un public écrits, servis par chaque scène", "en": "A written goal and audience, served by every scene" },
-          "verify": { "fr": "BRIEF.md donne l'objectif, le public et l'action attendue ; chaque beat de storyboard.md s'y rattache.", "en": "BRIEF.md states goal, audience and expected action; every beat in storyboard.md maps to it." }
+          "id": "NAR-01",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Un objectif et un public écrits, servis par chaque scène",
+            "en": "A written goal and audience, served by every scene"
+          },
+          "verify": {
+            "fr": "BRIEF.md donne l'objectif, le public et l'action attendue ; chaque beat de storyboard.md s'y rattache.",
+            "en": "BRIEF.md states goal, audience and expected action; every beat in storyboard.md maps to it."
+          }
         },
         {
-          "id": "NAR-02", "severity": "major", "check": { "method": "inspect" },
-          "label": { "fr": "Structure complète : accroche, développement, résolution", "en": "Complete structure: hook, development, payoff" },
-          "verify": { "fr": "Planche contact et storyboard : l'accroche arrive dans les 2 premières secondes (promo, social), la fin conclut (CTA, chute ou regard caméra).", "en": "Contact sheet and storyboard: the hook lands within the first 2 seconds (promo, social), the end resolves (CTA, punchline or look at camera)." }
+          "id": "NAR-02",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Structure complète : accroche, développement, résolution",
+            "en": "Complete structure: hook, development, payoff"
+          },
+          "verify": {
+            "fr": "Planche contact et storyboard : l'accroche arrive dans les 2 premières secondes (promo, social), la fin conclut (CTA, chute ou regard caméra).",
+            "en": "Contact sheet and storyboard: the hook lands within the first 2 seconds (promo, social), the end resolves (CTA, punchline or look at camera)."
+          }
         },
         {
-          "id": "NAR-03", "severity": "minor", "check": { "method": "auto", "tool": "lint" },
-          "label": { "fr": "Chaque beat a une durée et une intention", "en": "Every beat has a duration and an intent" },
-          "verify": { "fr": "umd lint : storyboard.beats_missing_duration et beats_missing_intent valent 0.", "en": "umd lint: storyboard.beats_missing_duration and beats_missing_intent are 0." }
+          "id": "NAR-03",
+          "severity": "minor",
+          "check": {
+            "method": "auto",
+            "tool": "lint"
+          },
+          "label": {
+            "fr": "Chaque beat a une durée et une intention",
+            "en": "Every beat has a duration and an intent"
+          },
+          "verify": {
+            "fr": "umd lint : storyboard.beats_missing_duration et beats_missing_intent valent 0.",
+            "en": "umd lint: storyboard.beats_missing_duration and beats_missing_intent are 0."
+          }
         },
         {
-          "id": "NAR-04", "severity": "major", "check": { "method": "inspect" }, "applies_if": ["is_video", "has_audio"],
-          "label": { "fr": "Compréhensible son coupé", "en": "Understandable with the sound off" },
-          "verify": { "fr": "Planche contact sans audio : le message principal et l'appel à l'action sont lisibles à l'écran.", "en": "Contact sheet without audio: the main message and the call to action are readable on screen." }
+          "id": "NAR-04",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "applies_if": [
+            "is_video",
+            "has_audio"
+          ],
+          "label": {
+            "fr": "Compréhensible son coupé",
+            "en": "Understandable with the sound off"
+          },
+          "verify": {
+            "fr": "Planche contact sans audio : le message principal et l'appel à l'action sont lisibles à l'écran.",
+            "en": "Contact sheet without audio: the main message and the call to action are readable on screen."
+          }
         },
         {
-          "id": "NAR-05", "severity": "minor", "check": { "method": "auto", "tool": "lint" },
-          "label": { "fr": "Script, textes et voix off sans tournures IA", "en": "Script, on-screen text and voice-over without AI phrasing" },
-          "verify": { "fr": "umd lint : slop.count vaut 0 dans BRIEF.md, storyboard.md, le script et les captions.", "en": "umd lint: slop.count is 0 in BRIEF.md, storyboard.md, the script and captions." }
+          "id": "NAR-05",
+          "severity": "minor",
+          "check": {
+            "method": "auto",
+            "tool": "lint"
+          },
+          "label": {
+            "fr": "Script, textes et voix off sans tournures IA",
+            "en": "Script, on-screen text and voice-over without AI phrasing"
+          },
+          "verify": {
+            "fr": "umd lint : slop.count vaut 0 dans BRIEF.md, storyboard.md, le script et les captions.",
+            "en": "umd lint: slop.count is 0 in BRIEF.md, storyboard.md, the script and captions."
+          }
         }
       ]
     },
     {
       "id": "timing",
       "code": "TIM",
-      "label": { "fr": "Rythme et timing", "en": "Rhythm and timing" },
-      "summary": { "fr": "Pas de temps mort, un événement régulier, une durée adaptée au format.", "en": "No dead air, regular events, a duration that fits the format." },
+      "label": {
+        "fr": "Rythme et timing",
+        "en": "Rhythm and timing"
+      },
+      "summary": {
+        "fr": "Pas de temps mort, un événement régulier, une durée adaptée au format.",
+        "en": "No dead air, regular events, a duration that fits the format."
+      },
       "build": [
-        { "fr": "Il se passe quelque chose de nouveau toutes les 2 secondes environ ; jamais plus de 3 secondes sans mouvement porteur.", "en": "Something new happens about every 2 seconds; never more than 3 seconds without meaningful motion." },
-        { "fr": "Durée cible fixée au brief (social 15–60 s, promo 30–90 s, logo 2–8 s) et respectée à ±10 %.", "en": "Target duration set in the brief (social 15–60 s, promo 30–90 s, logo 2–8 s) and met within ±10%." },
-        { "fr": "Les plans clés restent assez longtemps pour être lus ; aucun plan sous 0,5 s sauf montage rapide voulu.", "en": "Key shots hold long enough to be read; no shot under 0.5 s unless a deliberate rapid montage." },
-        { "fr": "Avec musique : couper sur les temps forts.", "en": "With music: cut on the beats." }
+        {
+          "fr": "Il se passe quelque chose de nouveau toutes les 2 secondes environ ; jamais plus de 3 secondes sans mouvement porteur.",
+          "en": "Something new happens about every 2 seconds; never more than 3 seconds without meaningful motion."
+        },
+        {
+          "fr": "Durée cible fixée au brief (social 15–60 s, promo 30–90 s, logo 2–8 s) et respectée à ±10 %.",
+          "en": "Target duration set in the brief (social 15–60 s, promo 30–90 s, logo 2–8 s) and met within ±10%."
+        },
+        {
+          "fr": "Les plans clés restent assez longtemps pour être lus ; aucun plan sous 0,5 s sauf montage rapide voulu.",
+          "en": "Key shots hold long enough to be read; no shot under 0.5 s unless a deliberate rapid montage."
+        },
+        {
+          "fr": "Avec musique : couper sur les temps forts.",
+          "en": "With music: cut on the beats."
+        }
       ],
       "criteria": [
         {
-          "id": "TIM-01", "severity": "major", "check": { "method": "auto", "tool": "analyze" }, "applies_if": ["is_video"],
-          "label": { "fr": "Aucun temps mort de plus de 3 s", "en": "No dead air longer than 3 s" },
-          "verify": { "fr": "umd analyze : dead_air ne contient aucun segment plus long que thresholds.dead_air_s (hors pauses voulues notées au storyboard).", "en": "umd analyze: dead_air has no segment longer than thresholds.dead_air_s (except intended holds noted in the storyboard)." }
+          "id": "TIM-01",
+          "severity": "major",
+          "check": {
+            "method": "auto",
+            "tool": "analyze"
+          },
+          "applies_if": [
+            "is_video"
+          ],
+          "label": {
+            "fr": "Aucun temps mort de plus de 3 s",
+            "en": "No dead air longer than 3 s"
+          },
+          "verify": {
+            "fr": "umd analyze : dead_air ne contient aucun segment plus long que thresholds.dead_air_s (hors pauses voulues notées au storyboard).",
+            "en": "umd analyze: dead_air has no segment longer than thresholds.dead_air_s (except intended holds noted in the storyboard)."
+          }
         },
         {
-          "id": "TIM-02", "severity": "major", "check": { "method": "inspect" },
-          "label": { "fr": "Un événement nouveau toutes les 2 s environ", "en": "Something new about every 2 s" },
-          "verify": { "fr": "Timeline de mouvement d'umd analyze et planche contact : pics réguliers, pas de longue plage plate.", "en": "umd analyze motion timeline and contact sheet: regular peaks, no long flat stretch." }
+          "id": "TIM-02",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Un événement nouveau toutes les 2 s environ",
+            "en": "Something new about every 2 s"
+          },
+          "verify": {
+            "fr": "Timeline de mouvement d'umd analyze et planche contact : pics réguliers, pas de longue plage plate.",
+            "en": "umd analyze motion timeline and contact sheet: regular peaks, no long flat stretch."
+          }
         },
         {
-          "id": "TIM-03", "severity": "minor", "check": { "method": "inspect" }, "applies_if": ["has_music"],
-          "label": { "fr": "Coupes et accents calés sur la musique", "en": "Cuts and accents land on the music" },
-          "verify": { "fr": "Comparer scenes (umd analyze) aux temps forts (beat_this ou librosa si installés, sinon écoute) : écart de 2 images au plus.", "en": "Compare scenes (umd analyze) with beats (beat_this or librosa if installed, otherwise listening): 2 frames apart at most." }
+          "id": "TIM-03",
+          "severity": "minor",
+          "check": {
+            "method": "inspect"
+          },
+          "applies_if": [
+            "has_music"
+          ],
+          "label": {
+            "fr": "Coupes et accents calés sur la musique",
+            "en": "Cuts and accents land on the music"
+          },
+          "verify": {
+            "fr": "Comparer scenes (umd analyze) aux temps forts (beat_this ou librosa si installés, sinon écoute) : écart de 2 images au plus.",
+            "en": "Compare scenes (umd analyze) with beats (beat_this or librosa if installed, otherwise listening): 2 frames apart at most."
+          }
         },
         {
-          "id": "TIM-04", "severity": "major", "check": { "method": "auto", "tool": "analyze" }, "applies_if": ["is_video"],
-          "label": { "fr": "Durée conforme au brief et à la plateforme", "en": "Duration matches the brief and the platform" },
-          "verify": { "fr": "umd analyze : probe.duration à ±thresholds.duration_tolerance de project.json duration_s.", "en": "umd analyze: probe.duration within ±thresholds.duration_tolerance of project.json duration_s." }
+          "id": "TIM-04",
+          "severity": "major",
+          "check": {
+            "method": "auto",
+            "tool": "analyze"
+          },
+          "applies_if": [
+            "is_video"
+          ],
+          "label": {
+            "fr": "Durée conforme au brief et à la plateforme",
+            "en": "Duration matches the brief and the platform"
+          },
+          "verify": {
+            "fr": "umd analyze : probe.duration à ±thresholds.duration_tolerance de project.json duration_s.",
+            "en": "umd analyze: probe.duration within ±thresholds.duration_tolerance of project.json duration_s."
+          }
         },
         {
-          "id": "TIM-05", "severity": "minor", "check": { "method": "inspect" }, "applies_if": ["is_video"],
-          "label": { "fr": "Plans assez longs pour être lus", "en": "Shots long enough to be read" },
-          "verify": { "fr": "scenes d'umd analyze : aucun plan sous 0,5 s hors montage rapide voulu ; plans avec texte assez longs (voir TXT-01).", "en": "umd analyze scenes: no shot under 0.5 s outside a deliberate montage; text shots long enough (see TXT-01)." }
+          "id": "TIM-05",
+          "severity": "minor",
+          "check": {
+            "method": "inspect"
+          },
+          "applies_if": [
+            "is_video"
+          ],
+          "label": {
+            "fr": "Plans assez longs pour être lus",
+            "en": "Shots long enough to be read"
+          },
+          "verify": {
+            "fr": "scenes d'umd analyze : aucun plan sous 0,5 s hors montage rapide voulu ; plans avec texte assez longs (voir TXT-01).",
+            "en": "umd analyze scenes: no shot under 0.5 s outside a deliberate montage; text shots long enough (see TXT-01)."
+          }
         }
       ]
     },
     {
       "id": "life",
       "code": "LIF",
-      "label": { "fr": "Vie et densité", "en": "Life and density" },
-      "summary": { "fr": "Rien n'est totalement figé, les scènes varient, les mouvements se chevauchent.", "en": "Nothing is fully frozen, scenes vary, motions overlap." },
+      "label": {
+        "fr": "Vie et densité",
+        "en": "Life and density"
+      },
+      "summary": {
+        "fr": "Rien n'est totalement figé, les scènes varient, les mouvements se chevauchent.",
+        "en": "Nothing is fully frozen, scenes vary, motions overlap."
+      },
       "build": [
-        { "fr": "Rien n'est jamais totalement immobile, même sur le dernier plan : respiration, clignement, lumière ou particules qui vivent.", "en": "Nothing is ever fully still, even on the last shot: breathing, blinking, living light or particles." },
-        { "fr": "Varier cadrage, composition et rythme d'une scène à l'autre ; pas deux fois la même mise en page.", "en": "Vary framing, composition and rhythm from scene to scene; never the same layout twice." },
-        { "fr": "Personnages : les yeux réagissent 6 à 10 images avant le corps.", "en": "Characters: eyes react 6 to 10 frames before the body." },
-        { "fr": "Décaler les éléments (stagger, overlapping action) : ils ne bougent jamais tous en même temps.", "en": "Offset elements (stagger, overlapping action): they never all move at once." }
+        {
+          "fr": "Rien n'est jamais totalement immobile, même sur le dernier plan : respiration, clignement, lumière ou particules qui vivent.",
+          "en": "Nothing is ever fully still, even on the last shot: breathing, blinking, living light or particles."
+        },
+        {
+          "fr": "Varier cadrage, composition et rythme d'une scène à l'autre ; pas deux fois la même mise en page.",
+          "en": "Vary framing, composition and rhythm from scene to scene; never the same layout twice."
+        },
+        {
+          "fr": "Personnages : les yeux réagissent 6 à 10 images avant le corps.",
+          "en": "Characters: eyes react 6 to 10 frames before the body."
+        },
+        {
+          "fr": "Décaler les éléments (stagger, overlapping action) : ils ne bougent jamais tous en même temps.",
+          "en": "Offset elements (stagger, overlapping action): they never all move at once."
+        }
       ],
       "criteria": [
         {
-          "id": "LIF-01", "severity": "major", "check": { "method": "auto", "tool": "analyze" }, "applies_if": ["is_video"],
-          "label": { "fr": "Aucune image figée plus d'1 s, dernier plan compris", "en": "No frozen picture over 1 s, last shot included" },
-          "verify": { "fr": "umd analyze : freezes ne contient aucun segment plus long que thresholds.freeze_s.", "en": "umd analyze: freezes has no segment longer than thresholds.freeze_s." }
+          "id": "LIF-01",
+          "severity": "major",
+          "check": {
+            "method": "auto",
+            "tool": "analyze"
+          },
+          "applies_if": [
+            "is_video"
+          ],
+          "label": {
+            "fr": "Aucune image figée plus d'1 s, dernier plan compris",
+            "en": "No frozen picture over 1 s, last shot included"
+          },
+          "verify": {
+            "fr": "umd analyze : freezes ne contient aucun segment plus long que thresholds.freeze_s.",
+            "en": "umd analyze: freezes has no segment longer than thresholds.freeze_s."
+          }
         },
         {
-          "id": "LIF-02", "severity": "major", "check": { "method": "inspect" },
-          "label": { "fr": "Variété visuelle entre les scènes", "en": "Visual variety between scenes" },
-          "verify": { "fr": "Planche contact : pas deux scènes avec la même composition, le même cadrage et la même entrée.", "en": "Contact sheet: no two scenes with the same composition, framing and entrance." }
+          "id": "LIF-02",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Variété visuelle entre les scènes",
+            "en": "Visual variety between scenes"
+          },
+          "verify": {
+            "fr": "Planche contact : pas deux scènes avec la même composition, le même cadrage et la même entrée.",
+            "en": "Contact sheet: no two scenes with the same composition, framing and entrance."
+          }
         },
         {
-          "id": "LIF-03", "severity": "minor", "check": { "method": "inspect" }, "applies_if": ["has_characters"],
-          "label": { "fr": "Les yeux mènent le corps, respiration et clignements", "en": "Eyes lead the body, breathing and blinks" },
-          "verify": { "fr": "Images extraites autour d'une réaction (umd frames --at) : regard 6 à 10 images avant le corps ; clignements présents.", "en": "Frames around a reaction (umd frames --at): gaze 6 to 10 frames before the body; blinks present." }
+          "id": "LIF-03",
+          "severity": "minor",
+          "check": {
+            "method": "inspect"
+          },
+          "applies_if": [
+            "has_characters"
+          ],
+          "label": {
+            "fr": "Les yeux mènent le corps, respiration et clignements",
+            "en": "Eyes lead the body, breathing and blinks"
+          },
+          "verify": {
+            "fr": "Images extraites autour d'une réaction (umd frames --at) : regard 6 à 10 images avant le corps ; clignements présents.",
+            "en": "Frames around a reaction (umd frames --at): gaze 6 to 10 frames before the body; blinks present."
+          }
         },
         {
-          "id": "LIF-04", "severity": "minor", "check": { "method": "inspect" },
-          "label": { "fr": "Mouvements décalés, pas d'unisson mécanique", "en": "Offset motions, no mechanical unison" },
-          "verify": { "fr": "Code (stagger, delays) et images successives : les éléments d'un groupe démarrent et finissent à des instants différents.", "en": "Code (stagger, delays) and successive frames: elements of a group start and end at different times." }
+          "id": "LIF-04",
+          "severity": "minor",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Mouvements décalés, pas d'unisson mécanique",
+            "en": "Offset motions, no mechanical unison"
+          },
+          "verify": {
+            "fr": "Code (stagger, delays) et images successives : les éléments d'un groupe démarrent et finissent à des instants différents.",
+            "en": "Code (stagger, delays) and successive frames: elements of a group start and end at different times."
+          }
+        },
+        {
+          "id": "LIF-05",
+          "severity": "major",
+          "check": {
+            "method": "auto",
+            "tool": "analyze"
+          },
+          "applies_if": [
+            "is_video"
+          ],
+          "label": {
+            "fr": "Moins d'1 s d'image quasi figée par 30 s, carton final exclu",
+            "en": "Under 1 s of near-still picture per 30 s, end card excluded"
+          },
+          "verify": {
+            "fr": "umd analyze : stillness.per_30s ≤ thresholds.still_per_30s_max (tranches de 0,5 s sous motion_floor, les end_card_s dernières secondes exclues).",
+            "en": "umd analyze: stillness.per_30s ≤ thresholds.still_per_30s_max (0.5 s buckets below motion_floor, the last end_card_s seconds excluded)."
+          }
         }
       ]
     },
     {
       "id": "art",
       "code": "ART",
-      "label": { "fr": "Direction artistique", "en": "Art direction" },
-      "summary": { "fr": "Un look validé sur images fixes avant d'animer, fidèle au brief, sans signature IA.", "en": "A look validated on stills before animating, faithful to the brief, without an AI signature." },
+      "label": {
+        "fr": "Direction artistique",
+        "en": "Art direction"
+      },
+      "summary": {
+        "fr": "Un look validé sur images fixes avant d'animer, fidèle au brief, sans signature IA.",
+        "en": "A look validated on stills before animating, faithful to the brief, without an AI signature."
+      },
       "build": [
-        { "fr": "Rendre des images fixes clés (umd still) et les comparer à la référence avant d'animer ; corriger jusqu'à trois tours.", "en": "Render key stills (umd still) and compare them with the reference before animating; correct for up to three rounds." },
-        { "fr": "Couleurs et typographies viennent du brief et de motion-tokens.json ; deux familles de polices au plus.", "en": "Colours and type come from the brief and motion-tokens.json; at most two font families." },
-        { "fr": "Pas de dégradé violet par défaut, de verre dépoli partout, d'emoji en guise d'icônes, de blobs 3D génériques, de mise en page centrée type template.", "en": "No default purple gradient, glass everywhere, emoji as icons, generic 3D blobs or centred template layouts." },
-        { "fr": "Respecter les zones de sécurité du format (titre 90 %, interfaces des plateformes en 9:16).", "en": "Respect the format's safe areas (title-safe 90%, platform UI zones in 9:16)." },
-        { "fr": "Logos et icônes en vectoriel ; aucun asset agrandi flou.", "en": "Logos and icons as vectors; no blurry upscaled asset." }
+        {
+          "fr": "Rendre des images fixes clés (umd still) et les comparer à la référence avant d'animer ; corriger jusqu'à trois tours.",
+          "en": "Render key stills (umd still) and compare them with the reference before animating; correct for up to three rounds."
+        },
+        {
+          "fr": "Couleurs et typographies viennent du brief et de motion-tokens.json ; deux familles de polices au plus.",
+          "en": "Colours and type come from the brief and motion-tokens.json; at most two font families."
+        },
+        {
+          "fr": "Pas de dégradé violet par défaut, de verre dépoli partout, d'emoji en guise d'icônes, de blobs 3D génériques, de mise en page centrée type template.",
+          "en": "No default purple gradient, glass everywhere, emoji as icons, generic 3D blobs or centred template layouts."
+        },
+        {
+          "fr": "Respecter les zones de sécurité du format (titre 90 %, interfaces des plateformes en 9:16).",
+          "en": "Respect the format's safe areas (title-safe 90%, platform UI zones in 9:16)."
+        },
+        {
+          "fr": "Logos et icônes en vectoriel ; aucun asset agrandi flou.",
+          "en": "Logos and icons as vectors; no blurry upscaled asset."
+        }
       ],
       "criteria": [
         {
-          "id": "ART-01", "severity": "blocker", "check": { "method": "auto", "tool": "lint" },
-          "label": { "fr": "Images fixes clés validées avant l'animation", "en": "Key stills validated before animation" },
-          "verify": { "fr": "umd lint : stills.count ≥ 1 par scène dans .motion/stills/ et storyboard.md contient une ligne « Stills validated » datée.", "en": "umd lint: stills.count ≥ 1 per scene in .motion/stills/ and storyboard.md has a dated \"Stills validated\" line." }
+          "id": "ART-01",
+          "severity": "blocker",
+          "check": {
+            "method": "auto",
+            "tool": "lint"
+          },
+          "label": {
+            "fr": "Images fixes clés validées avant l'animation",
+            "en": "Key stills validated before animation"
+          },
+          "verify": {
+            "fr": "umd lint : stills.count ≥ 1 par scène dans .motion/stills/ et storyboard.md contient une ligne « Stills validated » datée.",
+            "en": "umd lint: stills.count ≥ 1 per scene in .motion/stills/ and storyboard.md has a dated \"Stills validated\" line."
+          }
         },
         {
-          "id": "ART-02", "severity": "major", "check": { "method": "inspect" },
-          "label": { "fr": "Palette et typographie du brief respectées", "en": "Palette and type from the brief respected" },
-          "verify": { "fr": "umd lint (fonts.families ≤ thresholds.fonts_max, couleurs hors tokens) et images : conformes à BRIEF.md.", "en": "umd lint (fonts.families ≤ thresholds.fonts_max, colours outside tokens) and frames: consistent with BRIEF.md." }
+          "id": "ART-02",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Palette et typographie du brief respectées",
+            "en": "Palette and type from the brief respected"
+          },
+          "verify": {
+            "fr": "umd lint (fonts.families ≤ thresholds.fonts_max, couleurs hors tokens) et images : conformes à BRIEF.md.",
+            "en": "umd lint (fonts.families ≤ thresholds.fonts_max, colours outside tokens) and frames: consistent with BRIEF.md."
+          }
         },
         {
-          "id": "ART-03", "severity": "major", "check": { "method": "inspect" },
-          "label": { "fr": "Aucun visuel à signature IA", "en": "No AI-signature visuals" },
-          "verify": { "fr": "Planche contact contre la liste de references/craft/anti-slop.md.", "en": "Contact sheet against the list in references/craft/anti-slop.md." }
+          "id": "ART-03",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Aucun visuel à signature IA",
+            "en": "No AI-signature visuals"
+          },
+          "verify": {
+            "fr": "Planche contact contre la liste de references/craft/anti-slop.md.",
+            "en": "Contact sheet against the list in references/craft/anti-slop.md."
+          }
         },
         {
-          "id": "ART-04", "severity": "minor", "check": { "method": "inspect" },
-          "label": { "fr": "Zones de sécurité du format respectées", "en": "Format safe areas respected" },
-          "verify": { "fr": "Images clés : texte et logo dans la zone titre (90 %) et hors des zones d'interface de la plateforme (9:16).", "en": "Key frames: text and logo inside title-safe (90%) and outside the platform's UI zones (9:16)." }
+          "id": "ART-04",
+          "severity": "minor",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Zones de sécurité du format respectées",
+            "en": "Format safe areas respected"
+          },
+          "verify": {
+            "fr": "Images clés : texte et logo dans la zone titre (90 %) et hors des zones d'interface de la plateforme (9:16).",
+            "en": "Key frames: text and logo inside title-safe (90%) and outside the platform's UI zones (9:16)."
+          }
         },
         {
-          "id": "ART-05", "severity": "major", "check": { "method": "inspect" },
-          "label": { "fr": "Assets nets à la résolution de sortie", "en": "Assets sharp at output resolution" },
-          "verify": { "fr": "Images à 100 % : logos, icônes et photos nets, sans pixellisation ni flou d'agrandissement.", "en": "Frames at 100%: logos, icons and photos sharp, no pixelation or upscale blur." }
+          "id": "ART-05",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Assets nets à la résolution de sortie",
+            "en": "Assets sharp at output resolution"
+          },
+          "verify": {
+            "fr": "Images à 100 % : logos, icônes et photos nets, sans pixellisation ni flou d'agrandissement.",
+            "en": "Frames at 100%: logos, icons and photos sharp, no pixelation or upscale blur."
+          }
         }
       ]
     }

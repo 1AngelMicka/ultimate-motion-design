@@ -10,6 +10,8 @@ Ultimate Motion Design bundles no third-party code. It calls tools that the user
 
 The style index (`plugins/umd/references/styles/index.json`) lists names, one-line descriptions and links from [lemomo-ai/lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar) (prompts MIT, demo films CC BY 4.0, credit LemoLab), [Vincentwei1021/mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) (MIT) and [yihui-dev/awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos) (MIT index; each prompt belongs to its author). Prompt bodies are downloaded from their source only when a project uses them. The docs site's style library (`site/assets/library/`) holds LemoLab demo stills resized to 480 px (CC BY 4.0, credit LemoLab, changed: resized) and mg-styles-15 posters and silent 480 px loops cut from their films (MIT); creators' thumbnails are displayed from skillry.dev, not copied. The critic's jury grid is adapted from mg-styles-15's `rubric.md` (MIT).
 
+`references/craft/motion-grammar.md`, the critic's verification rounds and ledger, the near-still budget (LIF-05) and music back-timing are adapted from [echris6/motion-video-kit](https://github.com/echris6/motion-video-kit) (MIT); the shot-as-event method and frame-numbered brief follow ideas from beamnxw's article "Motion Engineering with Opus 5.5" (rewritten, not copied).
+
 The scoring mechanics, the compact command runner and the auditor pattern come from [quality-pack](https://github.com/1AngelMicka/quality-pack) (MIT, same author).
 
 Motion token defaults reproduce the duration and easing values published by IBM Carbon Design System (`@carbon/motion`, Apache-2.0).

@@ -126,6 +126,18 @@ function audioPass(file, info) {
   };
 }
 
+// Near-still time: 0.5 s buckets below the motion floor, the last `endCard` seconds excluded (an end card may hold)
+export function stillness(timeline, bucket, floor, endCard = 2) {
+  const keep = Math.max(0, timeline.length - Math.round(endCard / bucket));
+  let total = 0, run = 0, longest = 0, at = null, runStart = 0;
+  for (let i = 0; i < keep; i++) {
+    if (timeline[i] < floor) { if (!run) runStart = i; run++; total++; if (run > longest) { longest = run; at = round(runStart * bucket); } }
+    else run = 0;
+  }
+  const span = keep * bucket;
+  return { still_s: round(total * bucket), per_30s: span ? round((total * bucket * 30) / span, 2) : 0, longest_s: round(longest * bucket), longest_at: at, end_card_excluded_s: endCard };
+}
+
 export function contactSheet(file, info, outFile, n = 16) {
   const portrait = info.width && info.height && info.height > info.width;
   const cols = portrait ? 8 : 4;
@@ -152,6 +164,7 @@ export function analyze(file, { outDir, thresholds = {}, sheet = true, cwd = pro
     res.flashes = countFlashes(v.frames, thresholds.flash_delta ?? 0.1);
     res.motion = { bucket_s: bucket, timeline, mean: round(timeline.reduce((s, x) => s + x, 0) / (timeline.length || 1), 1) };
     res.dead_air = deadAir(timeline, bucket, thresholds.motion_floor ?? 0.4, thresholds.dead_air_s ?? 3);
+    res.stillness = stillness(timeline, bucket, thresholds.motion_floor ?? 0.4, thresholds.end_card_s ?? 2);
     res.first_frame_black = v.black.some((b) => b.start <= 0.04);
   }
   if (info.audio) Object.assign(res, audioPass(abs, info));
@@ -180,3 +193,20 @@ export function frames(file, { at = [], every = null, outDir, cwd = process.cwd(
   }
   return { video: relative(cwd, abs), frames: out };
 }
+
+// Dense frames around each cut: one strip per cut, 12 frames from 0.2 s before to 0.2 s after (text over text,
+// splices and pops hide in transitions, not on settled frames)
+export function cutStrips(file, { cuts, outDir, cwd = process.cwd(), max = 12, width = 320 } = {}) {
+  const abs = resolve(cwd, file);
+  const info = probe(abs);
+  mkdirSync(outDir, { recursive: true });
+  const list = (cuts || []).map((c) => (typeof c === "number" ? c : c.t ?? c.time ?? c)).filter((t) => t > 0.2 && t < info.duration - 0.2).slice(0, max);
+  const out = [];
+  for (const t of list) {
+    const f = join(outDir, `cut-${String(t.toFixed(2)).replace(".", "_")}s.jpg`);
+    ffOk(["-ss", String(Math.max(0, t - 0.2)), "-t", "0.4", "-i", abs, "-vf", `fps=30,scale=${width}:-2,tile=6x2:padding=2:color=black`, "-frames:v", "1", "-q:v", "4", f]);
+    out.push({ cut: round(t), from: round(Math.max(0, t - 0.2)), to: round(t + 0.2), file: relative(cwd, f), layout: "6x2 row-major, 1/30 s apart" });
+  }
+  return { video: relative(cwd, abs), strips: out, skipped: Math.max(0, (cuts || []).length - out.length) };
+}
+
