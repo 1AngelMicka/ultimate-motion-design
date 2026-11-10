@@ -284,9 +284,12 @@ The plugin cuts tokens in three places:
 | **Drafts** (`/umd:render draft`) | Half resolution at 15 fps while iterating. |
 | **Cheaper model for the auditors** | `"audit_model": "sonnet"` in `.motion/project.json`; your session stays on your usual model. |
 | **Handoff** (`/umd:handoff`) | A short note lets the next session resume without re-exploring. The startup hook points to it for 14 days. |
+| **A style card instead of the prompt** | The chosen style prompt (1,200 to 7,700 tokens) is read once, summed up in 200 words in `BRIEF.md`, and only that summary is read again, by the critic and by the build. |
+| **Grouped auditors** | A group with 3 checks or fewer is given to another group's agent: an agent for two criteria would cost as much as one for fifteen. |
 
 ### Transparency
 
+- **Warned before spending.** Before each step, `/umd:go` states its token cost: measured on this project's earlier runs when there are some, estimated otherwise (agents launched, images read). An expensive step waits for your go-ahead, with the cheaper options: in practice the build (about 120 to 290 k tokens for 30 s, critique included) and the first full audit (about 110 to 250 k). In `.motion/project.json`, `"cost_confirm": "medium"` asks more often, `"never"` never; with a `token_budget`, any step that would exceed it waits for your go-ahead.
 - `/umd:tokens` reads Claude Code's local transcripts for this folder, subagents included. For each `/umd:*` command it shows input, output, cache-write and cache-read tokens. It adds the one change that would save the most on your project.
 - With a `token_budget` in `.motion/project.json`, it shows the share of the budget used.
 - The audit report also shows the tokens saved by compact output.

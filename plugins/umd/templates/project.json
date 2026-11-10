@@ -20,6 +20,7 @@
   "thresholds": {},
   "style": null,
   "quality_target": 8,
+  "cost_confirm": "high",
   "audit_model": "inherit",
   "token_budget": null
 }

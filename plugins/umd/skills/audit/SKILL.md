@@ -31,7 +31,9 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). Arguments: `$ARGUME
 
 ## 3. Auditors (parallel)
 
-Launch one `umd:auditor` agent per group in the plan, all in one message. If `audit_model` is not `inherit`, pass it as the agent's model. Prompt, filled in:
+Before launching, tell the user how many agents will run (each reads its plan, the evidence and the contact sheet: roughly 25 to 60 k tokens) unless the mode is `quick`.
+
+Launch one `umd:auditor` agent per group in the plan, all in one message, except that a group with 3 criteria or fewer is given to the agent of another group (list both groups in its prompt; it writes one part file per group): an agent for two criteria costs as much as one for fifteen. If `audit_model` is not `inherit`, pass it as the agent's model. Prompt, filled in:
 
 ```
 Audit group <group> of Ultimate Motion Design in <absolute project path>.

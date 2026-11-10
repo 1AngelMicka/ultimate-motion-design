@@ -123,7 +123,7 @@ write(mj, JSON.stringify(market, null, 2) + "\n");
     const text = readFileSync(join(ROOT, f), "utf8");
     const lines = text.split(/\r?\n/);
     lines.forEach((line, i) => {
-      for (const m of line.matchAll(/(\d+) (?:quality )?(?:checks|vérifications|critères|criteria)\b/g)) {
+      for (const m of line.matchAll(/(\d+) (?:quality )?(?:checks|vérifications|critères|criteria)\b(?! ou moins| or fewer| or less)/g)) {
         const n = Number(m[1]); const before = line.slice(0, m.index);
         if (/(des|of the|sur)\s*$/.test(before)) continue; // "28 des 60" handled below
         if (n !== total && n !== auto && !/\b(\d+) (?:des|of the)\s*$/.test(before)) bad.push(`${f}:${i + 1} says ${n} checks (data: ${total}, ${auto} automatic)`);

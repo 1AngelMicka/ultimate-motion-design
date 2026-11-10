@@ -308,3 +308,17 @@ test("capture: the picture sets the length when the soundtrack is shorter", { sk
   const p = spawnSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", join(d, "o.mp4")], { encoding: "utf8" });
   assert.ok(Math.abs(Number(p.stdout) - 2) < 0.15, `duration ${p.stdout}`);
 });
+
+test("cost: expensive steps ask first, budgets are honoured, measured runs replace the estimate", async () => {
+  const { estimateCost } = await import("../plugins/umd/scripts/lib/cost.mjs");
+  const p = { duration_s: 30 };
+  assert.equal(estimateCost("render", p, {}).confirm, false);
+  assert.equal(estimateCost("build", p, { storyboard: { beats: 12 } }).confirm, true);
+  assert.equal(estimateCost("build", { ...p, cost_confirm: "never" }, {}).confirm, false);
+  assert.equal(estimateCost("fix", { token_budget: 100000 }, { tokens_used: 95000 }).confirm, true);
+  const m = estimateCost("audit", p, {}, [{ command: "umd:audit", total: 40000, runs: 2 }]);
+  assert.match(m.source, /measured/);
+  assert.equal(m.level, "low");
+  const next = JSON.parse(umd(["next"], tmp()).stdout);
+  assert.ok(next.cost === undefined || next.cost.tokens);
+});

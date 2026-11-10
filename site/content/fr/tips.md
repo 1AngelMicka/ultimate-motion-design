@@ -153,6 +153,7 @@ Le contrôle automatique en repère une bonne partie (tics d'animation et formul
 - Mets `"audit_model": "sonnet"` dans `.motion/project.json` pour les auditeurs.
 - Note cible 7 pour un contenu courant, 8 pour une pub, 9 seulement si ça vaut des tours en plus.
 - Regarde `/umd:tokens` après chaque grosse étape.
+- `/umd:go` annonce le coût de chaque étape avant de la lancer et attend ton accord pour les plus chères. Fixe un `token_budget` dans `.motion/project.json` si tu veux un plafond.
 
 ## Essai réel en 20 minutes
 

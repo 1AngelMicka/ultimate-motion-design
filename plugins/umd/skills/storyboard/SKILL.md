@@ -18,7 +18,7 @@ Naming a technique in the Motion column? `umd moves <words>` (no tokens) gives 1
 If `project.json` has no `style` yet and the brief does not impose a strict brand system, start from a proven style rather than a blank page (`${CLAUDE_PLUGIN_ROOT}/references/styles.md`):
 
 1. `umd styles <mood, use and medium words from the brief>` (for example `umd styles luxe sombre lancement produit`). Show the user the 3 best matches with their preview links and one line each on why it fits.
-2. On their choice: `umd styles get <id>`, read `.motion/styles/<id>.md` once, set `"style": "<id>"` in project.json, and write in BRIEF.md which signature features you keep and what you adapt (story, product, copy, brand colours inside the style's colour logic), with the credit line.
+2. On their choice: `umd styles get <id>` (its output gives `approx_tokens`: style prompts weigh 1 to 8 k tokens), read `.motion/styles/<id>.md` **once**, set `"style": "<id>"` in project.json, and write a `## Style card` in BRIEF.md: at most 200 words with the signature features you keep (materials, colour logic, type, motion rules, sound), what you adapt (story, product, copy, brand colours inside the style's colour logic) and the credit line. From then on every step and every critic reads the card, never the full prompt again.
 3. Web pages: also pick 2 or 3 references from the galleries listed in `references/styles.md` and say what you take from each.
 
 ## 1. Beats

@@ -7,6 +7,8 @@ import { loadProject, motionDir, projectFlags } from "./ref.mjs";
 import { resolvePlaywright } from "./playwright.mjs";
 import { parseStoryboard } from "./lint.mjs";
 import { FFMPEG } from "./ffmpeg.mjs";
+import { estimateCost } from "./cost.mjs";
+import { tokenReport } from "./tokens.mjs";
 
 // Folders that hold outputs, caches or tools, never sources of the picture
 const SKIP = new Set(["node_modules", ".git", "renders", "audits", "deliverables", "dist", "build", "out", ".next", "frames", "analysis", "logs",
@@ -74,7 +76,11 @@ export function nextStep(cwd, ref) {
   const pw = resolvePlaywright(cwd);
   state.tools = { ffmpeg: ffmpegOk, playwright: !!pw };
   const project = loadProject(cwd);
-  const done = (step, reason, extra = {}) => ({ step, command: step === "done" ? null : `/umd:${step}`, reason, ...extra, state });
+  // every answer carries the cost of the step it proposes, measured here when it already ran, estimated otherwise
+  let history = null;
+  try { const t = tokenReport(cwd, { days: 90 }); if (t.available) { history = t.by_command; state.tokens_used = t.total.total; } } catch { /* no transcripts */ }
+  const done = (step, reason, extra = {}) => ({ step, command: step === "done" ? null : `/umd:${step}`, reason, ...extra,
+    cost: step === "done" ? undefined : estimateCost(step, project || {}, state, history), state });
   if (!ffmpegOk || !pw) return done("doctor", `missing: ${[!ffmpegOk && "FFmpeg", !pw && "Playwright"].filter(Boolean).join(", ")}`);
   if (!project) return done("kickoff", "no .motion/project.json in this folder");
   state.profile = project.profile;

@@ -153,6 +153,7 @@ The automatic checks catch a good part of this (motion tells and hollow wording)
 - Set `"audit_model": "sonnet"` in `.motion/project.json` for the auditors.
 - Target 7 for everyday content, 8 for an ad, 9 only if it is worth the extra rounds.
 - Check `/umd:tokens` after each big step.
+- `/umd:go` states the cost of each step before running it and waits for your go-ahead on the expensive ones. Set a `token_budget` in `.motion/project.json` if you want a ceiling.
 
 ## A 20-minute real test
 

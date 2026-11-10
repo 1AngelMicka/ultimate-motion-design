@@ -11,7 +11,7 @@ The user's words: `$ARGUMENTS`. Talk in the user's language (French by default).
 
 ## 1. Where are we?
 
-Run `umd next`. It returns `step`, `reason`, `needs_user`, `optional` and a short `state` (tools, storyboard, latest render, last audit). It reads local files only.
+Run `umd next`. It returns `step`, `reason`, `needs_user`, `optional`, `cost` and a short `state` (tools, storyboard, latest render, last audit). It reads local files only.
 
 ## 2. Which step?
 
@@ -20,7 +20,9 @@ Run `umd next`. It returns `step`, `reason`, `needs_user`, `optional` and a shor
 - `$ARGUMENTS` describes something to make and a project already exists → `kickoff` (it asks whether to update this project or start a new one in another folder); never ignore the user's words.
 - Otherwise → the step from `umd next`.
 
-Tell the user in one line: the step and why (`reason`).
+Tell the user in one line: the step, why (`reason`) and what it will cost (`cost.tokens`, `cost.level`, and "measured" when `cost.source` says so).
+
+**Expensive steps.** When `cost.confirm` is true (a high-cost step, or the project's `token_budget` would be exceeded), stop before running it: give the estimate, the main drivers (`cost.drivers`) and the cheaper options (`cost.cheaper`), and ask whether to go ahead. A project can set `"cost_confirm": "medium"` (ask more often) or `"never"` in `.motion/project.json`.
 
 ## 3. Run it
 

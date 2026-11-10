@@ -9,7 +9,7 @@ export function transcriptDir(cwd) {
   return join(base, "projects", resolve(cwd).replace(/[^a-zA-Z0-9]/g, "-"));
 }
 
-const empty = () => ({ input: 0, output: 0, cache_write: 0, cache_read: 0, turns: 0 });
+const empty = () => ({ input: 0, output: 0, cache_write: 0, cache_read: 0, turns: 0, runs: 0 });
 const add = (a, u) => { a.input += u.input_tokens || 0; a.output += u.output_tokens || 0; a.cache_write += u.cache_creation_input_tokens || 0; a.cache_read += u.cache_read_input_tokens || 0; a.turns++; };
 
 function commandOf(entry) {
@@ -30,7 +30,10 @@ function readTranscript(file, byCommand, seen, start = "conversation") {
     let e;
     try { e = JSON.parse(l); } catch { continue; }
     const cmd = commandOf(e);
-    if (cmd !== undefined && cmd !== null) current = cmd;
+    if (cmd !== undefined && cmd !== null) {
+      if (/^umd:/.test(cmd) && /<command-name>/.test(JSON.stringify(e.message?.content || ""))) (byCommand[cmd] ||= empty()).runs++; // one run per typed command
+      current = cmd;
+    }
     const u = e.message?.usage;
     if (e.type === "assistant" && u) {
       const id = e.message.id || e.uuid;
@@ -42,7 +45,7 @@ function readTranscript(file, byCommand, seen, start = "conversation") {
     // a skill launched by Claude itself (Skill tool) also starts a new attribution
     if (e.type === "assistant" && Array.isArray(e.message?.content)) {
       const s = e.message.content.find((x) => x.type === "tool_use" && x.name === "Skill" && x.input?.skill);
-      if (s) current = String(s.input.skill).replace(/^\//, "");
+      if (s) { current = String(s.input.skill).replace(/^\//, ""); if (/^umd:/.test(current)) (byCommand[current] ||= empty()).runs++; }
     }
   }
 }
@@ -65,7 +68,7 @@ export function tokenReport(cwd, { session = null, days = 30 } = {}) {
     }
   }
   const total = empty();
-  for (const v of Object.values(byCommand)) { total.input += v.input; total.output += v.output; total.cache_write += v.cache_write; total.cache_read += v.cache_read; total.turns += v.turns; }
+  for (const v of Object.values(byCommand)) { total.runs += v.runs; total.input += v.input; total.output += v.output; total.cache_write += v.cache_write; total.cache_read += v.cache_read; total.turns += v.turns; }
   const rows = Object.entries(byCommand).map(([command, v]) => ({ command, ...v, total: v.input + v.output + v.cache_write + v.cache_read }))
     .sort((a, b) => b.total - a.total);
   return { available: true, sessions: files.length, days, by_command: rows, total: { ...total, total: total.input + total.output + total.cache_write + total.cache_read },

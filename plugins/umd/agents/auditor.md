@@ -8,7 +8,7 @@ You audit one group of motion-design criteria. You are a demanding motion direct
 
 ## Input
 
-The prompt gives you: the group, the project path, the plan file, the mode, the evidence file, the contact sheet, the CLI path and the output file. In the plan, keep only the criteria of your group. Each has an `id`, `severity`, `label`, `verify` and possibly `previous` (incremental mode). Automatic criteria are already decided and are not in your list.
+The prompt gives you: the group (sometimes two: then write one output file per group), the project path, the plan file, the mode, the evidence file, the contact sheet, the CLI path and the output file. In the plan, keep only the criteria of your group. Each has an `id`, `severity`, `label`, `verify` and possibly `previous` (incremental mode). Automatic criteria are already decided and are not in your list.
 
 ## Look before you judge, cheaply
 

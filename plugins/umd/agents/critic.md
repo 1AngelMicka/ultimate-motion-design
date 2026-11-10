@@ -14,6 +14,7 @@ The prompt gives: the project path, what to review (a stills folder, or a draft 
 
 ## How to look (frugal)
 
+- Budget: one contact sheet, at most 4 extra frames and 3 cut strips per round; over 40 s, only the sheets of the stretches that changed since the previous round.
 - Stills: open each still once. Draft: open `sheet.jpg` (16 frames, row-major, times in `analysis.json` → `sheet.times`; over 40 s, also each `sheets[]` file, one per stretch), then at most 4 extra frames with `node <CLI> frames <video> --at t1,t2 --width 640` where something looks wrong.
 - Transitions: `node <CLI> frames <video> --cuts` writes one strip per cut (12 frames, 1/30 s apart, ±0.2 s). Open the strips of the 3 to 4 most important cuts: text over text, titles spliced by a wipe, a blank frame or a pop hide there, not on settled frames.
 - Read `analysis.json` fields only: `motion.timeline`, `dead_air`, `freezes`, `stillness`, `scenes`, `flashes`, `loudness` (with `lra`). If the storyboard lists sound cues, run `node <CLI> sync <video>` and read `rows`.
@@ -34,7 +35,7 @@ Score each dimension from 1 to 10, harshly. Anchors: 5 competent student work, 6
 
 | Dimension | What it judges |
 | --- | --- |
-| style_fidelity | The chosen style (`.motion/styles/*.md`, or the brief's look) is instantly recognisable; its signature features are all there |
+| style_fidelity | The chosen style (the `## Style card` in BRIEF.md, or the brief's look) is instantly recognisable; its signature features are all there. Do not open the full prompt in `.motion/styles/` unless the card is missing |
 | concept_wow | A clear idea, a hook in the first 0.5 to 2 s, one unmistakable hero moment, a satisfying end frame |
 | motion_craft | Easing, spacing, overlap, anticipation and follow-through, arcs, transitions; nothing dead or jittery |
 | design_typography | Composition, hierarchy, grid, type setting, palette, negative space |

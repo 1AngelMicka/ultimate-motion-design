@@ -21,7 +21,7 @@ Nothing to install. `umd styles` searches a local index of 784 entries (no token
 ## Core patterns
 
 1. **Search by mood, use and medium**, in any language: `umd styles luxe sombre lancement`, `umd styles explainer data`, `umd styles 3d product --kind style`, `umd styles logo --source mg`. Results show id, category, uses, a one-line essence, a `preview` link (the entry on the docs gallery: still or looping video, prompt, credit) and a `film` link. Show the user 3 options with their preview links; let them choose. Users can also browse everything at https://1angelmicka.github.io/ultimate-motion-design/bibliotheque.html and come back with an id.
-2. **Download only the chosen one**: `umd styles get lemo:dark-keynote` writes `.motion/styles/<id>.md` (2 000 to 4 000 tokens). Read it once.
+2. **Download only the chosen one**: `umd styles get lemo:dark-keynote` writes `.motion/styles/<id>.md` (1 200 to 7 700 tokens, median about 3 100; read it once, then work from the `## Style card` in BRIEF.md). Read it once.
 3. **Adapt, keep the signature**:
    - Keep the style's signature features, materials, colour logic and motion rules; they are what makes it read as premium.
    - Replace the creative seed: story, product, copy, brand colours (inside the style's colour logic), duration, aspect ratio.

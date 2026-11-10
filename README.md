@@ -284,9 +284,12 @@ Le plugin réduit les tokens à trois endroits :
 | **Brouillons** (`/umd:render draft`) | Demi-résolution à 15 images/s pendant l'itération. |
 | **Modèle moins cher pour les auditeurs** | `"audit_model": "sonnet"` dans `.motion/project.json` ; ta session reste sur ton modèle habituel. |
 | **Passage de relais** (`/umd:handoff`) | Une note courte permet à la session suivante de reprendre sans réexplorer. Le hook de démarrage la signale pendant 14 jours. |
+| **Une carte de style plutôt que le prompt** | Le prompt de style choisi (1 200 à 7 700 tokens) est lu une fois, résumé en 200 mots dans `BRIEF.md`, et seul ce résumé est relu ensuite, par le critique comme par la construction. |
+| **Auditeurs regroupés** | Un groupe de 3 vérifications ou moins est confié à l'agent d'un autre groupe : un agent pour deux critères coûterait autant qu'un pour quinze. |
 
 ### Transparence
 
+- **Prévenu avant de dépenser.** Avant chaque étape, `/umd:go` annonce son coût en tokens : mesuré sur les passages précédents de ce projet quand il y en a, estimé sinon (agents lancés, images lues). Une étape coûteuse attend ton accord, avec les options moins chères : en pratique la construction (environ 120 à 290 k tokens pour 30 s, critique comprise) et le premier audit complet (environ 110 à 250 k). Dans `.motion/project.json`, `"cost_confirm": "medium"` demande plus souvent, `"never"` jamais ; avec un `token_budget`, toute étape qui le dépasserait attend ton accord.
 - `/umd:tokens` lit les transcriptions locales de Claude Code pour ce dossier, sous-agents compris. Pour chaque commande `/umd:*`, il affiche les tokens en entrée, en sortie, en écriture et en lecture de cache. Il ajoute le conseil qui ferait le plus économiser sur ton projet.
 - Avec un `token_budget` dans `.motion/project.json`, il affiche la part du budget utilisée.
 - Le rapport d'audit indique aussi les tokens évités grâce aux sorties compactes.
