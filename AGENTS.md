@@ -47,6 +47,7 @@ Do not run `claude plugin …` from inside a running Claude Code session: nested
 2. From then on the user types `/umd:go` to continue. It runs the next step (storyboard, build, render, audit, fix, deliver) and stops at decisions that belong to the user: approving the key stills, accepting a licence exception, delivering.
 3. Results: the audit report is `.motion/AUDIT.md` (score out of 10, blockers, fixes); renders and their contact sheets are in `.motion/renders/<id>/`; deliverables in `deliverables/`.
 4. Token use: `/umd:tokens`. Cheapest audit: `/umd:audit quick` (automatic checks only, no agent).
+5. Resources, at no token cost: `umd styles <words>` (784 styles and prompts, previews at https://1angelmicka.github.io/ultimate-motion-design/en/bibliotheque.html), `umd moves <words>` (120 named techniques), `umd commons <words>` (free images, recorded in the assets lock). Every link the project used is in `SOURCES.md`.
 
 ## Use without Claude Code (other agents)
 
@@ -68,3 +69,4 @@ The method lives in plain Markdown: `plugins/umd/skills/*/SKILL.md` (the steps; 
 - Never add a licence exception (`license_policy.allow`) or lower a threshold on your own: it is the user's decision.
 - Do not copy someone else's video or site look; describe references in words (see `plugins/umd/references/recipes/match-reference.md`).
 - Record every asset in `.motion/assets.lock.json` with its source and licence.
+- Recommend only free, reusable resources: nothing paid, nothing that may not be redistributed.

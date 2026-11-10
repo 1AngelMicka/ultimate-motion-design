@@ -24,7 +24,12 @@ What it brings:
   - Score out of 10. An open blocker caps the score and locks delivery.
   - A critic agent scores every draft like a jury (7 = professional, 8 = agency, 9 = award) and sends it back until it reaches the target. A fresh critic every round, which never sees the builder's reasoning and checks the previous round's fixes item by item.
   - Sound is measured against picture: each effect lands on its event within ±45 ms (`umd sync`), and the music's real ending lands on the end card (`umd mix --backtime`).
+  - Cuts happen on motion, never between two parked shots, and no picture stays near-still for more than 1 s per 30 s: two measured checks, calibrated on 15 award films with zero false alarm.
 - **The grammar of professional launch films.** Six rules and 16 mechanisms drawn from the analysis of 28 launch films: one persistent actor, every action producing a result, the foreground carrying the transition.
+- **Proven starting points, at no token cost.**
+  - 784 styles and prompts, with a preview of the result in the [online library](https://1angelmicka.github.io/ultimate-motion-design/en/bibliotheque.html) (`umd styles`).
+  - 120 named techniques, from match cut to split-flap, so you and the critic speak the same language (`umd moves`).
+  - Free images from Wikimedia Commons, recorded automatically with their author and licence (`umd commons`).
 - **Token-frugal and transparent.**
   - About 250 tokens loaded at all times.
   - Measurable checks are done in code, without an agent.
@@ -33,6 +38,7 @@ What it brings:
 - **Licences under control.**
   - A guard refuses to install a non-commercial model in a commercial project, a Tencent model in Europe, or AGPL code in a web page.
   - Every asset is inventoried with its licence.
+  - Only free, reusable resources are recommended: nothing paid, nothing you may not redistribute.
 - **Easy to install.** Two commands, then `/umd:doctor` installs whatever is missing.
 - **Free, open source, no telemetry**, in French and English.
 
@@ -53,10 +59,10 @@ Under the hood it follows these steps, which you can also run one by one:
 | Step | What happens | What it produces |
 | --- | --- | --- |
 | `/umd:kickoff` | Claude looks at the folder and asks a few questions: what, format, length, look, commercial use. It picks the profile, route and engine, checks the tools and writes the brief. | `BRIEF.md`, `.motion/project.json` |
-| `/umd:storyboard` | Script, then timed beats, with one intent per beat. Before anything moves, the **key stills** are rendered, compared with the reference and corrected over up to 3 rounds by an "art director" agent. | `.motion/storyboard.md`, `.motion/stills/` |
-| `/umd:build` | Builds beat by beat with motion tokens, assets, voice, music and captions. Fast drafts (half size, 15 fps) are reviewed by the same agent. | the piece's sources, `.motion/assets.lock.json` |
+| `/umd:storyboard` | Picks a proven style, writes the script, then timed beats with one intent per beat. Product actions are written as events numbered to the frame, and important sounds as cues. Before anything moves, the **key stills** are rendered, compared with the reference and corrected over up to 3 rounds by an "art director" agent. | `.motion/storyboard.md`, `.motion/stills/` |
+| `/umd:build` | Builds beat by beat with motion tokens, assets, voice, music (timed so its real ending lands on the end card) and captions. Fast drafts (half size, 15 fps) are reviewed every round by a fresh critic, who scores like a jury and checks the previous round's fixes. | the piece's sources, `.motion/assets.lock.json`, `.motion/LEDGER.md` |
 | While you work | The `motion` skill applies the craft rules by itself. Time comes from the frame, never the clock. Durations and curves come from the tokens, and every motion has a job. No AI motion tells, nothing frozen. The licence guard watches installs. | |
-| `/umd:render` | Final render, done twice to prove it is reproducible, then analysed: cuts, dead air, frozen frames, black frames, flashes, loudness, contact sheet. | `.motion/renders/<id>/` |
+| `/umd:render` | Final render, done twice to prove it is reproducible, then analysed: cuts and motion around each cut, dead air, near-still time, black frames, flashes, loudness, contact sheet. | `.motion/renders/<id>/` |
 | `/umd:audit` | Automatic measures are done in code. Then one auditor per group judges, in parallel, whatever needs eyes. Result: the overall score, each domain's score, the trend and prioritised fixes. | `.motion/AUDIT.md` |
 | `/umd:fix` | Fixes issues in order, blockers first. Each fix is verified, then the render and audit are redone. | |
 | `/umd:deliver` | Copies the audited render to `deliverables/` with a manifest and credits. Refused while a blocker is open or if the render changed since the audit. | `deliverables/` |
@@ -145,7 +151,13 @@ Your project keeps its `.motion/` folder and deliverables; delete them if you no
 | `/umd:doctor` · `/umd:doctor fix` | Check or install the tools |
 | `/umd:handoff` | Write `.motion/handoff.md` to resume in another session |
 
-All these commands rely on a zero-dependency CLI that you can also run yourself: `node <plugin>/scripts/umd.mjs` (with no argument it prints its help). It includes `capture`, `still`, `analyze`, `frames`, `compare`, `vmaf`, `mix`, `normalize`, `captions`, `burn`, `lint`, `licenses`, `webperf` and `tokens`.
+All these commands rely on a zero-dependency CLI that you can also run yourself: `node <plugin>/scripts/umd.mjs` (with no argument it prints its help). It includes:
+
+- **rendering:** `capture`, `still`, `render`;
+- **analysis:** `analyze` (cuts, motion, dead air, flashes, loudness, contact sheet), `frames` (`--cuts`: 12 frames around each cut), `compare`, `vmaf`, `webperf`, `lint`, `licenses`;
+- **sound:** `mix` (ducking, loudness, `--backtime` to land the music's ending on the end card), `hits` (a track's final hits), `sync` (each sound against its picture), `normalize`, `loudness`, `captions`, `burn`;
+- **resources:** `styles` (784 styles and prompts), `moves` (120 named techniques), `commons` (free images from Wikimedia Commons);
+- **tracking:** `next`, `status`, `tokens`.
 
 ## Routes and technologies
 
@@ -162,15 +174,18 @@ At kickoff, Claude picks a route based on what you are making. Each route has it
 
 On top of that:
 
-- **14 proven recipes:** product launch, product demo, presentation video, explainer, logo sting, kinetic typography, vertical short, data story, hero section, page transitions, scrollytelling, micro-interactions, narrative short, and matching a reference animation;
-- **16 engine guides;**
-- **craft guides:** animation principles, motion tokens, composition and safe areas, on-screen text, anti "AI slop";
+- **15 proven recipes:** product launch, product demo, presentation video, explainer, logo sting, kinetic typography, vertical short, data story, hero section, page transitions, scrollytelling, micro-interactions, narrative short, recurring animated series, and matching a reference animation (broken down shot by shot);
+- **17 engine guides,** including a sorted list of 60 effect, 3D, physics, sound and editing libraries with their licence and what to watch for a reproducible render;
+- **craft guides:** launch-film grammar, animation principles, motion tokens, composition and safe areas, on-screen text (and copy a stranger understands in 3 s), anti "AI slop";
 - **audio guides:** commercial-safe voices, music and sound effects, mixing, captions;
 - **practical guides:** assets, platform specs, licences.
 
 **784 proven styles and prompts** serve as starting points: 66 film styles from [lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar), 15 motion-design styles from [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) and 703 prompts from [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos). `/umd:storyboard` offers three that fit your brief, and `umd styles <words>` searches them at no token cost. To choose by eye: the [Style library](https://1angelmicka.github.io/ultimate-motion-design/en/bibliotheque.html) shows every style with a preview of the result (still or video) and its prompt to copy. Ready-to-copy prompts and advice: the [Tips and prompts](https://1angelmicka.github.io/ultimate-motion-design/en/astuces.html) page.
 
-The file [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) lists **1,113 GitHub repositories**, checked on 9 and 10 November 2026, and [SOURCES.md](SOURCES.md) every link shared, tested or used since the start, with what was done with it, with licence warnings.
+Two files keep the trace of the research:
+
+- [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) lists **1,113 GitHub repositories**, checked on 9 and 10 November 2026, with licence warnings;
+- [SOURCES.md](SOURCES.md) lists **every link** shared, tested or used since the project started (315), with what was done with it and why some were set aside.
 
 ### Deterministic rendering
 
@@ -221,22 +236,25 @@ The other checks are judged by the auditors, from the contact sheet and a few ta
   - stills not validated before animation;
   - a non-commercial asset in an ad.
 - The overall score weights the domains by profile: `promo`, `presentation`, `explainer`, `social`, `film`, `logo` or `web`. Domains that do not apply are ignored, such as captions for a logo or audio for a web page.
-- Thresholds can be tuned per project in the `thresholds` of `.motion/project.json`: −14 LUFS, 3 flashes per second, 3 s of dead air, VMAF 93… The dead-air, frozen-picture, flash and loudness thresholds were checked on 15 agency-level films with zero false alarm ([docs/CALIBRATION.md](docs/CALIBRATION.md)). The VMAF, caption and web ones remain conventions.
+- Thresholds can be tuned per project in the `thresholds` of `.motion/project.json`: −14 LUFS, 3 flashes per second, 3 s of dead air, VMAF 93… The dead-air, frozen-picture, near-still, cuts-on-motion, flash and loudness thresholds were checked on 15 agency-level films with zero false alarm ([docs/CALIBRATION.md](docs/CALIBRATION.md)). A rule that would have flagged award films (music dynamics) was dropped. The VMAF, caption and web ones remain conventions.
 
 ## Licences and rights
 
 Licences are the most concrete risk in a motion project: many state-of-the-art models have non-commercial weights. The plugin handles them at three levels:
 
 - **At kickoff**, the project's policy is written into `license_policy`: commercial use or not, region, Remotion status (free up to 3 employees, paid company licence above), accepted exceptions.
-- **While you work**, a hook refuses to install (npm, pnpm, yarn, bun, pip, uv, pipx, poetry) a package or model that the policy forbids, and suggests an alternative. The registry has 30 entries:
-  - non-commercial weights such as F5-TTS, MusicGen, YuE, FLUX.1 [dev]…;
+- **While you work**, a hook refuses to install (npm, pnpm, yarn, bun, pip, uv, pipx, poetry) a package or model that the policy forbids, and suggests an alternative. The registry has 39 entries:
+  - non-commercial weights such as F5-TTS, MusicGen, YuE, FLUX.1 [dev]…, and tools under a non-commercial licence (anything2explainer, CC BY-NC datasets);
   - Tencent Hunyuan models, whose licence does not apply in Europe;
   - AGPL and GPL;
   - Animate UI's Commons Clause;
-  - repositories without a licence.
+  - repositories without a licence;
+  - paid collections, or collections you may not redistribute.
 - **At audit**, `umd licenses` cross-checks dependencies, declared models and `.motion/assets.lock.json`. Every asset is recorded there with its source and licence; required credits are copied into `deliverables/credits.txt`.
 
 An exception is still possible: it is your decision, written down explicitly in `license_policy.allow`.
+
+For images, `umd commons` only offers public domain, CC0 and CC BY (CC BY-SA only if you ask), downloads the file and records it in `assets.lock.json` with its author and credit line.
 
 ## Token economy
 
@@ -251,12 +269,13 @@ The plugin cuts tokens in three places:
 | Mechanism | Effect |
 | --- | --- |
 | **Almost nothing loaded at all times** | About 250 tokens loaded at all times: the description of the `motion` skill and those of the two agents. The eleven `/umd:*` commands cost nothing until you run them. In a umd project, the startup hook adds about 150 tokens of context. |
-| **References on demand** | 49 guides of 1,200 to 2,100 tokens each, read one at a time, only when needed: for example the project's route, then its engine's guide. |
+| **References on demand** | 53 guides of 1,200 to 2,100 tokens each, read one at a time, only when needed: for example the project's route, then its engine's guide. |
 | **Checks done in code** | 29 of the 60 checks are decided by the CLI from FFmpeg measures, lint, licences and browser tests. The auditors only look at what needs eyes. |
 | **Contact sheet** | Each render produces a 16-frame sheet: a single image to read. Claude then extracts only 2 to 6 targeted frames if a doubt remains. |
 | **Compact output** | Renders, encodes and analyses write their full output to disk and return only a summary. In our test, 3 commands went from about 3,700 tokens of output to about 700. |
 | **Incremental audit by default** | Only the checks that a changed file or a new render can affect are re-checked. If nothing changed, no auditor is started. |
 | **Quick mode** (`/umd:audit quick`) | Automatic measures only, no agent. |
+| **Local searches** | `umd styles` and `umd moves` search indexes shipped with the plugin: zero tokens, no network. Only the chosen style is downloaded. |
 | **Drafts** (`/umd:render draft`) | Half resolution at 15 fps while iterating. |
 | **Cheaper model for the auditors** | `"audit_model": "sonnet"` in `.motion/project.json`; your session stays on your usual model. |
 | **Handoff** (`/umd:handoff`) | A short note lets the next session resume without re-exploring. The startup hook points to it for 14 days. |
@@ -290,9 +309,13 @@ These tools are not included in the plugin: they are separate projects, installe
 | [rive-app/skills](https://github.com/rive-app/skills) | Interactive vector animation | Official Rive skills |
 | [ChromeDevTools/chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) | Debugging animated pages | Performance traces, dropped frames |
 | [ahujasid/mcp-for-blender](https://github.com/ahujasid/mcp-for-blender) | `blender` route only | Drives a running Blender |
+| [echris6/motion-video-kit](https://github.com/echris6/motion-video-kit) | Premium business commercials | The source of the motion grammar: notes on 28 films, critic prompts, 3D product realism, case studies |
+| [Leonxlnx/cinetic](https://github.com/Leonxlnx/cinetic) | A ready template (update video, UI walkthrough, social ad) | 34 scenes and 7 film templates in Remotion or HyperFrames |
+| [kajisho5/ffmpeg-skill](https://github.com/kajisho5/ffmpeg-skill) | Editing existing footage | 42 FFmpeg recipes and a review of the cut |
+| [Moh4696/cinematic-skill](https://github.com/Moh4696/cinematic-skill) | Narrated documentaries and archive films | One camera over a board of photos and maps, each picture timed to the voice |
 | [NiazMorshed2007/reanimate](https://github.com/NiazMorshed2007/reanimate) | A reference animation to study (site, video, gif, Lottie, WebGL), or your own animation to port | Records it, extracts its durations and curves, rebuilds it and measures the gap frame by frame. Needs Bun; tested on macOS and Linux only. See [the recipe](plugins/umd/references/recipes/match-reference.md) |
 
-The exact install commands, checked against each project, are in [references/companions.md](plugins/umd/references/companions.md).
+All are free and open source. The exact install commands, checked against each project, are in [references/companions.md](plugins/umd/references/companions.md).
 
 ## What it creates in your project
 
@@ -300,9 +323,11 @@ The exact install commands, checked against each project, are in [references/com
 BRIEF.md                         the brief (written by /umd:kickoff)
 .motion/
   project.json                   profile, route, engine, format, render, licence policy, thresholds
-  storyboard.md                  the beats, and the dated "Stills validated" line
+  storyboard.md                  the beats, events, sound cues and the dated "Stills validated" line
   motion-tokens.json             durations and curves (DTCG format)
   assets.lock.json               every asset with its source and licence
+  styles/                        the chosen style's prompt, with its credit line
+  LEDGER.md                      every critique round: what was found, changed and measured
   stills/                        the key stills
   renders/<id>/                  video, render.json, analysis.json, sheet.jpg, determinism.json, logs
   renders/latest.json            the latest render
@@ -311,10 +336,11 @@ BRIEF.md                         the brief (written by /umd:kickoff)
   audits/<date>/                 evidence.json, plan.json, parts/ (auditor results)
   token-savings.json             tokens saved by compact output
   handoff.md                     the handoff between sessions
+assets/commons/                  images downloaded by umd commons
 deliverables/                    deliverables, with their manifest and credits.txt
 ```
 
-Commit `BRIEF.md` and `.motion/`, except the renders, to keep the score history. `/umd:kickoff` adds the renders, audit logs and token counter to your `.gitignore`.
+Commit `BRIEF.md` and `.motion/`, except the renders, to keep the score history. `LEDGER.md` and the audit report show the care taken: you can attach them to a client delivery. `/umd:kickoff` adds the renders, audit logs and token counter to your `.gitignore`.
 
 ## Troubleshooting
 
@@ -330,6 +356,7 @@ Commit `BRIEF.md` and `.motion/`, except the renders, to keep the score history.
 | 3D is slow or blank in the render | Headless Chromium uses software rendering. Iterate with `/umd:render draft` and check one frame first with `umd still`. |
 | An install is blocked by the guard | Use the suggested alternative (`references/licenses.md`). If you accept the risk, add the name to `license_policy.allow`: that is your decision, Claude does not make it for you. |
 | `/umd:deliver` refuses to deliver | A blocker is open, or the render changed since the audit: `/umd:fix`, then `/umd:render` and `/umd:audit`. |
+| `umd sync` says "no hit within 250 ms" | The planned sound is missing or too quiet under the music: place the effect on the cue time (`umd mix --sfx file.wav@6.5`) and check it rises above the music. |
 | `/umd:tokens` is empty | Transcripts appear after the first Claude Code session in this folder. If you moved your configuration, set `CLAUDE_CONFIG_DIR`. |
 
 ## Privacy and security
@@ -339,6 +366,7 @@ The plugin sends no telemetry.
 - **What it contacts:**
   - During a render, it serves your files on `127.0.0.1` and only contacts the URLs your page loads itself.
   - `/umd:doctor fix` downloads Playwright from npm, Chromium from Playwright's servers, and FFmpeg through winget or Homebrew.
+  - `umd styles get` downloads the chosen prompt from GitHub; `umd commons` queries Wikimedia Commons. No data from your project is sent.
 - **What it reads:** `/umd:tokens` reads Claude Code's transcripts on your machine and sends nothing.
 - **Hooks:** they run locally and are short enough to read: [licence guard](plugins/umd/scripts/hooks/license-guard.mjs), [session reminder](plugins/umd/scripts/hooks/session-start.mjs).
 - **Reporting a vulnerability:** see [SECURITY.md](SECURITY.md).
@@ -349,11 +377,12 @@ The plugin helps you spot licence traps; it does not replace a lawyer's advice.
 
 Ideas, bugs, new recipes and new engines are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md). Planned:
 
-- calibrating the thresholds on real renders;
+- calibrating the VMAF, caption and web thresholds, which remain conventions;
+- a full real-world run, from `/umd:go` to delivery;
 - an After Effects and Premiere module through MCP;
 - automated platform exports;
 - a visual judge specialised in timing.
 
 ## Credits and licence
 
-The scoring, audit and token-saving mechanics come from [quality-pack](https://github.com/1AngelMicka/quality-pack), by the same author. The catalogue and guides build on a study of more than 900 repositories. Third-party tools are credited in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). MIT licence.
+The scoring, audit and token-saving mechanics come from [quality-pack](https://github.com/1AngelMicka/quality-pack), by the same author. The motion grammar, critique rounds and music timing are adapted from [motion-video-kit](https://github.com/echris6/motion-video-kit); the styles come from [lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar), [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) and [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos); the 120 techniques from [motionvideo.xyz](https://github.com/motionvideohq/motionvideo.xyz). The catalogue and guides build on a study of more than 1,100 repositories, and every link used is in [SOURCES.md](SOURCES.md). Third-party tools are credited in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). MIT licence.
