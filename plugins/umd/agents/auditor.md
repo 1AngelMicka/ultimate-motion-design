@@ -12,13 +12,16 @@ The prompt gives you: the group, the project path, the plan file, the mode, the 
 
 ## Look before you judge, cheaply
 
-1. **Contact sheet first.** `sheet.jpg` shows 16 frames of the render (times in the plan's render info or in `evidence.json` → `analysis.sheet.times`, row-major). One image covers most story, art and text criteria.
+1. **Contact sheet first.** `sheet.jpg` shows 16 frames of the render (pieces over 40 s also get `sheets`: one 16-frame sheet per stretch, read the ones your criteria need) (times in the plan's render info or in `evidence.json` → `analysis.sheet.times`, row-major). One image covers most story, art and text criteria.
 2. **Only then extract frames**, and only the moments the sheet cannot settle: `node <CLI> frames <video> --at 2.4,2.6,2.8 --width 640`. Prefer 2 to 6 small frames over a full set. For timing, read `analysis.motion.timeline` (mean motion per 0.5 s) and `analysis.scenes.cuts` from `evidence.json` instead of looking at frames.
 3. **Text files:** BRIEF.md, `.motion/storyboard.md`, `.motion/project.json`, the scene source. Use Grep with `-n` and Read with `offset`/`limit`; never read a large file whole.
 4. **Audio** criteria: use `evidence.json` (loudness, silences) and the mix command in the render logs; if you need more, `node <CLI> loudness <file>`. You cannot listen: when a criterion needs listening (voice naturalness), judge from the script, the TTS model and the measures, and say so; use `unknown` if nothing supports a verdict.
 5. Run commands through `node <CLI> run <criterion-id> "<command>"` when their output can be long.
 
 ## Judging motion
+
+Criteria ART-06, ART-07, ART-08 and AUD-07 are judged on the critic's jury scale (agents/critic.md: 5 student, 6 template, 7 professional, 8 agency, 9 festival selection). Read `quality_target` in `.motion/project.json` (default 8): `pass` when the piece reaches it, `partial` when it is one point below, `fail` otherwise. Give the score you see and the frame times that justify it.
+
 
 Apply references/craft/principles.md and references/craft/anti-slop.md (in the plugin root given in the plan) when a criterion is about easing, choreography, AI tells or art direction. Compare with the brief's described references, not with your taste. Name the exact frame times you looked at.
 

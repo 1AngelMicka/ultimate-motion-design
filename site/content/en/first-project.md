@@ -8,6 +8,8 @@ In Claude Code:
 
 ```
 /plugin marketplace add 1AngelMicka/ultimate-motion-design
+```
+```
 /plugin install umd@ultimate-motion-design
 ```
 
@@ -21,9 +23,9 @@ Restart Claude Code (or type `/reload-plugins`), then open an empty folder for y
 
 `/umd:go` sees there is no project yet and starts with the **kickoff**:
 
-- it checks the tools (FFmpeg, Playwright, Chromium) and offers to install what is missing;
 - it asks a few questions: audience, platforms, look described in words, voice-over and music, commercial use;
 - it picks the profile (here `promo`), the route (`html-video`) and the engine, and says why;
+- it checks the tools (FFmpeg, Playwright, Chromium) and offers to install what is missing;
 - it writes `BRIEF.md` and `.motion/project.json`.
 
 ## 3. Approve the look before anything moves

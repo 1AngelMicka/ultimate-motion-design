@@ -3,25 +3,37 @@
 // project's licence policy forbids (non-commercial weights in a commercial piece, Tencent models in the EU,
 // AGPL/GPL code shipped in a web page…). Exits silently in about 30 ms for every other command.
 import { readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
+import { join, dirname, resolve } from "node:path";
 
 let input = "";
 try { input = readFileSync(0, "utf8"); } catch { process.exit(0); }
 let payload;
 try { payload = JSON.parse(input); } catch { process.exit(0); }
 const command = payload?.tool_input?.command || "";
-if (!/\b(npm|pnpm|yarn|bun|pip3?|pipx|uv|poetry)\b/.test(command)) process.exit(0);
-const dir = payload.cwd || process.env.CLAUDE_PROJECT_DIR || process.cwd();
-if (!existsSync(join(dir, ".motion", "project.json"))) process.exit(0);
+if (!/\b(npm|pnpm|yarn|bunx?|npx|pip[\d.]*|pipx|uvx?|poetry)\b/.test(command)) process.exit(0);
+// the shell may sit in a subfolder (web/, scenes/): walk up to the folder that holds .motion/project.json
+function findProject(start) {
+  let d = resolve(start);
+  for (let i = 0; i < 12; i++) {
+    if (existsSync(join(d, ".motion", "project.json"))) return d;
+    const up = dirname(d);
+    if (up === d) break;
+    d = up;
+  }
+  return null;
+}
+const dir = findProject(payload.cwd || process.cwd()) || (process.env.CLAUDE_PROJECT_DIR ? findProject(process.env.CLAUDE_PROJECT_DIR) : null);
+if (!dir) process.exit(0);
 
 const { installTargets, classify } = await import("../lib/licenses.mjs");
 const { loadReferential, loadProject, projectFlags } = await import("../lib/ref.mjs");
 const targets = installTargets(command);
 if (!targets.length) process.exit(0);
 const ref = loadReferential();
-const project = loadProject(dir);
-const fl = projectFlags(project, ref);
-const pol = { commercial: fl.has("commercial"), region: "EU", allow: [], redistribute: fl.has("is_web"), service: false, resale: false, ...(project.license_policy || {}) };
+// an unreadable project.json must not switch the guard off: fall back to the strictest policy
+let project = null, fl = new Set(["commercial"]);
+try { project = loadProject(dir); fl = projectFlags(project, ref); } catch { project = { license_policy: { commercial: true, region: "EU" } }; }
+const pol = { commercial: fl.has("commercial"), region: "EU", allow: [], redistribute: fl.has("is_web"), service: false, resale: false, ...(project?.license_policy || {}) };
 const allow = new Set((pol.allow || []).map((x) => String(x).toLowerCase()));
 const blocked = [];
 for (const t of targets) {

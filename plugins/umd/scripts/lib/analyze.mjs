@@ -186,6 +186,19 @@ export function analyze(file, { outDir, thresholds = {}, sheet = true, cwd = pro
     if (sheet && info.width) {
       const s = contactSheet(abs, info, join(outDir, "sheet.jpg"));
       res.sheet = { ...s, file: relative(cwd, s.file) };
+      // long pieces: one extra 16-frame sheet per stretch, about one frame every 2.5 s overall (at most 4 sheets)
+      if (info.duration > 40) {
+        const count = Math.min(4, Math.ceil(info.duration / 40));
+        const span = info.duration / count;
+        res.sheets = [];
+        for (let k = 0; k < count; k++) {
+          const f = join(outDir, `sheet-${k + 1}.jpg`);
+          const times = Array.from({ length: 16 }, (_, i) => round(k * span + (span * (i + 0.5)) / 16));
+          const portrait = info.height > info.width, cols = portrait ? 8 : 4, cellW = Math.floor(1536 / cols / 2) * 2;
+          ffOk(["-ss", String(round(k * span)), "-t", String(round(span)), "-i", abs, "-vf", `fps=16/${round(span)},scale=${cellW}:-2,tile=${cols}x${Math.ceil(16 / cols)}:padding=4:color=black`, "-frames:v", "1", "-q:v", "4", f]);
+          res.sheets.push({ file: relative(cwd, f), from: round(k * span), to: round((k + 1) * span), times });
+        }
+      }
     }
     writeFileSync(join(outDir, "analysis.json"), JSON.stringify(res, null, 2));
   }

@@ -4,7 +4,7 @@
 
 Criteria audited by `/umd:audit`. Method `auto`: decided in code from measurements; `inspect`: judged by an auditor agent with evidence.
 
-**12 domains · 60 criteria · v0.5.0**
+**12 domains · 64 criteria · v0.6.0**
 
 ## Profiles and domain weights
 
@@ -136,6 +136,9 @@ Applies if: always
 | ART-03 | No AI-signature visuals | major | inspect | Contact sheet against the list in references/craft/anti-slop.md. |
 | ART-04 | Format safe areas respected | minor | inspect | Key frames: text and logo inside title-safe (90%) and outside the platform's UI zones (9:16). |
 | ART-05 | Assets sharp at output resolution | major | inspect | Frames at 100%: logos, icons and photos sharp, no pixelation or upscale blur. |
+| ART-06 | One idea, a hook and a hero moment at the target level | major | inspect | Jury (agents/critic.md): concept_wow ≥ quality_target from project.json (default 8). A hook readable before 2 s, one identifiable hero moment (time), a satisfying end frame. Cite the times. |
+| ART-07 | Typography finished to the target level | major | inspect | Jury: design_typography ≥ quality_target. Tight tracking on large display, line breaks by meaning, no widow, one emphasis device per line, the right font loaded (no fallback). Cite the frame. |
+| ART-08 | Colour and finish at the target level | major | inspect | Jury: finish_texture ≥ quality_target. A palette per sequence that follows the story (colour script), motivated light, grain or dither against banding, no aliasing. Cite the frame. |
 
 ## Motion, text and safety
 
@@ -246,6 +249,7 @@ Applies if: has_audio
 | AUD-04 | No leading silence or abrupt cut | major | auto (analyze) | umd analyze: silence.leading_s and silence.trailing_s ≤ thresholds.silence_edge_max_s, and audio_end.abrupt is false. |
 | AUD-05 | Clear, natural voice, names pronounced right _(has_voice)_ | major | inspect | Listening and transcript: no robotic artefacts, 140–170 words/min, brand names correct. |
 | AUD-06 | Delivery audio format | minor | auto (analyze) | umd analyze: probe.audio at 48 kHz, 2 channels, AAC ≥ 192 kb/s or Opus. |
+| AUD-07 | Layered sound design at the target level _(has_music)_ | major | inspect | Jury: sound_sync ≥ quality_target. At hero moments several layers (riser, impact, sub, detail), the music carved under the voice, silence used as an accent at least once; each effect on its picture (umd sync). |
 
 ### CAP — Captions
 

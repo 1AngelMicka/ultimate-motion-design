@@ -24,10 +24,10 @@ If `project.json` has no `style` yet and the brief does not impose a strict bran
 ## 1. Beats
 
 1. Read `BRIEF.md` and `.motion/project.json`. If missing, stop and suggest `/umd:kickoff`.
-2. Read the matching recipe in `${CLAUDE_PLUGIN_ROOT}/references/recipes/` (one file: launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions or narrative-short).
+2. Read the matching recipe in `${CLAUDE_PLUGIN_ROOT}/references/recipes/` (one file: launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions, narrative-short or series).
    - If BRIEF.md names a reference to move like, or an animation of the user's to port, also read `recipes/match-reference.md`: measure the reference first (reanimate if installed, otherwise the umd fallback), then put the measured durations and curves in the motion tokens and the measured sequence in the beats.
 3. Write the script in plain words first if there is a voice-over (no hollow phrasing: `umd lint` flags it).
-4. Fill `.motion/storyboard.md`: the arc line, then one table row per beat: `| # | Time | Shot | On-screen text | Motion | Sound | Intent |`.
+4. Fill `.motion/storyboard.md`: the arc line, then one table row per beat: `| # | Time | Shot | On-screen text | Motion | Sound | Intent |`. Then fill `## Events` (each product action in seconds and global frames: start state, cursor on the control, press, result, legible), `## Layout limits` (checked with the longest copy), `## Sound cues` (one line per sound of the Sound column: `6.5s click: cursor press`; `umd sync` measures them) and `## Review frames`. Give each sequence a palette (colour script) in its Shot cell.
    - Time as `a–b s`; beats sum to `duration_s`.
    - Something new about every 2 s; no 3 s without meaningful motion.
    - On-screen text gets at least max(1.2 s, words ÷ 3 + 0.5 s).

@@ -43,7 +43,7 @@
     ]
   },
   "thresholds": {
-    "_note": "Defaults; override any of them in .motion/project.json \"thresholds\". dead_air_s, motion_floor, freeze_s, still_per_30s_max, flashes_per_s and the loudness values were checked on 15 award-level films with zero false alarm (docs/CALIBRATION.md). still_per_30s_max follows the frozen-time budget of echris6/motion-video-kit (28 launch films). sync_tolerance_ms is about one frame at 24 to 30 fps. The VMAF, caption and web values are conventions.",
+    "_note": "Defaults; override any of them in .motion/project.json \"thresholds\". dead_air_s, motion_floor, freeze_s, still_per_30s_max, flashes_per_s and the loudness values were checked on 15 reference films scored 7 to 8 by an AI jury, with zero false alarm (docs/CALIBRATION.md). still_per_30s_max follows the frozen-time budget of echris6/motion-video-kit (28 launch films). sync_tolerance_ms is about one frame at 24 to 30 fps. The VMAF, caption and web values are conventions.",
     "loudness_lufs": -14,
     "loudness_tolerance_lu": 1,
     "true_peak_dbtp": -1,

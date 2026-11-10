@@ -5,13 +5,13 @@ A series with the same hero, the same world and a new short episode on a schedul
 ## Use when / avoid when
 
 - Use for daily or weekly shorts for an app, a shop or a channel, explainers with a mascot, onboarding tips told by a character.
-- Avoid for a one-off launch film (`routes/promo.md`) or when the client cannot review each episode.
+- Avoid for a one-off launch film (`recipes/launch-video.md`) or when the client cannot review each episode.
 
 ## Setup
 
 - A series bible: `.motion/series-bible.md`, read before every episode. Hero (what they want, how they speak), world, tone, one running gag, what never happens, how the product appears. The product is never the punchline: the hero's problem is.
 - A locked hero: one canonical image plus a character sheet (front, side, three expressions) in `assets/hero/`, attached to every generated scene; or one rigged model (Rive, Spine, Blender, three.js) reused in every episode. A hero that drifts from one episode to the next is what makes AI series look like slop. Never borrow a famous character's look.
-- Episodes in code (route `film` or `explainer`, `umd capture`), or generated frames with the sheet as reference; voice from a TTS with commercial rights (`audio/voice.md`); captions with `umd captions`.
+- Episodes in code (route `html-video`, `threejs-film` or `explainer`, rendered with `umd capture`), or generated frames with the sheet as reference; voice from a TTS with commercial rights (`audio/voice.md`); captions with `umd captions`.
 
 ## Core patterns
 

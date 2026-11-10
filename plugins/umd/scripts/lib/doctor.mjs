@@ -9,8 +9,12 @@ import { ff, filters, encoders, FFMPEG } from "./ffmpeg.mjs";
 import { resolvePlaywright, RUNTIME_DIR, loadChromium, launch } from "./playwright.mjs";
 
 const OS = platform();
+const winQuote = (a) => (/^[\w@%+=:,./\\-]+$/.test(a) ? a : `"${String(a).replace(/"/g, '\\"')}"`);
 const sh = (cmd, args, opts = {}) => {
-  const r = spawnSync(cmd, args, { encoding: "utf8", shell: OS === "win32", ...opts });
+  // Windows needs a shell for .cmd shims (npm, npx); build the command line ourselves so "C:\Users\Jean Dupont" survives
+  const r = OS === "win32"
+    ? spawnSync([cmd, ...args].map(winQuote).join(" "), { encoding: "utf8", shell: true, ...opts })
+    : spawnSync(cmd, args, { encoding: "utf8", ...opts });
   return { ok: r.status === 0, out: `${r.stdout || ""}${r.stderr || ""}`.trim(), missing: r.error?.code === "ENOENT" };
 };
 const has = (cmd) => { const r = sh(OS === "win32" ? "where" : "which", [cmd]); return r.ok; };

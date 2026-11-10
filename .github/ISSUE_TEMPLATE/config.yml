@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security issue / Faille de sécurité
+    url: https://github.com/1AngelMicka/ultimate-motion-design/security/advisories/new
+    about: Report it privately, see SECURITY.md / À signaler en privé, voir SECURITY.md
+  - name: Documentation
+    url: https://1angelmicka.github.io/ultimate-motion-design/
+    about: Install, first project, troubleshooting / Installation, premier projet, dépannage

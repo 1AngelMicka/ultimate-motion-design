@@ -2,7 +2,7 @@
 // Serves `root` on 127.0.0.1 with a random port; used by capture, stills and webperf for local paths.
 import { createServer } from "node:http";
 import { createReadStream, existsSync, statSync } from "node:fs";
-import { join, resolve, relative, extname, sep, dirname } from "node:path";
+import { join, resolve, relative, extname, sep, dirname, isAbsolute } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const TYPES = {
@@ -17,7 +17,8 @@ const TYPES = {
 export async function serveFile(file, cwd = process.cwd()) {
   const abs = resolve(cwd, file);
   // serve the project root when the page lives inside it (so ../assets and node_modules resolve), else the page's folder
-  const inside = !relative(cwd, abs).startsWith("..");
+  const rel = relative(cwd, abs);
+  const inside = !rel.startsWith("..") && !isAbsolute(rel); // a page on another drive is never "inside"
   const root = inside ? resolve(cwd) : dirname(abs);
   const server = createServer((req, res) => {
     let p;
@@ -30,15 +31,18 @@ export async function serveFile(file, cwd = process.cwd()) {
     const size = statSync(f).size;
     const type = TYPES[extname(f).toLowerCase()] || "application/octet-stream";
     const range = req.headers.range && /bytes=(\d*)-(\d*)/.exec(req.headers.range);
-    if (range) { // video seeking needs byte ranges
-      const start = range[1] ? Number(range[1]) : 0;
-      const end = range[2] ? Math.min(Number(range[2]), size - 1) : size - 1;
+    const send = (stream) => { stream.on("error", () => res.destroy()); stream.pipe(res); };
+    if (range && (range[1] || range[2])) { // video seeking needs byte ranges
+      let start, end;
+      if (!range[1]) { start = Math.max(0, size - Number(range[2])); end = size - 1; } // suffix range: the last N bytes
+      else { start = Number(range[1]); end = range[2] ? Math.min(Number(range[2]), size - 1) : size - 1; }
+      if (start >= size || start > end) { res.writeHead(416, { "Content-Range": `bytes */${size}` }).end(); return; }
       res.writeHead(206, { "Content-Type": type, "Content-Range": `bytes ${start}-${end}/${size}`, "Accept-Ranges": "bytes", "Content-Length": end - start + 1, "Cache-Control": "no-store" });
-      createReadStream(f, { start, end }).pipe(res);
+      send(createReadStream(f, { start, end }));
       return;
     }
     res.writeHead(200, { "Content-Type": type, "Content-Length": size, "Accept-Ranges": "bytes", "Cache-Control": "no-store" });
-    createReadStream(f).pipe(res);
+    send(createReadStream(f));
   });
   await new Promise((r) => server.listen(0, "127.0.0.1", r));
   const { port } = server.address();

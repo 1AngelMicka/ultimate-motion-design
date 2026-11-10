@@ -51,9 +51,15 @@ export function searchStyles(query, { source = null, kind = null, limit = 8 } = 
 export async function getStyle(id, { cwd = process.cwd() } = {}) {
   const e = loadStyles().entries.find((x) => x.id === id);
   if (!e) throw new Error(`No style "${id}". Search first: umd styles <words>`);
-  const res = await fetch(e.prompt_url);
+  const res = await fetch(e.prompt_url, { signal: AbortSignal.timeout(30000) });
   if (!res.ok) throw new Error(`Download failed (${res.status}) for ${e.prompt_url}`);
   const text = await res.text();
+  // the index pins each prompt to a commit and a hash: refuse a file that changed since it was reviewed
+  if (e.sha256) {
+    const { createHash } = await import("node:crypto");
+    const got = createHash("sha256").update(text, "utf8").digest("hex");
+    if (got !== e.sha256) throw new Error(`${id}: the downloaded prompt does not match the reviewed version (sha256 ${got.slice(0, 12)}… ≠ ${e.sha256.slice(0, 12)}…). Not written.`);
+  }
   const dir = existsSync(join(cwd, ".motion")) ? join(cwd, ".motion", "styles") : join(cwd, "styles");
   mkdirSync(dir, { recursive: true });
   const file = join(dir, `${id.replace(/[^a-z0-9-]+/gi, "-")}.md`);

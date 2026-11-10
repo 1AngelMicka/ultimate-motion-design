@@ -485,6 +485,51 @@
             "fr": "Images à 100 % : logos, icônes et photos nets, sans pixellisation ni flou d'agrandissement.",
             "en": "Frames at 100%: logos, icons and photos sharp, no pixelation or upscale blur."
           }
+        },
+        {
+          "id": "ART-06",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Une idée, une accroche et un moment fort au niveau visé",
+            "en": "One idea, a hook and a hero moment at the target level"
+          },
+          "verify": {
+            "fr": "Jury (agents/critic.md) : concept_wow ≥ quality_target de project.json (8 par défaut). Accroche lisible avant 2 s, un moment fort identifiable (temps), une image de fin satisfaisante. Citer les temps.",
+            "en": "Jury (agents/critic.md): concept_wow ≥ quality_target from project.json (default 8). A hook readable before 2 s, one identifiable hero moment (time), a satisfying end frame. Cite the times."
+          }
+        },
+        {
+          "id": "ART-07",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Typographie finie au niveau visé",
+            "en": "Typography finished to the target level"
+          },
+          "verify": {
+            "fr": "Jury : design_typography ≥ quality_target. Approche resserrée sur les grands titres, coupes de ligne par le sens, pas de veuve, une seule mise en valeur par ligne, la bonne police chargée (pas de police de secours). Citer l'image.",
+            "en": "Jury: design_typography ≥ quality_target. Tight tracking on large display, line breaks by meaning, no widow, one emphasis device per line, the right font loaded (no fallback). Cite the frame."
+          }
+        },
+        {
+          "id": "ART-08",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Couleur et finition au niveau visé",
+            "en": "Colour and finish at the target level"
+          },
+          "verify": {
+            "fr": "Jury : finish_texture ≥ quality_target. Une palette par séquence qui suit l'histoire (colour script), lumière motivée, grain ou dither contre le banding, pas d'aliasing. Citer l'image.",
+            "en": "Jury: finish_texture ≥ quality_target. A palette per sequence that follows the story (colour script), motivated light, grain or dither against banding, no aliasing. Cite the frame."
+          }
         }
       ]
     }

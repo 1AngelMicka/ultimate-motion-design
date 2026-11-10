@@ -2,7 +2,7 @@
 
 Date: 2026-11-10 · umd 0.3.0 · FFmpeg 9.0.2 · `umd analyze` on each film, defaults unchanged.
 
-## Reference set: 15 award-level films
+## Reference set: 15 films scored 7 to 8 by an AI jury
 
 The 15 films of [Vincentwei1021/mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) (MIT): 10 s each, made by Claude Opus 5.5 in code, scored 7 to 8 by an AI jury against award-level criteria, with music and sound. Fourteen in 16:9, one in 9:16. The question: do the automatic checks raise **false alarms** on films people judge excellent?
 
@@ -31,7 +31,7 @@ The 15 films of [Vincentwei1021/mg-styles-15](https://github.com/Vincentwei1021/
 | Measure | 15 reference films | Decision |
 | --- | --- | --- |
 | Near-still time (0.5 s buckets below `motion_floor`, last 2 s excluded), per 30 s | 0 s for all 15; longest still run 0 s | LIF-05 added: at most `still_per_30s_max` = 1 s per 30 s. Zero false alarm; the budget comes from echris6/motion-video-kit, where a draft with 10 s frozen out of 36 s passed every builder check |
-| Loudness range (LRA) | 1.0 to 9.0 LU; 6 films under 3 LU (line art 1.6, 3D render 2.3, collage 1.2, morph 2.7, Bauhaus 2.5, paperclip 2.5, pixel 1.0) | Not a criterion: a "≥ 3 LU for energetic scores" rule would flag 6 award films out of 15. Shown in `umd analyze` and read by the critic only |
+| Loudness range (LRA) | 1.0 to 9.0 LU; 7 films under 3 LU (line art 1.6, 3D render 2.3, collage 1.2, morph 2.7, Bauhaus 2.5, paperclip 2.5, pixel 1.0) | Not a criterion: a "≥ 3 LU for energetic scores" rule would flag 7 of the 15 reference films. Shown in `umd analyze` and read by the critic only |
 
 ## Added in 0.5.0: cuts on motion (seams)
 
@@ -49,7 +49,7 @@ The 15 films of [Vincentwei1021/mg-styles-15](https://github.com/Vincentwei1021/
 
 ## What this says about the thresholds
 
-- `motion_floor` 0.4 with `dead_air_s` 3: the calmest award films (line art, Bauhaus, paperclip, pixel) dip to 0.3–0.4 for single 0.5 s buckets but never for 3 s in a row. Kept.
+- `motion_floor` 0.4 with `dead_air_s` 3: the calmest reference films (line art, Bauhaus, paperclip, pixel) dip to 0.3–0.4 for single 0.5 s buckets but never for 3 s in a row. Kept.
 - `freeze_s` 1.0: no reference film holds a fully static picture for 1 s. Kept.
 - `flashes_per_s` 3 (WCAG 2.3.1): fast-cut films reach 2. Kept. The measure is full-frame only; localised flashes still need the auditor's eye.
 - Loudness −14 LUFS ±1, true peak ≤ −1 dBTP: every reference film sits within −14.3 to −14.0 LUFS and −3.6 to −1.2 dBTP. Kept.

@@ -136,7 +136,7 @@ const ANCHORS = { "économie-de-tokens": "tokens", "token-economy": "tokens", "o
 function splitReadme(file) {
   const text = read(file).replace(/\r/g, "");
   const parts = text.split(/^## /m);
-  const intro = parts[0].replace(/^# .*\n/, "").replace(/^\*\*[^\n]*·[^\n]*\n/m, "").replace(/^\[[^\n]*·[^\n]*\n/m, "").trim();
+  const intro = parts[0].replace(/^# .*\n/, "").replace(/^\[!\[.*\n/gm, "").replace(/^\*\*[^\n]*·[^\n]*\n/m, "").replace(/^\[[^\n]*·[^\n]*\n/m, "").trim();
   const sections = parts.slice(1).map((p) => `## ${p}`.trim());
   return { intro, sections };
 }

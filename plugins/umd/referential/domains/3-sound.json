@@ -141,6 +141,24 @@
             "fr": "umd analyze : probe.audio à 48 kHz, 2 canaux, AAC ≥ 192 kb/s ou Opus.",
             "en": "umd analyze: probe.audio at 48 kHz, 2 channels, AAC ≥ 192 kb/s or Opus."
           }
+        },
+        {
+          "id": "AUD-07",
+          "severity": "major",
+          "check": {
+            "method": "inspect"
+          },
+          "label": {
+            "fr": "Design sonore en couches au niveau visé",
+            "en": "Layered sound design at the target level"
+          },
+          "verify": {
+            "fr": "Jury : sound_sync ≥ quality_target. Aux moments forts, plusieurs couches (montée, impact, grave, détail), la musique creusée sous la voix, un silence utilisé comme accent au moins une fois ; chaque effet tombe sur son image (umd sync).",
+            "en": "Jury: sound_sync ≥ quality_target. At hero moments several layers (riser, impact, sub, detail), the music carved under the voice, silence used as an accent at least once; each effect on its picture (umd sync)."
+          },
+          "applies_if": [
+            "has_music"
+          ]
         }
       ]
     },

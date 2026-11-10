@@ -1,0 +1,11 @@
+name: Idea or new recipe / Idée ou nouvelle recette
+description: A recipe, an engine, a check or a resource to add / Une recette, un moteur, une vérification ou une ressource à ajouter
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea / L'idée
+      description: What it adds to the quality or the cost of a piece, with a link if it comes from a repository (licence?). Paid or non-redistributable resources are not added. / Ce que ça apporte, avec un lien et sa licence. Les ressources payantes ou non redistribuables ne sont pas ajoutées.
+    validations:
+      required: true

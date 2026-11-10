@@ -62,8 +62,8 @@ Without `umdRender`, `umd capture` still virtualises time (rAF, timers, `Date.no
 | 3. Stills | Build each key frame static first; `umd still index.html --at 0.5,3,6.5,11 --out .motion/stills`; put each next to the reference, fix, max 3 rounds | PNGs side by side |
 | 4. Build | Animate between the validated stills; `umd lint` while writing | source + `assets.lock.json` |
 | 5. Draft render | `umd render --draft` | `.motion/renders/<id>/` |
-| 6. Critique | `umd frames <video> --sheet` and `umd analyze <video>`; read the sheet beat by beat, fix the worst issue first | contact sheet, analyze JSON |
-| 7. Final render | `umd render`, then audio mix and captions burn or sidecar | MP4 + `render.json` |
+| 6. Critique | A fresh `umd:critic` agent each round (jury scores, then verification of the previous round); `umd frames <video> --cuts` around transitions; voice, music and captions are mixed during the build, before the final render | critic reply, `.motion/LEDGER.md` |
+| 7. Final render | `umd render --twice` once the ledger says `Build accepted` (the mix is already set in `render.audio`) | MP4 + `render.json` + `determinism.json` |
 | 8. Audit | `/umd:audit`, `/umd:fix` until no blocker, then `umd deliver` | `audit.json` |
 
 ### Cost

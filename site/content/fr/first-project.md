@@ -8,6 +8,8 @@ Dans Claude Code :
 
 ```
 /plugin marketplace add 1AngelMicka/ultimate-motion-design
+```
+```
 /plugin install umd@ultimate-motion-design
 ```
 
@@ -21,9 +23,9 @@ Redémarre Claude Code (ou tape `/reload-plugins`), puis ouvre un dossier vide p
 
 `/umd:go` voit qu'il n'y a pas encore de projet et commence par le **kickoff** :
 
-- il vérifie les outils (FFmpeg, Playwright, Chromium) et propose d'installer ce qui manque ;
 - il te pose quelques questions : public, plateformes, look décrit en mots, voix off et musique, usage commercial ;
 - il choisit le profil (ici `promo`), la route (`html-video`) et le moteur, en disant pourquoi ;
+- il vérifie les outils (FFmpeg, Playwright, Chromium) et propose d'installer ce qui manque ;
 - il écrit `BRIEF.md` et `.motion/project.json`.
 
 ## 3. Valider le look avant d'animer

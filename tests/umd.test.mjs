@@ -212,3 +212,99 @@ test("deterministic HTML capture", { skip: (!hasFfmpeg() || !resolvePlaywright(p
   const c = JSON.parse(umd(["compare", join(d, "a.mp4"), join(d, "b.mp4")], d).stdout);
   assert.equal(c.identical, true);
 });
+
+// ---------------------------------------------------------------- regressions from the 0.6.0 review
+test("next: draft rounds gate the final render, outputs and ledger never ask for a re-render", () => {
+  const d = tmp();
+  umd(["init"], d);
+  if (!JSON.parse(umd(["next"], d).stdout).state.tools.ffmpeg) return;
+  writeFileSync(join(d, "BRIEF.md"), "# Brief\n\n## Goal\nA short clip for the docs, three words over a knot.\n");
+  writeFileSync(join(d, ".motion", "storyboard.md"), "| # | Time | Shot | On-screen text | Motion | Sound | Intent |\n|---|---|---|---|---|---|---|\n| 1 | 0-2s | a | Hi | in | - | joy |\nStills validated 2026-11-10\n");
+  const r = join(d, ".motion", "renders", "r1");
+  mkdirSync(r, { recursive: true });
+  const now = new Date(Date.now() + 5000).toISOString();
+  writeFileSync(join(r, "render.json"), JSON.stringify({ id: "r1", draft: true, started_at: now, finished_at: now }));
+  writeFileSync(join(d, ".motion", "renders", "latest.json"), JSON.stringify({ id: "r1", dir: ".motion/renders/r1", output: ".motion/renders/r1/video.mp4", draft: true }));
+  assert.equal(JSON.parse(umd(["next"], d).stdout).step, "build"); // no "Build accepted" line yet
+  writeFileSync(join(d, ".motion", "LEDGER.md"), "| Round | Render | Top findings | Changes | Measured |\n\nBuild accepted 2026-11-10\n");
+  assert.equal(JSON.parse(umd(["next"], d).stdout).step, "render");
+  // a final render, then files written after it that are not sources
+  writeFileSync(join(r, "render.json"), JSON.stringify({ id: "r1", draft: false, started_at: now, finished_at: new Date(Date.now() + 60000).toISOString() }));
+  writeFileSync(join(d, ".motion", "renders", "latest.json"), JSON.stringify({ id: "r1", dir: ".motion/renders/r1", output: ".motion/renders/r1/video.mp4", draft: false }));
+  mkdirSync(join(d, "media", "videos"), { recursive: true });
+  writeFileSync(join(d, "media", "videos", "Main.mp4"), "x");
+  mkdirSync(join(d, ".motion", "styles"), { recursive: true });
+  writeFileSync(join(d, ".motion", "styles", "lemo-x.md"), "x");
+  assert.equal(JSON.parse(umd(["next"], d).stdout).step, "audit");
+});
+
+test("deliver refuses a render that the last audit did not cover", () => {
+  const d = tmp();
+  umd(["init"], d);
+  mkdirSync(join(d, ".motion", "renders", "r2"), { recursive: true });
+  writeFileSync(join(d, ".motion", "renders", "r2", "video.mp4"), "x");
+  writeFileSync(join(d, ".motion", "renders", "latest.json"), JSON.stringify({ id: "r2", dir: ".motion/renders/r2", output: ".motion/renders/r2/video.mp4", draft: false }));
+  mkdirSync(join(d, ".motion", "audits"), { recursive: true });
+  writeFileSync(join(d, ".motion", "audits", "2026-11-10.report.json"), JSON.stringify({ date: "2026-11-10", render_id: null, open_blockers: 0, issues: [], global: 9 }));
+  const r = umd(["deliver"], d);
+  assert.notEqual(r.status, 0);
+  assert.match(r.stderr + r.stdout, /not audited/);
+});
+
+test("CLI: a boolean flag before the input does not swallow it", () => {
+  const r = umd(["capture", "--draft", "missing-page.html", "--out", "x.mp4"], tmp());
+  assert.doesNotMatch(r.stderr + r.stdout, /Usage: umd capture/);
+});
+
+test("licence guard: version specifiers, git URLs, python -m pip, npx", () => {
+  assert.deepEqual(installTargets("pip install 'audiocraft>=1'"), ["audiocraft"]);
+  assert.deepEqual(installTargets("pip install git+https://github.com/facebookresearch/audiocraft"), ["facebookresearch/audiocraft"]);
+  assert.deepEqual(installTargets("python -m pip install yue==1.0"), ["yue"]);
+  assert.deepEqual(installTargets("pip3.11 install f5-tts"), ["f5-tts"]);
+  assert.deepEqual(installTargets("npx -y hunyuan3d"), ["hunyuan3d"]);
+});
+
+test("licence guard hook: works from a subfolder and with a broken project.json", () => {
+  const d = tmp();
+  mkdirSync(join(d, ".motion"), { recursive: true });
+  mkdirSync(join(d, "web"), { recursive: true });
+  writeFileSync(join(d, ".motion", "project.json"), "{ broken");
+  const hook = join(ROOT, "plugins", "umd", "scripts", "hooks", "license-guard.mjs");
+  const r = spawnSync(process.execPath, [hook], { input: JSON.stringify({ tool_input: { command: "pip install 'audiocraft>=1'" }, cwd: join(d, "web") }), encoding: "utf8" });
+  assert.equal(r.status, 0);
+  assert.match(r.stdout, /"permissionDecision":"deny"/);
+});
+
+test("static server: bad ranges get 416, suffix ranges work, traversal is refused", async () => {
+  const { serveFile } = await import("../plugins/umd/scripts/lib/serve.mjs");
+  const d = tmp();
+  writeFileSync(join(d, "page.html"), "<p>hello world 17</p>");
+  const s = await serveFile("page.html", d);
+  try {
+    const base = s.url.replace(/page\.html$/, "");
+    assert.equal((await fetch(s.url, { headers: { Range: "bytes=500-" } })).status, 416);
+    const tail = await fetch(s.url, { headers: { Range: "bytes=-4" } });
+    assert.equal(tail.status, 206);
+    assert.equal(await tail.text(), "</p>");
+    assert.equal((await fetch(`${base}..%2F..%2Fsecret`)).status, 403);
+  } finally { await s.close(); }
+});
+
+test("burn: a subtitle file name with commas and quotes works", { skip: !hasFfmpeg() && "ffmpeg not installed" }, () => {
+  const d = tmp();
+  const v = spawnSync("ffmpeg", ["-v", "error", "-y", "-f", "lavfi", "-i", "color=black:s=320x180:r=25:d=1", "-c:v", "libx264", "-pix_fmt", "yuv420p", join(d, "in.mp4")]);
+  if (v.status !== 0) return;
+  writeFileSync(join(d, "it's, v2.srt"), "1\n00:00:00,000 --> 00:00:00,900\nHello\n");
+  const r = umd(["burn", "in.mp4", "it's, v2.srt", "--out", "out.mp4"], d);
+  assert.equal(r.status, 0, r.stderr);
+});
+
+test("capture: the picture sets the length when the soundtrack is shorter", { skip: (!hasFfmpeg() || !resolvePlaywright(process.cwd())) && "ffmpeg or Playwright missing" }, () => {
+  const d = tmp();
+  writeFileSync(join(d, "p.html"), "<body style='background:#123'><script>window.umdDuration=2; Date(); new Date();</script></body>");
+  spawnSync("ffmpeg", ["-v", "error", "-y", "-f", "lavfi", "-i", "sine=f=440:d=0.5", join(d, "a.wav")]);
+  const r = umd(["capture", "p.html", "--out", "o.mp4", "--fps", "10", "--width", "320", "--height", "180", "--audio", "a.wav"], d);
+  assert.equal(r.status, 0, r.stderr);
+  const p = spawnSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", join(d, "o.mp4")], { encoding: "utf8" });
+  assert.ok(Math.abs(Number(p.stdout) - 2) < 0.15, `duration ${p.stdout}`);
+});

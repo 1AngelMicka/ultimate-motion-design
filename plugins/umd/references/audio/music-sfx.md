@@ -69,6 +69,16 @@ y, sr = librosa.load("music.wav", sr=None)
 tempo, beats = librosa.beat.beat_track(y=y, sr=sr, units="time")  # fallback when beat_this is unavailable
 ```
 
+## Sound design pass (AUD-07)
+
+Once the picture is locked, one pass on sound alone:
+- **Layers at hero moments**: a riser into it, an impact on it (transient + low sub), a detail on top (click, shimmer), then a tail. One layer alone reads as stock.
+- **Carve the music under the voice**: duck it (`umd mix --duck`), and if the voice still fights, dip the music around 2 to 5 kHz.
+- **Silence as an accent**: drop the music for a beat before the biggest reveal at least once.
+- **Lead the cut**: start the next scene's sound a few frames before its picture (J-cut) so the edit feels intentional.
+- **Width**: keep voice and impacts centred, spread ambience and risers.
+- List each layer in `## Sound cues`, then `umd sync`.
+
 ## Rendering to video with umd
 
 - Snap the timeline to beats in the scene code (store beat times in `.motion/beats.json`), then render.

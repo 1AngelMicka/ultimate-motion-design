@@ -13,14 +13,22 @@
 // LemoLab stills resized (CC BY 4.0, credit kept on the page), mg-styles-15 posters and muted 480 px loops (MIT).
 // Community prompts keep their poster on skillry.dev, linked, not copied.
 import { readFileSync, writeFileSync, readdirSync, existsSync, mkdirSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+// Each prompt is pinned to the commit that was reviewed, with the sha256 of its exact bytes (read from git, not
+// from the working tree, so line-ending conversion cannot change it). `umd styles get` refuses a file that differs.
+const git = (repo, ...a) => execFileSync("git", ["-C", repo, ...a], { maxBuffer: 64 * 1024 * 1024 });
+const pin = (repo) => (existsSync(join(repo, ".git")) ? git(repo, "rev-parse", "HEAD").toString().trim() : "main");
+const blobHash = (repo, path) => { try { return createHash("sha256").update(git(repo, "show", `HEAD:${path}`)).digest("hex"); } catch { return null; } };
 const args = process.argv.slice(2);
 const LIBS = resolve(args.find((a) => !a.startsWith("--")) || ".");
 const MEDIA = args.includes("--media");
+const LEMO_REPO = join(LIBS, "lemo-opuscar"), MG_REPO = join(LIBS, "mg-styles-15"), OPUS_REPO = join(LIBS, "awesome-opus5-5-videos");
+const [LEMO_SHA, MG_SHA, OPUS_SHA] = [LEMO_REPO, MG_REPO, OPUS_REPO].map((r) => (existsSync(r) ? pin(r) : "main"));
 const SITE = "https://1angelmicka.github.io/ultimate-motion-design";
 const LIB_OUT = join(ROOT, "site", "assets", "library");
 const ff = (...a) => execFileSync("ffmpeg", ["-v", "error", "-y", ...a], { stdio: "inherit" });
@@ -46,7 +54,7 @@ if (existsSync(lemo)) {
       id: `lemo:${slug}`, source: "lemo-opuscar", kind: "style", name: s.en, category: s.category_en || null,
       line: clip(essence || s.line, 220), film: s.film ? `${s.film}: ${clip(s.line, 140)}` : null, uses: s.uses || [],
       duration_s: s.dur || null,
-      prompt_url: `https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/main/styles/${slug}/STYLE.md`,
+      prompt_url: `https://raw.githubusercontent.com/lemomo-ai/lemo-opuscar/${LEMO_SHA}/styles/${slug}/STYLE.md`, sha256: blobHash(LEMO_REPO, `styles/${slug}/STYLE.md`),
       preview_url: "https://lemomo-ai.github.io/lemo-opuscar/",
       poster_url: `${SITE}/assets/library/lemo/${slug}.jpg`,
       film_url: `https://github.com/lemomo-ai/lemo-opuscar/releases/download/films/${slug}.mp4`,
@@ -77,7 +85,7 @@ if (existsSync(mg)) {
       id: `mg:${n}`, source: "mg-styles-15", kind: "style", name: en, category: "Motion graphics",
       line: clip(seed.replace(/[「」]/g, "").replace(/^[　-鿿\s]+/, "") || sig, 220), jury_score: score ? Number(score) : null, uses: [],
       duration_s: 10,
-      prompt_url: `https://raw.githubusercontent.com/Vincentwei1021/mg-styles-15/main/prompts/${f}`,
+      prompt_url: `https://raw.githubusercontent.com/Vincentwei1021/mg-styles-15/${MG_SHA}/prompts/${f}`, sha256: blobHash(MG_REPO, `prompts/${f}`),
       preview_url: `https://vincentwei1021.github.io/mg-styles-15/#${n}`,
       poster_url: `${SITE}/assets/library/mg/${n}.jpg`,
       clip_url: `${SITE}/assets/library/mg/${n}.mp4`,
@@ -94,7 +102,7 @@ if (existsSync(op)) {
     entries.push({
       id: `opus:${v.slug}`, source: "awesome-opus5-5-videos", kind: "prompt", name: `${v.category} by ${v.author}`, category: v.category,
       line: clip(v.prompt, 220), tags: v.tech_tags || [], partial: !!v.prompt_partial,
-      prompt_url: `https://raw.githubusercontent.com/yihui-dev/awesome-opus5-5-videos/main/prompts/${v.slug}.md`,
+      prompt_url: `https://raw.githubusercontent.com/yihui-dev/awesome-opus5-5-videos/${OPUS_SHA}/prompts/${v.slug}.md`, sha256: blobHash(OPUS_REPO, `prompts/${v.slug}.md`),
       preview_url: v.skillry_url || v.post_url, post_url: v.post_url, author: v.author,
       poster_url: v.poster_url || null, film_url: v.skillry_url || v.post_url,
       licence: "index MIT; the prompt belongs to its author: credit the post when you reuse it",

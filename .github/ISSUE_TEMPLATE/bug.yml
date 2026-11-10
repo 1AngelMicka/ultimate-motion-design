@@ -1,0 +1,24 @@
+name: Bug
+description: Something does not work as documented / Quelque chose ne marche pas comme prévu
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened / Ce qui s'est passé
+      description: The command you ran, what you expected, what you got. / La commande, ce que tu attendais, ce que tu as obtenu.
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output / Sortie
+      description: The JSON or error printed by the command (remove anything private). / Le JSON ou l'erreur affichés (retire ce qui est privé).
+      render: text
+  - type: input
+    id: env
+    attributes:
+      label: Environment / Environnement
+      description: Output of `node <plugin>/scripts/umd.mjs version` and `doctor`, OS, Node version.
+    validations:
+      required: true

@@ -23,6 +23,7 @@ export function normalize(input, output, { lufs = -14, tp = -1, lra = 11, cwd = 
   const abs = resolve(cwd, input), out = resolve(cwd, output);
   mkdirSync(dirname(out), { recursive: true });
   const m = loudnormMeasure(abs, lufs, tp, lra);
+  if (!Number.isFinite(Number(m.input_i))) throw new Error(`${relative(cwd, abs)} is silent (integrated loudness -inf): nothing to normalise. Check the mix inputs.`);
   const filter = `loudnorm=I=${lufs}:TP=${tp}:LRA=${lra}:measured_I=${m.input_i}:measured_TP=${m.input_tp}:measured_LRA=${m.input_lra}:measured_thresh=${m.input_thresh}:offset=${m.target_offset}:linear=true`;
   const info = probe(abs);
   const isVideo = !!info.width;

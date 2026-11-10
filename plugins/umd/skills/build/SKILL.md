@@ -39,6 +39,7 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). References: `${CLAU
 3. Launch a **new** `umd:critic` agent on the draft every round (project path, render folder, round number, CLI path, and from round 2 the previous critic's reply as "previous report"). Give it the artefact, the brief and the user's own words, never your reasoning or your list of fixes. Apply its ranked fixes, the critical ones and the concept_wow one first. Keep the previous version's source until the new draft is better.
    Append one row to `.motion/LEDGER.md` (create it with the header `| Round | Render | Top findings | Changes | Measured |`): the render id, the critic's top 3, what you changed, and the numbers that moved (scores, stillness per 30 s, sync worst ms, LUFS). It is the proof of craft you can show the client.
 4. Stop when every jury dimension reaches `quality_target` (default 8), or after round 3: then show the user the scores and what remains, and ask whether to spend more rounds (each costs a draft render and a critique).
+5. When the critic says "ready", or the user accepts the draft as it is, add the line `Build accepted YYYY-MM-DD` (today) at the end of `.motion/LEDGER.md`. `umd next` keeps returning `build` until it is there, so an interrupted build resumes its rounds instead of jumping to the final render.
 
 ## 3. Checks before handing over
 

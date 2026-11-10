@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.0 — 2026-11-10
+
+A full review of the repository (code, method, documentation, comparison with the most-starred plugins and video skills), then fixes.
+
+- **Craft counts in the score.** ART-06 (idea, hook, hero moment), ART-07 (typography finish), ART-08 (colour script and finish) and AUD-07 (layered sound design) are judged against the project's `quality_target` (64 checks, 29 automatic). A bland but clean piece can no longer score 9.
+- **/umd:go cannot loop or skip.** A `Build accepted` line in `.motion/LEDGER.md` gates the final render, so an interrupted build resumes its rounds; fix → render → audit cycles are counted and hand back to the user when two cycles in a row do not raise the score; new words on an existing project go back to kickoff; files that are not sources (ledger, styles, Manim's `media/`, the render output) no longer ask for a re-render.
+- **Render fixes.** A soundtrack shorter than the picture no longer truncates the video (padded, never `-shortest`); a `<video>` with `preload="none"` or a missing source no longer hangs the capture; `Date()` without `new`, `performance.timeOrigin` and `crypto.getRandomValues`/`randomUUID` are on virtual time; the local server answers bad byte ranges with 416 and serves pages from another drive.
+- **Safety.** `deliver` refuses a render the last audit did not cover; `burn` copes with any subtitle file name (no filter injection); the licence guard catches `pkg>=1`, git URLs, `python -m pip`, `pip3.11` and `npx`, works from a subfolder and stays on with a broken `project.json`; `commons get` never rewrites an invalid assets lock; style prompts are pinned to a reviewed commit with a sha256 check; network calls time out.
+- **Robustness.** `doctor --fix` works with spaces in Windows paths; boolean flags no longer swallow the next argument; render paths are stored with `/`; silent mixes are reported instead of failing in loudnorm; long pieces get one contact sheet per stretch.
+- **Method.** Storyboard fills Events, Layout limits, Sound cues and Review frames; kickoff records `quality_target` and `style`; one verdict vocabulary for the critic; platform versions with another aspect ratio are re-laid out, never cropped; a sound design pass and a typography finish section; the html-video route matches the build skill.
+- **Repository.** CI on Linux (Node 18 and 22), macOS and Windows with step timeouts; `tools/build.mjs --check` fails when a document states a wrong number of checks or licence entries; release workflow from CHANGELOG; issue and pull request templates; code of conduct; manifests with `$schema`, docs homepage, category and tags; demo GIF and badges in the READMEs.
+- **Docs.** The calibration films are described as what they are (15 reference films scored 7 to 8 by an AI jury); SOURCES.md cleaned (no broken link, no unpublished path, counts that add up); French wording polished.
+
 ## 0.5.0 — 2026-11-10
 
 - New check TIM-06 (60 checks, 29 automatic): cuts land on motion, never between two parked shots (`seams` in `umd analyze`); 0 of 28 cuts flagged in the 15 calibration films. Idea from edenfunf/reelmimic's seam ledger.
@@ -14,7 +27,7 @@
 ## 0.4.0 — 2026-11-10
 
 - Motion grammar of premium launch films (`references/craft/motion-grammar.md`): six rules, 16 reusable mechanisms, pacing for a 30 s film, the shot written as an event, layout for the longest copy, and the checks critics miss and clients catch. Adapted from echris6/motion-video-kit (MIT, 28 launch films studied) and beamnxw's "Motion Engineering with Opus 5.5".
-- New check LIF-05 (59 checks, 28 automatic): under 1 s of near-still picture per 30 s, end card excluded. Zero false alarm on the 15 calibration films. `umd analyze` adds `stillness`; loudness range is shown but stays informative (it would flag 6 award films out of 15).
+- New check LIF-05 (59 checks, 28 automatic): under 1 s of near-still picture per 30 s, end card excluded. Zero false alarm on the 15 calibration films. `umd analyze` adds `stillness`; loudness range is shown but stays informative (it would flag 7 of the 15 reference films).
 - `umd sync <video>`: the storyboard's new `## Sound cues` section (`6.5s click`, `f210 reveal`) is measured against the audio onsets; AUD-03 is decided in code when cues exist (±45 ms, new threshold `sync_tolerance_ms`).
 - Music back-timing: `umd hits <music>` lists the final hits of a track, `umd mix --backtime` or `--hit s --card s` makes the track's own ending land on the end card, one continuous piece, nothing cut or looped.
 - `umd frames <video> --cuts`: one strip of 12 frames around each cut, where text over text, splices and pops hide.

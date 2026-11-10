@@ -15,15 +15,31 @@ function virtualTime(seed) {
   const EPOCH = 1767225600000; // 2026-01-01T00:00:00Z, fixed so Date-based code is reproducible
   let now = 0;
   const RealDate = Date;
-  class VDate extends RealDate {
-    constructor(...a) { if (a.length === 0) super(EPOCH + now); else super(...a); }
-    static now() { return EPOCH + now; }
+  // Callable like the real Date: `new Date()` gives the virtual time, `Date()` (no new) its string
+  function VDate(...a) {
+    if (!new.target) return new RealDate(EPOCH + now).toString();
+    return a.length === 0 ? new RealDate(EPOCH + now) : new RealDate(...a);
   }
+  VDate.prototype = RealDate.prototype;
+  VDate.now = () => EPOCH + now;
+  VDate.parse = RealDate.parse;
+  VDate.UTC = RealDate.UTC;
   window.Date = VDate;
   try { Object.defineProperty(performance, "now", { value: () => now, configurable: true }); } catch { /* ignore */ }
-  let s = seed >>> 0;
-  Math.random = () => { s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  try { Object.defineProperty(performance, "timeOrigin", { value: EPOCH, configurable: true }); } catch { /* ignore */ }
+  const prng = (seed0) => { let s = seed0 >>> 0; return () => { s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; };
+  Math.random = prng(seed);
+  // crypto randomness is seeded too (a separate stream), so ids and noise built on it repeat; Web Workers are not covered
+  const cryptoRand = prng(seed ^ 0x9e3779b9);
+  try {
+    const fill = (arr) => { const b = new Uint8Array(arr.buffer, arr.byteOffset, arr.byteLength); for (let i = 0; i < b.length; i++) b[i] = Math.floor(cryptoRand() * 256); return arr; };
+    Object.defineProperty(crypto, "getRandomValues", { value: fill, configurable: true });
+    Object.defineProperty(crypto, "randomUUID", { value: () => { const b = fill(new Uint8Array(16)); b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80; const h = [...b].map((x) => x.toString(16).padStart(2, "0")).join(""); return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`; }, configurable: true });
+  } catch { /* ignore */ }
   const realRaf = window.requestAnimationFrame.bind(window);
+  const realSetTimeout = window.setTimeout.bind(window);
+  const within = (p, ms) => Promise.race([p, new Promise((r) => realSetTimeout(() => r("timeout"), ms))]);
+  const mediaWarnings = new Set();
   let rafs = [], rafId = 0;
   window.requestAnimationFrame = (cb) => { const id = ++rafId; rafs.push({ id, cb }); return id; };
   window.cancelAnimationFrame = (id) => { rafs = rafs.filter((r) => r.id !== id); };
@@ -55,19 +71,29 @@ function virtualTime(seed) {
         if (!births.has(a)) births.set(a, now);
         try { a.pause(); a.currentTime = now - births.get(a); } catch { /* finished or invalid */ }
       }
+      // <video>: load metadata first (preload="none" never fires seeked), skip broken sources, never wait forever
       const vids = [...document.querySelectorAll("video")];
-      await Promise.all(vids.map((v) => new Promise((res) => {
+      await Promise.all(vids.map(async (v) => {
         v.pause();
+        if (v.error || v.networkState === 3) { mediaWarnings.add(`video skipped (cannot load): ${v.currentSrc || v.src}`); return; }
+        if (v.readyState === 0) {
+          v.preload = "auto";
+          if (v.networkState === 0) v.load();
+          const r = await within(new Promise((res) => { v.addEventListener("loadedmetadata", res, { once: true }); v.addEventListener("error", res, { once: true }); }), 5000);
+          if (r === "timeout" || v.error) { mediaWarnings.add(`video skipped (no metadata in 5 s): ${v.currentSrc || v.src}`); return; }
+        }
         const t = Math.min(now / 1000, (v.duration || Infinity) - 0.001);
-        if (Math.abs(v.currentTime - t) < 0.0005) return res();
-        v.addEventListener("seeked", () => res(), { once: true });
+        if (Math.abs(v.currentTime - t) < 0.0005) return;
+        const done = new Promise((res) => v.addEventListener("seeked", res, { once: true }));
         v.currentTime = t;
         realRaf(() => {}); // keep the compositor alive
-      })));
+        if ((await within(done, 5000)) === "timeout") mediaWarnings.add(`video seek timed out at ${t.toFixed(2)}s: ${v.currentSrc || v.src}`);
+      }));
       if (typeof window.umdRender === "function") await window.umdRender(now / 1000);
       await new Promise((r) => realRaf(() => realRaf(r)));
       return now / 1000;
     },
+    warnings() { return [...mediaWarnings]; },
     finiteDuration() {
       let end = 0;
       for (const a of document.getAnimations()) {
@@ -103,10 +129,11 @@ async function openPage(input, { cwd, width, height, transparent, seed, scale = 
   return { browser, page, errors };
 }
 
-function encodeArgs(format, { fps, out, draft, audio, transparent, enc }) {
+function encodeArgs(format, { fps, out, draft, audio, transparent, enc, seconds }) {
   const input = ["-f", "image2pipe", "-framerate", String(fps), "-i", "-"];
   const aIn = audio ? ["-i", audio] : [];
-  const aMap = audio ? ["-map", "0:v", "-map", "1:a", "-shortest"] : [];
+  // the picture sets the length: a shorter soundtrack is padded with silence, a longer one is cut (never -shortest)
+  const aMap = audio ? ["-map", "0:v", "-map", "1:a", "-af", "apad", "-t", String(seconds)] : [];
   switch (format) {
     case "webm": return [...input, ...aIn, ...aMap, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", draft ? "40" : "28", "-row-mt", "1", "-deadline", draft ? "realtime" : "good",
       "-pix_fmt", transparent ? "yuva420p" : "yuv420p", ...(audio ? ["-c:a", "libopus", "-b:a", "160k"] : []), out];
@@ -145,7 +172,7 @@ export async function capture(input, opts = {}) {
     const shot = { type: transparent ? "png" : (draft ? "jpeg" : "png"), ...(draft && !transparent ? { quality: 85 } : {}), omitBackground: transparent, animations: "allow", caret: "hide" };
     let ff;
     if (format === "png") mkdirSync(out, { recursive: true });
-    else ff = ffPipe(encodeArgs(format, { fps, out, draft, audio: opts.audio ? resolve(cwd, opts.audio) : null, transparent, enc: encoders() }), { cwd });
+    else ff = ffPipe(encodeArgs(format, { fps, out, draft, audio: opts.audio ? resolve(cwd, opts.audio) : null, transparent, enc: encoders(), seconds: total / fps }), { cwd });
     for (let i = 0; i < total; i++) {
       const t = from + i / fps;
       await page.evaluate((x) => window.__umd.seek(x), t);
@@ -155,8 +182,9 @@ export async function capture(input, opts = {}) {
       if (opts.onProgress && i % 30 === 0) opts.onProgress(i, total);
     }
     if (ff) { ff.stdin.end(); await ff.done; }
+    const warnings = await page.evaluate(() => window.__umd.warnings());
     return { out: relative(cwd, out), format, width, height, fps, duration, frames: total, draft, transparent,
-      seconds: Math.round((Date.now() - started) / 100) / 10, page_errors: [...new Set(errors)].slice(0, 10) };
+      seconds: Math.round((Date.now() - started) / 100) / 10, page_errors: [...new Set([...warnings, ...errors])].slice(0, 10) };
   } finally {
     await browser.close();
   }

@@ -14,7 +14,7 @@ The prompt gives: the project path, what to review (a stills folder, or a draft 
 
 ## How to look (frugal)
 
-- Stills: open each still once. Draft: open `sheet.jpg` (16 frames, row-major, times in `analysis.json` → `sheet.times`), then at most 4 extra frames with `node <CLI> frames <video> --at t1,t2 --width 640` where something looks wrong.
+- Stills: open each still once. Draft: open `sheet.jpg` (16 frames, row-major, times in `analysis.json` → `sheet.times`; over 40 s, also each `sheets[]` file, one per stretch), then at most 4 extra frames with `node <CLI> frames <video> --at t1,t2 --width 640` where something looks wrong.
 - Transitions: `node <CLI> frames <video> --cuts` writes one strip per cut (12 frames, 1/30 s apart, ±0.2 s). Open the strips of the 3 to 4 most important cuts: text over text, titles spliced by a wipe, a blank frame or a pop hide there, not on settled frames.
 - Read `analysis.json` fields only: `motion.timeline`, `dead_air`, `freezes`, `stillness`, `scenes`, `flashes`, `loudness` (with `lra`). If the storyboard lists sound cues, run `node <CLI> sync <video>` and read `rows`.
 
@@ -46,7 +46,7 @@ Read `quality_target` in `.motion/project.json` (default 8). A round passes only
 
 ## Verification rounds
 
-When the prompt gives the previous round's report, start with it: for each of its fixes give FIXED / PARTLY / STILL PRESENT with a time, then list new defects (fixes often create them: a covered element losing its layer order, a moved object now crossing a headline). End that block with SHIP or ONE MORE PASS.
+When the prompt gives the previous round's report, start with it: for each of its fixes give FIXED / PARTLY / STILL PRESENT with a time, then list new defects (fixes often create them: a covered element losing its layer order, a moved object now crossing a headline). End that block with the same verdict words as the output: ready or another round.
 
 ## Output
 

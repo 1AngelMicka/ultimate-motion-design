@@ -103,3 +103,12 @@ Minimum sizes (conventions, check on a phone-size still; these are not platform 
 - On screen, one line at a time, 2 to 7 words, one claim, no metaphor ("second brain", "superpower"), no slogan shape ("Meet X", "X, reimagined", "Less X. More Y."). `umd lint` flags the hollow words (NAR-05).
 - Narration: at most about 22 words per line, numbers written as words, and never the same sentence typed on screen and spoken word for word.
 (After Leonxlnx/cinetic's copy check and Moh4696/cinematic-skill's narration rules, both MIT.)
+
+## Typography finish (ART-07)
+
+- Display sizes (above about 72 px at 1080p): tighten tracking by 1 to 3 %; body text keeps the font's default.
+- Break lines by meaning, never mid-phrase; no single-word last line (widow) in a title.
+- One emphasis device per line: weight, colour or motion, not all three.
+- Hang punctuation and quotes outside the text block so the left edge stays optically straight.
+- Variable fonts: animate an axis (weight, width) for emphasis rather than scaling the whole line.
+- Check the rendered frame, not the CSS: `document.fonts.check()` true for every family, no fallback font in the still.

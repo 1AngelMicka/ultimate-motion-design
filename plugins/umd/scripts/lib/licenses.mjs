@@ -119,22 +119,32 @@ export function checkLicenses(root, { ref, project, flags = new Set() } = {}) {
 // Package names from an install command line (npm/pnpm/yarn/bun add|install|i, pip/uv/pipx install|add).
 export function installTargets(cmd) {
   const out = [];
+  const TOOL = /^(npm|pnpm|yarn|bun|npx|bunx|pip(?:\d+(?:\.\d+)?)?|uv|uvx|pipx|poetry)$/;
+  const push = (raw) => {
+    const a = raw.replace(/^(['"])|(['"])$/g, "");
+    if (!a || a.startsWith("-") || /^[A-Za-z_][A-Za-z0-9_]*=(?!=)/.test(a)) return; // flags, env assignments
+    const gh = a.match(/github\.com[/:]([^/\s]+\/[^/\s#@?]+?)(?:\.git)?(?:[#@?/].*)?$/) || a.match(/^github:([^/\s]+\/[^/\s#@]+)/);
+    if (gh) { out.push(gh[1]); return; }
+    if (/^(git\+|https?:|file:|\.|\/|~)/.test(a)) return; // other URLs and local paths
+    const name = a.replace(/(?<=.)@[^/]*$/, "").replace(/\[.*?\]/, "").replace(/\s*[=<>~!;].*$/, "");
+    if (name && !name.includes(":")) out.push(name);
+  };
   for (const seg of String(cmd).split(/&&|\|\||;|\|/)) {
     const t = seg.trim().split(/\s+/);
-    const i = t.findIndex((x) => /^(npm|pnpm|yarn|bun|npx|pip|pip3|uv|pipx|poetry)$/.test(x));
+    // python -m pip install … behaves like pip install …
+    const m = t.findIndex((x, k) => x === "-m" && /^pip/.test(t[k + 1] || ""));
+    if (m !== -1) t.splice(m - 1, 2);
+    const i = t.findIndex((x) => TOOL.test(x));
     if (i === -1) continue;
-    const verb = t[i + 1];
+    const tool = t[i], verb = t[i + 1];
     let args = [];
-    if (/^(npm|pnpm|bun)$/.test(t[i]) && /^(i|install|add)$/.test(verb)) args = t.slice(i + 2);
-    else if (t[i] === "yarn" && verb === "add") args = t.slice(i + 2);
-    else if (/^(pip|pip3|pipx)$/.test(t[i]) && verb === "install") args = t.slice(i + 2);
-    else if (t[i] === "uv" && (verb === "add" || (verb === "pip" && t[i + 2] === "install") || (verb === "tool" && t[i + 2] === "install"))) args = t.slice(i + (verb === "add" ? 2 : 3));
-    else if (t[i] === "poetry" && verb === "add") args = t.slice(i + 2);
-    for (const a of args) {
-      if (a.startsWith("-") || a.includes("=") && !a.includes("==")) continue;
-      const name = a.replace(/^(['"])|(['"])$/g, "").replace(/(?<=.)@[^/]*$/, "").replace(/[=<>~!].*$/, "").replace(/\[.*\]$/, "");
-      if (name && !name.startsWith(".") && !name.includes(":")) out.push(name);
-    }
+    if (/^(npm|pnpm|bun)$/.test(tool) && /^(i|install|add)$/.test(verb)) args = t.slice(i + 2);
+    else if (tool === "yarn" && verb === "add") args = t.slice(i + 2);
+    else if (/^(npx|bunx|uvx)$/.test(tool)) { const first = t.slice(i + 1).find((x) => !x.startsWith("-")); args = first ? [first] : []; }
+    else if (/^(pip|pipx)/.test(tool) && verb === "install") args = t.slice(i + 2);
+    else if (tool === "uv" && (verb === "add" || (verb === "pip" && t[i + 2] === "install") || (verb === "tool" && t[i + 2] === "install"))) args = t.slice(i + (verb === "add" ? 2 : 3));
+    else if (tool === "poetry" && verb === "add") args = t.slice(i + 2);
+    for (const a of args) push(a);
   }
   return out;
 }

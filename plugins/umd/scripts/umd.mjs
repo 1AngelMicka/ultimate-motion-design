@@ -11,9 +11,9 @@
 //   styles <words> [--source lemo|mg|opus] [--kind style|prompt]   Search 784 proven styles and prompts (no tokens spent)
 //   styles get <id>                                   Download that style prompt into .motion/styles/
 //   moves <words> [--family transitions|camera|type|...]   120 named motion techniques (match cut, whip pan, split-flap…)
-//   commons <words> [--allow-sa]                      Wikimedia Commons media under PD, CC0 or CC BY (BY-SA on request)
+//   commons <words> [--allow-sa] [--limit 12]         Wikimedia Commons media under PD, CC0 or CC BY (BY-SA on request)
 //   commons get "File:Name.jpg" [--dir assets/commons] [--width 1920]   Download it and record it in assets.lock.json
-//   still<html|url> --at 0,1.5 [--out dir] [--width W --height H]      Key stills on virtual time
+//   still <html|url> --at 0,1.5 [--out dir] [--width W --height H]      Key stills on virtual time
 //   capture <html|url> --out f.mp4 [--fps 30] [--duration s] [--width 1920 --height 1080] [--from s]
 //           [--draft] [--transparent] [--format mp4|webm|mov|gif|png] [--audio f] [--seed n]   Deterministic HTML → video
 //   render [--draft] [--twice] [--no-analyze]                          Render the project (project.json "render"), then analyze
@@ -25,8 +25,8 @@
 //   burn <video> <subs.ass> --out f.mp4             Burn captions in (libass)
 // Check
 //   analyze <video> [--out dir]                     Probe, cuts, freezes, dead air, black, flashes, loudness, contact sheet
-//   frames <video> --at 1,2.5 | --every 2 | --cuts [--out dir]   (--cuts: 12 frames around each cut, where collisions hide)
-//   sync <video> [--cues storyboard.md]             Do the sound hits land on their visual events? (storyboard "## Sound cues")
+//   frames <video> --at 1,2.5 | --every 2 | --cuts | --sheet [--out dir] [--width 960]   (--cuts: 12 frames around each cut)
+//   sync <video> [--cues storyboard.md] [--tolerance-ms 45]   Do the sound hits land on their visual events? (storyboard "## Sound cues")
 //   compare <a> <b>                                 Frame-hash equality + SSIM       vmaf <encode> <master>
 //   lint [dir]   licenses   webperf <url>   captions-check <subs> <words.json>
 //   evidence [--date D]                             All automatic checks for the audit + statuses of auto criteria
@@ -35,6 +35,7 @@
 //   deliver [--name n]                              Copy the audited render to deliverables/ (refused while a blocker is open)
 //   tokens [--days 30] [--session id] [--json]      Token use per /umd:* command, from the session transcripts
 //   run <label> "<command>"                         Run a command, keep the log on disk, print a compact summary
+//   version                                         Plugin version
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, copyFileSync, statSync } from "node:fs";
 import { join, relative, resolve, extname, basename } from "node:path";
 import { createHash } from "node:crypto";
@@ -50,12 +51,14 @@ const cmd = argv.shift();
 const flags = new Set();
 const opts = {};
 const pos = [];
+// boolean flags never take a value, so `umd capture --draft page.html` keeps page.html as the input
+const BOOL = new Set(["allow-sa", "backtime", "cuts", "draft", "fix", "force", "incremental", "json", "no-analyze", "sheet", "transparent", "twice"]);
 for (let i = 0; i < argv.length; i++) {
   const a = argv[i];
   if (a.startsWith("--")) {
     const k = a.slice(2);
     const v = argv[i + 1];
-    if (v === undefined || v.startsWith("--")) flags.add(k);
+    if (BOOL.has(k) || v === undefined || v.startsWith("--")) flags.add(k);
     else { (opts[k] ??= []).push(v); i++; }
   } else pos.push(a);
 }
@@ -169,6 +172,7 @@ async function evidence() {
   const { autocheck } = await import("./lib/autocheck.mjs");
   const planned = new Set(allDomains(ref).filter((d) => (ref.profiles[project.profile].weights[d.id] ?? 0) > 0 && applies(d, fl))
     .flatMap((d) => d.criteria.filter((c) => applies(c, fl)).map((c) => c.id)));
+  ev.flags = [...fl];
   const all = autocheck(ev, th, project);
   const results = Object.fromEntries(Object.entries(all).filter(([id]) => planned.has(id)));
   writeFileSync(join(dir, "evidence.json"), JSON.stringify({ date, render: lr, ...ev }, null, 2));
@@ -306,7 +310,7 @@ function deliver() {
   const lr = latestRender();
   if (!lr) die("No render to deliver: run /umd:render.");
   if (lr.draft) die("The latest render is a draft. Run /umd:render (final), then /umd:audit, then deliver.");
-  if (report.render_id && report.render_id !== lr.id) die(`The latest render (${lr.id}) was not audited (audit covered ${report.render_id}). Run /umd:audit again.`);
+  if (report.render_id !== lr.id) die(`The latest render (${lr.id}) was not audited (${report.render_id ? `audit covered ${report.render_id}` : "the last audit ran before any render"}). Run /umd:audit again.`);
   if (report.open_blockers > 0) {
     const b = report.issues.filter((i) => i.severity === "blocker").map((i) => `${i.id} (${i.status}): ${i.fix || i.label.en}`);
     process.stderr.write(`Delivery refused: ${report.open_blockers} open blocker(s).\n- ${b.join("\n- ")}\nFix them with /umd:fix, then render and audit again.\n`);
@@ -360,7 +364,9 @@ async function render() {
       if (r.audio && !/\.(gif|png)$/i.test(output)) {
         const { ffOk } = await import("./lib/ffmpeg.mjs");
         const muxed = keep.replace(/(\.\w+)$/, ".mux$1");
-        ffOk(["-i", keep, "-i", resolve(cwd, r.audio), "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest", "-movflags", "+faststart", muxed]);
+        const { probe } = await import("./lib/ffmpeg.mjs");
+        const vlen = probe(keep).duration; // the picture sets the length: pad a short soundtrack, cut a long one
+        ffOk(["-i", keep, "-i", resolve(cwd, r.audio), "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-af", "apad", "-t", String(vlen), "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", muxed]);
         copyFileSync(muxed, keep);
       }
       return { output: relative(cwd, keep), command: { exit_code: res.exit_code, duration_s: res.duration_s, log: res.log, signal_lines: res.signal_lines.slice(0, 8) } };
@@ -386,8 +392,11 @@ async function render() {
     analysis = analyze(a.output, { cwd, outDir: dir, thresholds: thresholds(project, ref) });
     info.probe = analysis.probe;
   }
+  info.finished_at = new Date().toISOString();
+  const posix = (x) => String(x).split("\\").join("/"); // portable between Windows, macOS and Linux
+  info.output = posix(info.output);
   writeFileSync(join(dir, "render.json"), JSON.stringify(info, null, 2));
-  writeFileSync(join(md, "renders", "latest.json"), JSON.stringify({ id, dir: relative(cwd, dir), output: a.output, draft, probe: info.probe || null }, null, 2));
+  writeFileSync(join(md, "renders", "latest.json"), JSON.stringify({ id, dir: posix(relative(cwd, dir)), output: posix(a.output), draft, probe: info.probe || null }, null, 2));
   out({ id, ok: true, output: a.output, seconds: info.seconds, page_errors: a.capture?.page_errors?.length ? a.capture.page_errors : undefined,
     determinism: determinism ? { identical: determinism.identical, ssim: determinism.ssim } : undefined, analysis: analysisSummary(analysis) });
 }
@@ -577,9 +586,14 @@ async function main() {
     case "burn": {
       if (pos.length < 2 || !opt("out")) die("Usage: umd burn <video> <subs.ass> --out f.mp4");
       const { ffOk } = await import("./lib/ffmpeg.mjs");
-      const subs = resolve(cwd, pos[1]);
-      const subsDir = resolve(subs, "..");
-      ffOk(["-i", resolve(cwd, pos[0]), "-vf", `subtitles=${basename(subs)}`, "-c:v", "libx264", "-crf", "16", "-preset", "slow", "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", resolve(cwd, opt("out"))], { cwd: subsDir });
+      // libass reads the file name inside a filtergraph: copy it under a safe name so commas, quotes or colons
+      // in the user's file name can neither break nor inject filters
+      const { mkdtempSync } = await import("node:fs");
+      const { tmpdir } = await import("node:os");
+      const subsDir = mkdtempSync(join(tmpdir(), "umd-burn-"));
+      const safe = `subs${extname(pos[1]).toLowerCase().replace(/[^.\w]/g, "") || ".ass"}`;
+      copyFileSync(resolve(cwd, pos[1]), join(subsDir, safe));
+      ffOk(["-i", resolve(cwd, pos[0]), "-vf", `subtitles=${safe}`, "-c:v", "libx264", "-crf", "16", "-preset", "slow", "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", resolve(cwd, opt("out"))], { cwd: subsDir });
       return out({ output: opt("out") });
     }
     case "lint": {

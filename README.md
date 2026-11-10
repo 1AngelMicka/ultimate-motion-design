@@ -2,6 +2,10 @@
 
 **Français** · [English](README.en.md) · **[Documentation](https://1angelmicka.github.io/ultimate-motion-design/)** · [Pour les agents IA](AGENTS.md)
 
+[![Licence MIT](https://img.shields.io/badge/licence-MIT-1f2328)](LICENSE) [![Release](https://img.shields.io/github/v/release/1AngelMicka/ultimate-motion-design?color=1f2328)](https://github.com/1AngelMicka/ultimate-motion-design/releases) [![Node 18+](https://img.shields.io/badge/node-18%2B-1f2328)](https://nodejs.org) [![validate](https://github.com/1AngelMicka/ultimate-motion-design/actions/workflows/validate.yml/badge.svg)](https://github.com/1AngelMicka/ultimate-motion-design/actions/workflows/validate.yml)
+
+[![Démo : /umd:go enchaîne kickoff, storyboard, build, rendu, audit, correction et livraison](site/assets/demo.gif)](https://1angelmicka.github.io/ultimate-motion-design/)
+
 Un plugin pour [Claude Code](https://claude.com/claude-code) qui fait produire à Claude du motion design de très haute qualité, puis le vérifie image par image avant de le livrer. Il couvre :
 
 - les vidéos promo et les lancements produit ;
@@ -19,12 +23,13 @@ Ses points forts :
   - Claude choisit la bonne route pour chaque projet.
 - **Rendu déterministe intégré.** `umd capture` transforme n'importe quelle page HTML animée en vidéo, image par image, sans licence Remotion. Deux rendus donnent des images strictement identiques.
 - **Un vrai contrôle qualité.**
-  - 12 domaines et 60 vérifications, de la narration aux licences.
+  - 12 domaines et 64 vérifications, de la narration aux licences.
   - Chaque vérification réussie a une preuve : une image à t = 2,40 s, une mesure en LUFS ou une ligne de code.
   - Note sur 10. Un point bloquant ouvert plafonne la note et bloque la livraison.
-  - Un agent critique note chaque brouillon comme un jury (7 = pro, 8 = agence, 9 = prix) et fait recommencer jusqu'à la note visée. Un nouveau critique à chaque tour, qui ne voit jamais le raisonnement du constructeur et vérifie point par point les corrections du tour précédent.
+  - Un agent critique note chaque brouillon comme un jury (7 = pro, 8 = agence, 9 = sélection en festival) et fait recommencer jusqu'à la note visée. Un nouveau critique à chaque tour, qui ne voit jamais le raisonnement du constructeur et vérifie point par point les corrections du tour précédent.
+  - Le savoir-faire compte dans la note : l'idée et le moment fort, la typographie, la couleur et le design sonore sont jugés contre la note visée du projet (8 par défaut).
   - Le son est mesuré contre l'image : chaque effet tombe sur son événement à ±45 ms (`umd sync`), et la vraie fin de la musique tombe sur le carton final (`umd mix --backtime`).
-  - Les coupes se font sur du mouvement, jamais entre deux plans arrêtés, et aucune image ne reste quasi figée plus d'1 s par 30 s : deux contrôles mesurés, calibrés sur 15 films primés sans fausse alerte.
+  - Les coupes se font sur du mouvement, jamais entre deux plans arrêtés, et pas plus d'une seconde d'image quasi figée par tranche de 30 s : deux contrôles mesurés, calibrés sans fausse alerte sur 15 films de référence notés 7 à 8 sur 10 par un jury IA.
 - **La grammaire des films de lancement pro.** Six règles et 16 mécanismes tirés de l'analyse de 28 films de lancement : un acteur qui persiste, chaque action qui produit un résultat, le premier plan qui porte la transition.
 - **Des points de départ éprouvés, sans dépenser de tokens.**
   - 784 styles et prompts, avec un aperçu du résultat dans la [bibliothèque en ligne](https://1angelmicka.github.io/ultimate-motion-design/bibliotheque.html) (`umd styles`).
@@ -103,7 +108,7 @@ Ensuite, tape simplement `/umd:go` à chaque fois pour continuer.
 
 ### Installer pour toute une équipe
 
-Dans le dossier du projet, lance une fois dans ton terminal, puis commite `.claude/settings.json` :
+Dans le dossier du projet, lance une fois dans ton terminal, puis versionne `.claude/settings.json` :
 
 ```bash
 claude plugin marketplace add 1AngelMicka/ultimate-motion-design --scope project
@@ -208,7 +213,7 @@ Deux fichiers gardent la trace de la recherche :
 
 Les règles et les vérifications sont détaillées dans [docs/fr/REFERENTIEL.md](docs/fr/REFERENTIEL.md).
 
-29 des 60 vérifications sont mesurées par le code, sans agent (celles qui s'appliquent dépendent du profil) :
+29 des 64 vérifications sont mesurées par le code, sans agent (celles qui s'appliquent dépendent du profil) :
 
 - durée et format de sortie ;
 - coupes faites sur du mouvement, jamais entre deux plans arrêtés ;
@@ -236,7 +241,7 @@ Les autres vérifications sont jugées par les auditeurs, à partir de la planch
   - des images fixes non validées avant l'animation ;
   - un asset non commercial dans une pub.
 - La note globale pondère les domaines selon le profil : `promo`, `presentation`, `explainer`, `social`, `film`, `logo` ou `web`. Les domaines sans objet sont ignorés, comme les sous-titres d'un logo ou l'audio d'une page web.
-- Les seuils se règlent par projet dans `thresholds` de `.motion/project.json` : −14 LUFS, 3 flashs par seconde, 3 s de temps mort, VMAF 93… Les seuils de temps mort, d'image figée, de temps quasi figé, de coupes sur du mouvement, de flashs et de loudness ont été vérifiés sur 15 films de niveau agence, sans aucune fausse alerte ([docs/CALIBRATION.md](docs/CALIBRATION.md)). Une règle qui aurait signalé des films primés (la dynamique de la musique) a été écartée. Ceux du VMAF, des sous-titres et du web restent des conventions.
+- Les seuils se règlent par projet dans `thresholds` de `.motion/project.json` : −14 LUFS, 3 flashs par seconde, 3 s de temps mort, VMAF 93… Les seuils de temps mort, d'image figée, de temps quasi figé, de coupes sur du mouvement, de flashs et de loudness ont été vérifiés sans aucune fausse alerte sur 15 films de référence notés 7 à 8 sur 10 par un jury IA ([docs/CALIBRATION.md](docs/CALIBRATION.md)). Une règle qui aurait signalé à tort 7 de ces films (la dynamique de la musique) a été écartée. Ceux du VMAF, des sous-titres et du web restent des conventions.
 
 ## Licences et droits
 
@@ -269,8 +274,8 @@ Le plugin réduit les tokens à trois endroits :
 | Mécanisme | Effet |
 | --- | --- |
 | **Presque rien en permanence** | Environ 250 tokens chargés en permanence : la description du skill `motion` et celles des deux agents. Les onze commandes `/umd:*` ne coûtent rien tant qu'on ne les lance pas. Dans un projet umd, le hook de démarrage ajoute environ 150 tokens de contexte. |
-| **Références à la demande** | 53 guides de 1 200 à 2 100 tokens chacun, lus un par un, seulement quand ils servent : par exemple la route du projet, puis le guide de son moteur. |
-| **Vérifications faites par le code** | 29 vérifications sur 60 sont décidées par la CLI à partir des mesures FFmpeg, du lint, des licences et des tests navigateur. Les auditeurs ne regardent que ce qui demande un œil. |
+| **Références à la demande** | 53 guides de 800 à 2 300 tokens chacun, lus un par un, seulement quand ils servent : par exemple la route du projet, puis le guide de son moteur. |
+| **Vérifications faites par le code** | 29 vérifications sur 64 sont décidées par la CLI à partir des mesures FFmpeg, du lint, des licences et des tests navigateur. Les auditeurs ne regardent que ce qui demande un œil. |
 | **Planche contact** | Chaque rendu produit une planche de 16 images, soit une seule image à lire. Claude n'extrait ensuite que 2 à 6 images ciblées si un doute reste. |
 | **Sorties compactes** | Rendus, encodages et analyses écrivent leur sortie complète sur le disque et ne renvoient qu'un résumé. Sur notre test, 3 commandes passent d'environ 3 700 tokens de sortie à environ 700. |
 | **Audit incrémental par défaut** | Seules les vérifications qu'un fichier modifié ou un nouveau rendu peut affecter sont revérifiées. Si rien n'a changé, aucun auditeur n'est lancé. |
@@ -340,7 +345,7 @@ assets/commons/                  les images téléchargées par umd commons
 deliverables/                    livrables, avec leur manifeste et credits.txt
 ```
 
-Commite `BRIEF.md` et `.motion/`, sauf les rendus, pour garder l'historique des notes. `LEDGER.md` et le rapport d'audit montrent le soin apporté : tu peux les joindre à une livraison client. `/umd:kickoff` ajoute à ton `.gitignore` les rendus, les logs d'audit et le compteur de tokens.
+Versionne `BRIEF.md` et `.motion/`, sauf les rendus, pour garder l'historique des notes. `LEDGER.md` et le rapport d'audit montrent le soin apporté : tu peux les joindre à une livraison client. `/umd:kickoff` ajoute à ton `.gitignore` les rendus, les logs d'audit et le compteur de tokens.
 
 ## En cas de problème
 

@@ -1,26 +1,34 @@
 // What should happen next in this project? Reads local files only (no browser launch, no FFmpeg run),
 // so /umd:go can decide the next step for a few hundred tokens.
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { join, relative, resolve, dirname, sep } from "node:path";
 import { spawnSync } from "node:child_process";
 import { loadProject, motionDir, projectFlags } from "./ref.mjs";
 import { resolvePlaywright } from "./playwright.mjs";
 import { parseStoryboard } from "./lint.mjs";
 import { FFMPEG } from "./ffmpeg.mjs";
 
-const SKIP = new Set(["node_modules", ".git", "renders", "audits", "deliverables", "dist", "build", "out", ".next", "frames", "analysis", "logs", ".reanimate", "stills"]);
+// Folders that hold outputs, caches or tools, never sources of the picture
+const SKIP = new Set(["node_modules", ".git", "renders", "audits", "deliverables", "dist", "build", "out", ".next", "frames", "analysis", "logs",
+  ".reanimate", "stills", "media", "__pycache__", ".claude", ".venv", "venv", ".cache", "_site", "umd-analysis"]);
+// Inside .motion/ only these files change the picture; the rest (ledger, styles, audits, project settings) does not
+const MOTION_SOURCES = /^(motion-tokens\.json|captions\.(ass|srt|vtt))$/;
 
-function newestSource(root) {
+function newestSource(root, extraSkip = []) {
   let newest = 0, file = null, count = 0;
+  const skipPaths = new Set(extraSkip.map((x) => resolve(root, x)));
   const rec = (dir, depth) => {
     if (depth > 6) return;
     let entries = [];
     try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    const inMotion = relative(root, dir) === ".motion";
     for (const e of entries) {
       if (count > 5000) return;
       const p = join(dir, e.name);
-      if (e.isDirectory()) { if (!SKIP.has(e.name)) rec(p, depth + 1); continue; }
-      if (!e.isFile() || /token-savings\.json$|latest\.json$|AUDIT\.md$|handoff\.md$/.test(e.name)) continue;
+      if (skipPaths.has(resolve(p))) continue;
+      if (e.isDirectory()) { if (!SKIP.has(e.name) && !(inMotion)) rec(p, depth + 1); continue; }
+      if (inMotion && !MOTION_SOURCES.test(e.name)) continue;
+      if (!e.isFile() || /^\.DS_Store$|token-savings\.json$|latest\.json$|AUDIT\.md$|handoff\.md$|LEDGER\.md$/.test(e.name)) continue;
       count++;
       const m = statSync(p).mtimeMs;
       if (m > newest) { newest = m; file = p; }
@@ -31,6 +39,27 @@ function newestSource(root) {
 }
 
 const readJson = (f) => { try { return JSON.parse(readFileSync(f, "utf8")); } catch { return null; } };
+
+// The build is accepted when the critic said "ready" (or the user accepted the draft): a dated line in the ledger
+function buildAccepted(md) {
+  const f = join(md, "LEDGER.md");
+  if (!existsSync(f)) return false;
+  return /build accepted\s*:?\s*\d{4}-\d{2}-\d{2}/i.test(readFileSync(f, "utf8").replace(/<!--[\s\S]*?-->/g, ""));
+}
+
+// Fix cycles: fix → render → audit → fix never repeats the same step twice in a row, so count the cycles here and
+// hand back to the user when two of them in a row did not raise the score.
+function fixGuard(md, report) {
+  const f = join(md, "state.json");
+  const st = readJson(f) || {};
+  const seen = st.fix_reports || [];
+  const key = `${report.date}:${report.global}:${report.open_blockers}`;
+  if (seen.at(-1)?.key !== key) seen.push({ key, score: report.global, blockers: report.open_blockers });
+  const last = seen.slice(-3);
+  const stuck = last.length === 3 && last[2].score <= last[0].score && last[2].blockers >= last[0].blockers;
+  try { writeFileSync(f, JSON.stringify({ ...st, fix_reports: seen.slice(-10) }, null, 2)); } catch { /* read-only folder */ }
+  return { cycles: seen.length, stuck };
+}
 
 function briefFilled(cwd) {
   const f = join(cwd, "BRIEF.md");
@@ -60,10 +89,11 @@ export function nextStep(cwd, ref) {
   if (!beatsOk) return done("storyboard", sb ? "storyboard beats are incomplete (duration or intent missing)" : "no storyboard yet");
   if (!sb.validated) return done("storyboard", "key stills are not validated yet (no dated \"Stills validated\" line)", { needs_user: true });
 
-  const src = newestSource(cwd);
+  const renderOut = project.render?.output ? [project.render.output, dirname(project.render.output) === "." ? null : dirname(project.render.output)].filter(Boolean) : [];
+  const src = newestSource(cwd, renderOut);
   const lr = readJson(join(md, "renders", "latest.json"));
   const renderInfo = lr ? readJson(join(cwd, lr.dir, "render.json")) : null;
-  const renderMs = renderInfo?.started_at ? Date.parse(renderInfo.started_at) : 0;
+  const renderMs = Date.parse(renderInfo?.finished_at || renderInfo?.started_at || 0) || 0;
   state.latest_render = lr ? { id: lr.id, draft: lr.draft, output: lr.output } : null;
   const reports = existsSync(join(md, "audits")) ? readdirSync(join(md, "audits")).filter((f) => /\.report\.json$/.test(f)).sort() : [];
   const report = reports.length ? readJson(join(md, "audits", reports.at(-1))) : null;
@@ -75,12 +105,18 @@ export function nextStep(cwd, ref) {
   const isVideo = fl.has("is_video");
   if (isVideo) {
     if (!lr) return done("build", "storyboard validated, nothing rendered yet");
-    if (lr.draft) return done("render", "the latest render is a draft: final render next");
+    if (lr.draft && !buildAccepted(md)) return done("build", "draft rounds are not finished: no \"Build accepted YYYY-MM-DD\" line in .motion/LEDGER.md yet");
+    if (lr.draft) return done("render", "the build is accepted and the latest render is a draft: final render next");
     if (src.ms > renderMs + 1000) return done("render", `sources changed after the latest render (${src.file})`);
     if (!report || report.render_id !== lr.id) return done("audit", "the latest final render has not been audited");
   } else {
     if (!report) return done(project.url ? "audit" : "build", project.url ? "nothing audited yet" : "no page URL in project.json yet: build the page and set \"url\"");
     if (src.ms > auditMs + 1000) return done("audit", `files changed after the last audit (${src.file})`);
+  }
+  if (report.open_blockers > 0 || state.last_audit.majors_open > 0) {
+    const g = fixGuard(md, report);
+    state.fix_cycles = g.cycles;
+    if (g.stuck) return done("fix", `fixes are not converging: ${g.cycles} audits, score ${report.global}/10 and ${report.open_blockers} blocker(s) unchanged over the last two cycles. Show the user what is left and ask how to proceed`, { needs_user: true });
   }
   if (report.open_blockers > 0) return done("fix", `${report.open_blockers} open blocker(s)`);
   if (state.last_audit.majors_open > 0) return done("fix", `${state.last_audit.majors_open} major issue(s) open (score ${report.global}/10)`, { optional: true });

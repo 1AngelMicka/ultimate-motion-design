@@ -2,21 +2,46 @@ name: validate
 on: [push, pull_request]
 permissions:
   contents: read
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} · Node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, node: "18" }
+          - { os: ubuntu-latest, node: "22" }
+          - { os: macos-latest, node: "22" }
+          - { os: windows-latest, node: "22" }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - name: FFmpeg
+          node-version: ${{ matrix.node }}
+      - name: FFmpeg (Linux)
+        if: runner.os == 'Linux'
+        timeout-minutes: 10
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
-      - name: Playwright runtime (for the capture test)
+      - name: FFmpeg (macOS)
+        if: runner.os == 'macOS'
+        timeout-minutes: 15
+        run: brew install ffmpeg
+      - name: FFmpeg (Windows)
+        if: runner.os == 'Windows'
+        timeout-minutes: 15
+        run: choco install ffmpeg -y --no-progress
+      - name: Playwright runtime (for the capture tests)
+        timeout-minutes: 10
         run: node plugins/umd/scripts/umd.mjs doctor --fix
-      - name: Referential is valid and generated files are committed
+      - name: Referential, generated docs and stated numbers are in sync
         run: node tools/build.mjs --check
       - name: Documentation site builds
         run: node tools/site.mjs
       - name: Tests
+        timeout-minutes: 15
         run: node --test tests/

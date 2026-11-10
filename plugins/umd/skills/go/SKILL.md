@@ -17,6 +17,7 @@ Run `umd next`. It returns `step`, `reason`, `needs_user`, `optional` and a shor
 
 - `$ARGUMENTS` names a step, in any language (`audit`, `vérifier`, `corriger`/`fix`, `rendu`/`render`, `livrer`/`deliver`, `tokens`, `storyboard`, `build`/`construire`, `kickoff`/`démarrer`) → run that step, then stop.
 - `$ARGUMENTS` describes something to make ("une vidéo de lancement de 30 s…") and there is no project yet → `kickoff`, with these words as the brief.
+- `$ARGUMENTS` describes something to make and a project already exists → `kickoff` (it asks whether to update this project or start a new one in another folder); never ignore the user's words.
 - Otherwise → the step from `umd next`.
 
 Tell the user in one line: the step and why (`reason`).
@@ -29,7 +30,7 @@ Read `${CLAUDE_PLUGIN_ROOT}/skills/<step>/SKILL.md` and follow it exactly, as if
 
 After a step ends, run `umd next` again and continue with the new step **without asking**, except in these cases, where you stop and ask:
 
-- `needs_user` is true: the stills must be approved (storyboard), or the piece is ready to deliver;
+- `needs_user` is true: the stills must be approved (storyboard), fixes are not converging (`umd next` counts the fix → render → audit cycles), or the piece is ready to deliver;
 - the step file itself asks the user (route choice, creative change, licence exception, installing tools);
 - `optional` is true (only major issues left): ask whether to fix them or deliver as is;
 - the same step comes back twice in a row with the same reason: something is blocking; say what and stop;

@@ -1,6 +1,6 @@
 # Catalogue GitHub — Motion design avec Claude Code et Codex
 
-**Édition : 9 novembre 2026** · **1113 dépôts GitHub** · Descriptions volontairement courtes.
+**Édition : 10 novembre 2026** · **1113 dépôts GitHub** · Descriptions volontairement courtes.
 **Périmètre :** skills agents, motion graphics codés, vidéos, React/GSAP, animation 2D/3D, outils MCP, shaders, montage, rendu et capture, contrôle qualité, voix, musique, assets et références.
 
 > **Comment lire ce catalogue :** certains dépôts sont des **skills à installer** dans Claude/Codex, d’autres sont des **bibliothèques, logiciels ou modèles** à leur faire utiliser par code. Un dépôt n’est pas nécessairement gratuit pour tous les usages : vérifie sa licence, ses API éventuelles et ses prérequis matériels avant de l’intégrer.
@@ -23,7 +23,7 @@
 12. [paper-design/shaders](https://github.com/paper-design/shaders) — fonds animés prêts à poser.
 13. [hexgrad/kokoro](https://github.com/hexgrad/kokoro) — voix off française légère et libre.
 14. [ace-step/ACE-Step-1.5](https://github.com/ace-step/ACE-Step-1.5) — musique locale commercialisable.
-15. [ahujasid/blender-mcp](https://github.com/ahujasid/blender-mcp) — 3D Blender contrôlée en langage naturel.
+15. [ahujasid/blender-mcp](https://github.com/ahujasid/mcp-for-blender) — 3D Blender contrôlée en langage naturel.
 
 ---
 
@@ -1089,7 +1089,7 @@
 
 ### Blender, Cinema 4D, Houdini, Unreal, Unity, Godot, TouchDesigner
 
-- **[ahujasid/blender-mcp](https://github.com/ahujasid/blender-mcp)** — Pilote Blender par MCP avec Claude/Codex.
+- **[ahujasid/blender-mcp](https://github.com/ahujasid/mcp-for-blender)** — Pilote Blender par MCP avec Claude/Codex.
 - **[CoplayDev/unity-mcp](https://github.com/CoplayDev/unity-mcp)** — Contrôle l'éditeur Unity via un agent MCP.
 - **[bpy-dev/blender-mcp](https://github.com/bpy-dev/blender-mcp)** — Distribution indépendante de « Blender Lab MCP » avec bpy autonome et docs d'API. ⚠️ GPL
 - **[seehiong/blender-mcp-bridge](https://github.com/seehiong/blender-mcp-bridge)** — Serveur MCP Blender (93 outils : modélisation, matériaux…) avec rejouage de sessions.

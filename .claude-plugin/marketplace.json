@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "ultimate-motion-design",
   "description": "Make and audit high-quality motion design with Claude Code: videos, animated pages, 3D, logo animation. Créer et auditer du motion design de haute qualité.",
   "owner": {
@@ -9,12 +10,21 @@
     {
       "name": "umd",
       "description": "Ultimate Motion Design: kickoff, storyboard, build, deterministic render, motion audit scored out of 10, fix, deliver, token report. Créer, rendre et auditer du motion design.",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "source": "./plugins/umd",
       "author": {
         "name": "Micka",
         "url": "https://github.com/1AngelMicka"
-      }
+      },
+      "homepage": "https://1angelmicka.github.io/ultimate-motion-design/",
+      "license": "MIT",
+      "category": "media",
+      "tags": [
+        "motion-design",
+        "video",
+        "animation",
+        "audit"
+      ]
     }
   ]
 }

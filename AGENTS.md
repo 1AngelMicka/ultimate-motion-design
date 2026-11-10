@@ -4,7 +4,7 @@ Instructions for an AI agent asked to install, set up or use this plugin for a u
 
 ## What it is
 
-A Claude Code plugin (`umd`) that makes and audits motion design: promo, presentation, explainer and social videos, logo animations, animated short films, animated web pages, 3D shots. It renders HTML animations to video deterministically, scores the result on 60 checks out of 10 with evidence, guards licences and reports token use. One command drives everything: `/umd:go`.
+A Claude Code plugin (`umd`) that makes and audits motion design: promo, presentation, explainer and social videos, logo animations, animated short films, animated web pages, 3D shots. It renders HTML animations to video deterministically, scores the result out of 10 on 64 checks, with evidence, guards licences and reports token use. One command drives everything: `/umd:go`.
 
 - Repository: https://github.com/1AngelMicka/ultimate-motion-design
 - Documentation: https://1angelmicka.github.io/ultimate-motion-design/ (English at `/en/`)

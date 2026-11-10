@@ -20,7 +20,7 @@ export function licenceClass(short) {
 
 async function api(params) {
   const url = `${API}?${new URLSearchParams({ format: "json", formatversion: "2", ...params })}`;
-  const r = await fetch(url, { headers: { "User-Agent": UA } });
+  const r = await fetch(url, { headers: { "User-Agent": UA }, signal: AbortSignal.timeout(30000) });
   if (!r.ok) throw new Error(`Commons API ${r.status}`);
   return r.json();
 }
@@ -54,7 +54,7 @@ export async function getCommons(title, { cwd = process.cwd(), dir = "assets/com
   if (it.class === "refused" || (it.class === "sa" && !allowSa))
     throw new Error(`${t} is under "${it.licence}": refused${it.class === "sa" ? " (share-alike: pass --allow-sa only if the user accepts it)" : " (only public domain, CC0, CC BY and, on request, CC BY-SA)"}`);
   const src = (it.width || 0) > width && it.thumb_url ? it.thumb_url : it.file_url;
-  const r = await fetch(src, { headers: { "User-Agent": UA } });
+  const r = await fetch(src, { headers: { "User-Agent": UA }, signal: AbortSignal.timeout(120000) });
   if (!r.ok) throw new Error(`Download failed: ${r.status}`);
   const buf = Buffer.from(await r.arrayBuffer());
   const name = t.slice(5).replace(/[^\w.-]+/g, "_").replace(/_+/g, "_");
@@ -66,7 +66,10 @@ export async function getCommons(title, { cwd = process.cwd(), dir = "assets/com
   const rel = relative(cwd, file).replace(/\\/g, "/");
   const lockFile = join(cwd, ".motion", "assets.lock.json");
   let lock = { assets: [] };
-  try { if (existsSync(lockFile)) lock = JSON.parse(readFileSync(lockFile, "utf8")); } catch { /* rewrite below */ }
+  if (existsSync(lockFile)) {
+    try { lock = JSON.parse(readFileSync(lockFile, "utf8")); }
+    catch (e) { throw new Error(`${relative(cwd, lockFile)} is not valid JSON (${e.message}): fix it first, nothing was changed. The file was downloaded to ${rel}.`); }
+  }
   const list = Array.isArray(lock) ? lock : (lock.assets ||= []);
   const entry = { path: rel, source: "Wikimedia Commons", url: it.page, license: it.licence, author: it.author, credit_line: `${t.slice(5)} by ${it.author}, ${it.licence}, via Wikimedia Commons`, ...(it.class === "sa" ? { note: "share-alike: adaptations must use the same licence" } : {}) };
   const i = list.findIndex((a) => a.path === rel);

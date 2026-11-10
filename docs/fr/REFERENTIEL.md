@@ -4,11 +4,11 @@
 
 Critères audités par `/umd:audit`. Méthode `auto` : décidé dans le code à partir des mesures ; `inspect` : jugé par un agent auditeur avec une preuve.
 
-**12 domains · 60 criteria · v0.5.0**
+**12 domaines · 64 critères · v0.6.0**
 
 ## Profils et poids des domaines
 
-| Profile | NAR | TIM | LIF | ART | MOT | TXT | SAF | WEB | AUD | CAP | REN | LIC |
+| Profil | NAR | TIM | LIF | ART | MOT | TXT | SAF | WEB | AUD | CAP | REN | LIC |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Promo ou lancement produit (`promo`) | 3 | 3 | 2 | 3 | 3 | 3 | 2 | 0 | 2 | 2 | 3 | 3 |
 | Vidéo de présentation (entreprise, produit, projet) (`presentation`) | 3 | 2 | 1 | 3 | 2 | 3 | 2 | 0 | 3 | 3 | 2 | 3 |
@@ -20,7 +20,7 @@ Critères audités par `/umd:audit`. Méthode `auto` : décidé dans le code à 
 
 ## Seuils par défaut
 
-| Key | Value |
+| Clé | Valeur |
 | --- | --- |
 | `loudness_lufs` | -14 |
 | `loudness_tolerance_lu` | 1 |
@@ -136,6 +136,9 @@ S'applique si: toujours
 | ART-03 | Aucun visuel à signature IA | majeur | inspect | Planche contact contre la liste de references/craft/anti-slop.md. |
 | ART-04 | Zones de sécurité du format respectées | mineur | inspect | Images clés : texte et logo dans la zone titre (90 %) et hors des zones d'interface de la plateforme (9:16). |
 | ART-05 | Assets nets à la résolution de sortie | majeur | inspect | Images à 100 % : logos, icônes et photos nets, sans pixellisation ni flou d'agrandissement. |
+| ART-06 | Une idée, une accroche et un moment fort au niveau visé | majeur | inspect | Jury (agents/critic.md) : concept_wow ≥ quality_target de project.json (8 par défaut). Accroche lisible avant 2 s, un moment fort identifiable (temps), une image de fin satisfaisante. Citer les temps. |
+| ART-07 | Typographie finie au niveau visé | majeur | inspect | Jury : design_typography ≥ quality_target. Approche resserrée sur les grands titres, coupes de ligne par le sens, pas de veuve, une seule mise en valeur par ligne, la bonne police chargée (pas de police de secours). Citer l'image. |
+| ART-08 | Couleur et finition au niveau visé | majeur | inspect | Jury : finish_texture ≥ quality_target. Une palette par séquence qui suit l'histoire (colour script), lumière motivée, grain ou dither contre le banding, pas d'aliasing. Citer l'image. |
 
 ## Mouvement, texte et sécurité
 
@@ -246,6 +249,7 @@ S'applique si: has_audio
 | AUD-04 | Pas de silence de tête ni de coupure brutale | majeur | auto (analyze) | umd analyze : silence.leading_s et silence.trailing_s ≤ thresholds.silence_edge_max_s, et audio_end.abrupt vaut false. |
 | AUD-05 | Voix claire et naturelle, noms bien prononcés _(has_voice)_ | majeur | inspect | Écoute et transcription : pas d'artefact robotique, rythme 140–170 mots/min, noms de marque corrects. |
 | AUD-06 | Format audio de diffusion | mineur | auto (analyze) | umd analyze : probe.audio à 48 kHz, 2 canaux, AAC ≥ 192 kb/s ou Opus. |
+| AUD-07 | Design sonore en couches au niveau visé _(has_music)_ | majeur | inspect | Jury : sound_sync ≥ quality_target. Aux moments forts, plusieurs couches (montée, impact, grave, détail), la musique creusée sous la voix, un silence utilisé comme accent au moins une fois ; chaque effet tombe sur son image (umd sync). |
 
 ### CAP — Sous-titres
 

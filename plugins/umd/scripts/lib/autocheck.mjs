@@ -86,7 +86,7 @@ export function autocheck(ev, th, project) {
       const au = p.audio;
       const fmtOk = au && au.sample_rate === 48000 && au.channels === 2 && ((au.codec === "aac" && (au.bitrate_kbps == null || au.bitrate_kbps >= 180)) || au.codec === "opus");
       set("AUD-06", fmtOk ? "pass" : "partial", `${src}: ${au ? `${au.codec} ${au.sample_rate} Hz ${au.channels} ch ${au.bitrate_kbps ?? "?"} kb/s` : "no audio stream"}`, "Encode audio as AAC 192 kb/s 48 kHz stereo (or Opus in WebM).");
-    } else if (project && (project.flags || []).includes("has_audio")) {
+    } else if (project && (ev.flags || project.flags || []).includes("has_audio")) {
       for (const id of ["AUD-01", "AUD-04", "AUD-06"]) set(id, "fail", `${src || "no render"}: no audio stream`, "Mux the soundtrack into the render (umd render with render.audio, or ffmpeg -i video -i mix.wav).");
     }
   } else {

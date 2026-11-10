@@ -2,6 +2,10 @@
 
 [Français](README.md) · **English** · **[Documentation](https://1angelmicka.github.io/ultimate-motion-design/en/)** · [For AI agents](AGENTS.md)
 
+[![MIT licence](https://img.shields.io/badge/license-MIT-1f2328)](LICENSE) [![Release](https://img.shields.io/github/v/release/1AngelMicka/ultimate-motion-design?color=1f2328)](https://github.com/1AngelMicka/ultimate-motion-design/releases) [![Node 18+](https://img.shields.io/badge/node-18%2B-1f2328)](https://nodejs.org) [![validate](https://github.com/1AngelMicka/ultimate-motion-design/actions/workflows/validate.yml/badge.svg)](https://github.com/1AngelMicka/ultimate-motion-design/actions/workflows/validate.yml)
+
+[![Demo: /umd:go chains kickoff, storyboard, build, render, audit, fix and deliver](site/assets/demo.gif)](https://1angelmicka.github.io/ultimate-motion-design/en/)
+
 A plugin for [Claude Code](https://claude.com/claude-code) that makes Claude produce high-end motion design, then checks it frame by frame before delivering it. It covers:
 
 - promo videos and product launches;
@@ -19,12 +23,13 @@ What it brings:
   - Claude picks the right route for each project.
 - **Built-in deterministic rendering.** `umd capture` turns any animated HTML page into a video, frame by frame, with no Remotion licence. Two renders give identical frames.
 - **Real quality control.**
-  - 12 domains and 60 checks, from narrative to licences.
+  - 12 domains and 64 checks, from narrative to licences.
   - Every passed check has evidence: a frame at t = 2.40 s, a LUFS measure, a line of code.
   - Score out of 10. An open blocker caps the score and locks delivery.
-  - A critic agent scores every draft like a jury (7 = professional, 8 = agency, 9 = award) and sends it back until it reaches the target. A fresh critic every round, which never sees the builder's reasoning and checks the previous round's fixes item by item.
+  - A critic agent scores every draft like a jury (7 = professional, 8 = agency, 9 = festival selection) and sends it back until it reaches the target. A fresh critic every round, which never sees the builder's reasoning and checks the previous round's fixes item by item.
+  - Craft counts in the score: the idea and hero moment, typography, colour and sound design are judged against the project's target level (8 by default).
   - Sound is measured against picture: each effect lands on its event within ±45 ms (`umd sync`), and the music's real ending lands on the end card (`umd mix --backtime`).
-  - Cuts happen on motion, never between two parked shots, and no picture stays near-still for more than 1 s per 30 s: two measured checks, calibrated on 15 award films with zero false alarm.
+  - Cuts happen on motion, never between two parked shots, and no more than one second of near-still picture per 30 s: two measured checks, calibrated with zero false alarm on 15 reference films scored 7 to 8 by an AI jury.
 - **The grammar of professional launch films.** Six rules and 16 mechanisms drawn from the analysis of 28 launch films: one persistent actor, every action producing a result, the foreground carrying the transition.
 - **Proven starting points, at no token cost.**
   - 784 styles and prompts, with a preview of the result in the [online library](https://1angelmicka.github.io/ultimate-motion-design/en/bibliotheque.html) (`umd styles`).
@@ -208,7 +213,7 @@ On every frame it pauses every CSS and Web Animations animation and every `<vide
 
 Every rule and check is detailed in [docs/en/REFERENTIAL.md](docs/en/REFERENTIAL.md).
 
-29 of the 60 checks are measured in code, without an agent (which ones apply depends on the profile):
+29 of the 64 checks are measured in code, without an agent (which ones apply depends on the profile):
 
 - output length and format;
 - cuts made on motion, never between two parked shots;
@@ -236,7 +241,7 @@ The other checks are judged by the auditors, from the contact sheet and a few ta
   - stills not validated before animation;
   - a non-commercial asset in an ad.
 - The overall score weights the domains by profile: `promo`, `presentation`, `explainer`, `social`, `film`, `logo` or `web`. Domains that do not apply are ignored, such as captions for a logo or audio for a web page.
-- Thresholds can be tuned per project in the `thresholds` of `.motion/project.json`: −14 LUFS, 3 flashes per second, 3 s of dead air, VMAF 93… The dead-air, frozen-picture, near-still, cuts-on-motion, flash and loudness thresholds were checked on 15 agency-level films with zero false alarm ([docs/CALIBRATION.md](docs/CALIBRATION.md)). A rule that would have flagged award films (music dynamics) was dropped. The VMAF, caption and web ones remain conventions.
+- Thresholds can be tuned per project in the `thresholds` of `.motion/project.json`: −14 LUFS, 3 flashes per second, 3 s of dead air, VMAF 93… The dead-air, frozen-picture, near-still, cuts-on-motion, flash and loudness thresholds were checked with zero false alarm on 15 reference films scored 7 to 8 by an AI jury ([docs/CALIBRATION.md](docs/CALIBRATION.md)). A rule that would have wrongly flagged 7 of these films (music dynamics) was dropped. The VMAF, caption and web ones remain conventions.
 
 ## Licences and rights
 
@@ -269,8 +274,8 @@ The plugin cuts tokens in three places:
 | Mechanism | Effect |
 | --- | --- |
 | **Almost nothing loaded at all times** | About 250 tokens loaded at all times: the description of the `motion` skill and those of the two agents. The eleven `/umd:*` commands cost nothing until you run them. In a umd project, the startup hook adds about 150 tokens of context. |
-| **References on demand** | 53 guides of 1,200 to 2,100 tokens each, read one at a time, only when needed: for example the project's route, then its engine's guide. |
-| **Checks done in code** | 29 of the 60 checks are decided by the CLI from FFmpeg measures, lint, licences and browser tests. The auditors only look at what needs eyes. |
+| **References on demand** | 53 guides of 800 to 2,300 tokens each, read one at a time, only when needed: for example the project's route, then its engine's guide. |
+| **Checks done in code** | 29 of the 64 checks are decided by the CLI from FFmpeg measures, lint, licences and browser tests. The auditors only look at what needs eyes. |
 | **Contact sheet** | Each render produces a 16-frame sheet: a single image to read. Claude then extracts only 2 to 6 targeted frames if a doubt remains. |
 | **Compact output** | Renders, encodes and analyses write their full output to disk and return only a summary. In our test, 3 commands went from about 3,700 tokens of output to about 700. |
 | **Incremental audit by default** | Only the checks that a changed file or a new render can affect are re-checked. If nothing changed, no auditor is started. |
