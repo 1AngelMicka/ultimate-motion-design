@@ -10,10 +10,10 @@ const round = (x, d = 2) => (x == null || Number.isNaN(x) ? null : Math.round(x 
 function videoPass(file, info) {
   // scale down for speed; analysis values are relative so resolution barely matters
   const graph = [
-    "[0:v]scale=320:-2,format=yuv420p,split=3[a][b][c]",
+    "[0:v]scale=320:-2,format=yuv420p,split=2[a][c]",
     "[a]freezedetect=n=0.001:d=0.5,nullsink",
-    "[b]blackdetect=d=0.04:pix_th=0.10,nullsink",
-    "[c]signalstats,metadata=print:key=lavfi.signalstats.YAVG,metadata=print:key=lavfi.signalstats.YDIF,select='gt(scene\\,0.3)',metadata=print:key=lavfi.scene_score[out]",
+    // a black frame has no bright pixel at all (YMAX): a dark design with text on it is not "black"
+    "[c]signalstats,metadata=print:key=lavfi.signalstats.YAVG,metadata=print:key=lavfi.signalstats.YDIF,metadata=print:key=lavfi.signalstats.YMAX,select='gt(scene\\,0.3)',metadata=print:key=lavfi.scene_score[out]",
   ].join(";");
   const r = ff(["-hide_banner", "-nostdin", "-i", file, "-filter_complex", graph, "-map", "[out]", "-an", "-f", "null", "-"]);
   if (r.code !== 0) throw new Error(`ffmpeg analysis failed: ${r.stderr.trim().split(/\r?\n/).slice(-4).join(" | ")}`);
@@ -29,16 +29,23 @@ function videoPass(file, info) {
     if ((m = line.match(/frame:\s*\d+\s+pts:\s*-?\d+\s+pts_time:\s*([\d.]+)/))) { t = Number(m[1]); continue; }
     if ((m = line.match(/lavfi\.signalstats\.YAVG=([\d.]+)/))) { cur = { t, yavg: Number(m[1]), ydif: 0 }; frames.push(cur); continue; }
     if ((m = line.match(/lavfi\.signalstats\.YDIF=([\d.]+)/))) { if (cur && cur.t === t) cur.ydif = Number(m[1]); continue; }
+    if ((m = line.match(/lavfi\.signalstats\.YMAX=([\d.]+)/))) { if (cur && cur.t === t) cur.ymax = Number(m[1]); continue; }
     if ((m = line.match(/lavfi\.scene_score=([\d.]+)/))) { scenes.push({ t: round(t), score: round(Number(m[1])) }); continue; }
     if ((m = line.match(/freeze_start:\s*([\d.]+)/))) { freezeStart = Number(m[1]); continue; }
     if ((m = line.match(/freeze_end:\s*([\d.]+)/)) && freezeStart != null) {
       freezes.push({ start: round(freezeStart), end: round(Number(m[1])), duration: round(Number(m[1]) - freezeStart) });
       freezeStart = null; continue;
     }
-    if ((m = line.match(/black_start:\s*([\d.]+)\s+black_end:\s*([\d.]+)\s+black_duration:\s*([\d.]+)/))) {
-      black.push({ start: round(Number(m[1])), end: round(Number(m[2])), duration: round(Number(m[3])) });
-    }
   }
+  // black segments: consecutive frames whose brightest pixel stays under about 10 % (8-bit limited range: 16 + 0.1 × 219)
+  const dt = info.fps ? 1 / info.fps : 0.04;
+  let bs = null;
+  for (const fr of frames) {
+    const isBlack = fr.ymax != null && fr.ymax < 38;
+    if (isBlack && bs == null) bs = fr.t;
+    if (!isBlack && bs != null) { black.push({ start: round(bs), end: round(fr.t), duration: round(fr.t - bs) }); bs = null; }
+  }
+  if (bs != null && frames.length) { const end = frames.at(-1).t + dt; black.push({ start: round(bs), end: round(end), duration: round(end - bs) }); }
   if (freezeStart != null) freezes.push({ start: round(freezeStart), end: info.duration, duration: round(info.duration - freezeStart), until_end: true });
   return { frames, scenes, freezes, black };
 }

@@ -274,7 +274,7 @@ function heroHtml(lang) {
   </div>
   <figure class="hero-media">
     <video src="${fr ? "" : "../"}assets/demo.mp4" poster="${fr ? "" : "../"}assets/demo.jpg" autoplay muted loop playsinline width="1280" height="720"></video>
-    <figcaption>${fr ? "Rendu par <code>umd capture</code> à partir d'une page HTML : deux rendus, images identiques à l'octet près." : "Rendered by <code>umd capture</code> from an HTML page: two renders, byte-identical frames."}</figcaption>
+    <figcaption>${fr ? "Une page HTML rendue par <code>umd capture</code> : un acteur (le point rouge) porte chaque transition, le storyboard se rend sous la tête de lecture, le plan fort s'ouvre sur le film (shader WebGL), l'audit se dessine par-dessus. Passe nos propres contrôles ; deux rendus, images identiques à l'octet près." : "An HTML page rendered by <code>umd capture</code>: one actor (the red dot) carries every transition, the storyboard renders under the playhead, the hero shot opens into the film (WebGL shader), the audit draws over it. Passes our own checks; two renders, byte-identical frames."}</figcaption>
   </figure>
 </section>`;
 }

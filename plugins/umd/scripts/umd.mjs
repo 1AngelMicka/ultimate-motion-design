@@ -586,6 +586,7 @@ async function main() {
     case "burn": {
       if (pos.length < 2 || !opt("out")) die("Usage: umd burn <video> <subs.ass> --out f.mp4");
       const { ffOk } = await import("./lib/ffmpeg.mjs");
+      { const { filters } = await import("./lib/ffmpeg.mjs"); if (!filters().has("subtitles")) die("This FFmpeg build has no libass (no \"subtitles\" filter), so it cannot burn captions. Install a full build (Windows: winget Gyan.FFmpeg; macOS: brew install ffmpeg-full or a static build; Linux: the distribution's ffmpeg), or deliver the .srt/.vtt as a sidecar file."); }
       // libass reads the file name inside a filtergraph: copy it under a safe name so commas, quotes or colons
       // in the user's file name can neither break nor inject filters
       const { mkdtempSync } = await import("node:fs");

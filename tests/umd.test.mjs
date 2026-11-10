@@ -16,7 +16,7 @@ import { lint, parseStoryboard } from "../plugins/umd/scripts/lib/lint.mjs";
 import { installTargets, classify, checkLicenses } from "../plugins/umd/scripts/lib/licenses.mjs";
 import { groupCues, toAss, toSrt } from "../plugins/umd/scripts/lib/captions.mjs";
 import { autocheck } from "../plugins/umd/scripts/lib/autocheck.mjs";
-import { hasFfmpeg } from "../plugins/umd/scripts/lib/ffmpeg.mjs";
+import { hasFfmpeg, filters } from "../plugins/umd/scripts/lib/ffmpeg.mjs";
 import { resolvePlaywright } from "../plugins/umd/scripts/lib/playwright.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -290,7 +290,7 @@ test("static server: bad ranges get 416, suffix ranges work, traversal is refuse
   } finally { await s.close(); }
 });
 
-test("burn: a subtitle file name with commas and quotes works", { skip: !hasFfmpeg() && "ffmpeg not installed" }, () => {
+test("burn: a subtitle file name with commas and quotes works", { skip: (!hasFfmpeg() || !filters().has("subtitles")) && "ffmpeg without libass (no subtitles filter)" }, () => {
   const d = tmp();
   const v = spawnSync("ffmpeg", ["-v", "error", "-y", "-f", "lavfi", "-i", "color=black:s=320x180:r=25:d=1", "-c:v", "libx264", "-pix_fmt", "yuv420p", join(d, "in.mp4")]);
   if (v.status !== 0) return;

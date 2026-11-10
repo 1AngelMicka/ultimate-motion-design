@@ -4,7 +4,7 @@
 
 [![Licence MIT](https://img.shields.io/badge/licence-MIT-1f2328)](LICENSE) [![Release](https://img.shields.io/github/v/release/1AngelMicka/ultimate-motion-design?color=1f2328)](https://github.com/1AngelMicka/ultimate-motion-design/releases) [![Node 18+](https://img.shields.io/badge/node-18%2B-1f2328)](https://nodejs.org) [![validate](https://github.com/1AngelMicka/ultimate-motion-design/actions/workflows/validate.yml/badge.svg)](https://github.com/1AngelMicka/ultimate-motion-design/actions/workflows/validate.yml)
 
-[![Démo : /umd:go enchaîne kickoff, storyboard, build, rendu, audit, correction et livraison](site/assets/demo.gif)](https://1angelmicka.github.io/ultimate-motion-design/)
+[![Démo rendue par umd capture : le storyboard se rend sous la tête de lecture, le plan fort s'ouvre sur le film, l'audit se dessine par-dessus](site/assets/demo.gif)](https://1angelmicka.github.io/ultimate-motion-design/)
 
 Un plugin pour [Claude Code](https://claude.com/claude-code) qui fait produire à Claude du motion design de très haute qualité, puis le vérifie image par image avant de le livrer. Il couvre :
 

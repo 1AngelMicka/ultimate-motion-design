@@ -4,7 +4,7 @@
 
 [![MIT licence](https://img.shields.io/badge/license-MIT-1f2328)](LICENSE) [![Release](https://img.shields.io/github/v/release/1AngelMicka/ultimate-motion-design?color=1f2328)](https://github.com/1AngelMicka/ultimate-motion-design/releases) [![Node 18+](https://img.shields.io/badge/node-18%2B-1f2328)](https://nodejs.org) [![validate](https://github.com/1AngelMicka/ultimate-motion-design/actions/workflows/validate.yml/badge.svg)](https://github.com/1AngelMicka/ultimate-motion-design/actions/workflows/validate.yml)
 
-[![Demo: /umd:go chains kickoff, storyboard, build, render, audit, fix and deliver](site/assets/demo.gif)](https://1angelmicka.github.io/ultimate-motion-design/en/)
+[![Demo rendered by umd capture: the storyboard renders under the playhead, the hero shot opens into the film, the audit draws over it](site/assets/demo.gif)](https://1angelmicka.github.io/ultimate-motion-design/en/)
 
 A plugin for [Claude Code](https://claude.com/claude-code) that makes Claude produce high-end motion design, then checks it frame by frame before delivering it. It covers:
 
