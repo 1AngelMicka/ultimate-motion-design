@@ -119,6 +119,7 @@ const PAGES = [
   { slug: "index", nav: { fr: "Accueil", en: "Home" }, sections: ["intro", "principle"], hero: true },
   { slug: "installation", nav: { fr: "Installation", en: "Install" }, sections: ["install"] },
   { slug: "premier-projet", nav: { fr: "Premier projet", en: "First project" }, content: "first-project.md" },
+  { slug: "astuces", nav: { fr: "Astuces et prompts", en: "Tips and prompts" }, content: "tips.md" },
   { slug: "commandes", nav: { fr: "Commandes", en: "Commands" }, sections: ["commands", "files"], extra: "cli" },
   { slug: "routes", nav: { fr: "Routes et technos", en: "Routes and tech" }, sections: ["routes"], extra: "references" },
   { slug: "qualite", nav: { fr: "Contrôle qualité", en: "Quality checks" }, sections: ["checks"], extra: "referential" },

@@ -25,6 +25,7 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (written `umd` below). Refer
 - **Format and length**: platform(s), aspect (16:9, 9:16, 1:1, 4:5), target duration, sound on or off by default.
 - **Look**: references described in words (shot length, camera, how things enter, palette, type), brand assets available.
 - **Use and licences**: commercial? team size if Remotion is an option (free up to 3 employees, company licence above)? Voice-over? Music?
+- **Ambition** (only if unclear): professional (`quality_target` 7, fewer rounds), agency (8, default) or award level (9, more rounds and tokens).
 
 ## 3. Decide the route and engine (say why in one line each)
 

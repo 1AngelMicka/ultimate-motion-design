@@ -9,7 +9,7 @@
     {
       "name": "umd",
       "description": "Ultimate Motion Design: kickoff, storyboard, build, deterministic render, motion audit scored out of 10, fix, deliver, token report. Créer, rendre et auditer du motion design.",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "source": "./plugins/umd",
       "author": {
         "name": "Micka",

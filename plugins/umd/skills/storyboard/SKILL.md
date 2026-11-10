@@ -11,6 +11,14 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). Talk in the project
 
 **Cost:** medium. Read one recipe file at most; stills rounds use the `umd:critic` agent on small images.
 
+## 0. Style (before any beat)
+
+If `project.json` has no `style` yet and the brief does not impose a strict brand system, start from a proven style rather than a blank page (`${CLAUDE_PLUGIN_ROOT}/references/styles.md`):
+
+1. `umd styles <mood, use and medium words from the brief>` (for example `umd styles luxe sombre lancement produit`). Show the user the 3 best matches with their preview links and one line each on why it fits.
+2. On their choice: `umd styles get <id>`, read `.motion/styles/<id>.md` once, set `"style": "<id>"` in project.json, and write in BRIEF.md which signature features you keep and what you adapt (story, product, copy, brand colours inside the style's colour logic), with the credit line.
+3. Web pages: also pick 2 or 3 references from the galleries listed in `references/styles.md` and say what you take from each.
+
 ## 1. Beats
 
 1. Read `BRIEF.md` and `.motion/project.json`. If missing, stop and suggest `/umd:kickoff`.
@@ -32,7 +40,7 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). Talk in the project
 1. Build only the static layout of the key beats (up to 8), in the route's engine, using the tokens and brand assets. Record each asset in `.motion/assets.lock.json` as it arrives.
 2. Render them: HTML routes `umd still <entry> --at <t1>,<t2>,… --out .motion/stills`; other engines with their still command (see the route file) into `.motion/stills/`.
 3. Review round: launch the `umd:critic` agent with the project path, `.motion/stills/`, the round number and the CLI path. Apply its fixes, re-render the stills.
-4. Up to 3 rounds. Stop when the critic says "ready to animate" or after round 3 (then list what is left to the user).
+4. Up to 3 rounds. Stop when the critic says "ready" (every dimension at `quality_target`) or after round 3; then show the user the last scores and what is left.
 5. Show the user the stills (paths), the critic's last verdict, and ask for approval. On approval, add `Stills validated YYYY-MM-DD` (today) under `## Stills` in the storyboard. This line is what the audit checks (ART-01).
 
 ## 3. Hand over

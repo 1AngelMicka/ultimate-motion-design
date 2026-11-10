@@ -131,6 +131,12 @@ test("next step follows the project state", () => {
   assert.equal(step(), "build");
 });
 
+test("style search ranks full styles for a mood query", () => {
+  const r = JSON.parse(umd(["styles", "luxe", "sombre", "lancement", "--limit", "3"], tmp()).stdout);
+  assert.ok(r.total > 700);
+  assert.ok(r.results.length === 3 && r.results[0].id.startsWith("lemo:"));
+});
+
 test("CLI: init, rules, deliver refused without audit", () => {
   const d = tmp();
   assert.equal(umd(["init"], d).status, 0);

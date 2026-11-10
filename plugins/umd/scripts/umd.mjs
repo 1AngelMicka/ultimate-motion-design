@@ -8,7 +8,9 @@
 //   init [--force]                      Create .motion/ (project.json, storyboard, tokens, assets lock) and BRIEF.md from templates
 //   rules [domain|group...]             Build rules of the domains that apply to this project (compact)
 // Make
-//   still <html|url> --at 0,1.5 [--out dir] [--width W --height H]      Key stills on virtual time
+//   styles <words> [--source lemo|mg|opus] [--kind style|prompt]   Search 784 proven styles and prompts (no tokens spent)
+//   styles get <id>                                   Download that style prompt into .motion/styles/
+//   still<html|url> --at 0,1.5 [--out dir] [--width W --height H]      Key stills on virtual time
 //   capture <html|url> --out f.mp4 [--fps 30] [--duration s] [--width 1920 --height 1080] [--from s]
 //           [--draft] [--transparent] [--format mp4|webm|mov|gif|png] [--audio f] [--seed n]   Deterministic HTML → video
 //   render [--draft] [--twice] [--no-analyze]                          Render the project (project.json "render"), then analyze
@@ -545,6 +547,14 @@ async function main() {
     case "evidence": return evidence();
     case "plan": return plan(pos.filter((x) => x !== "incremental"), flags.has("incremental"));
     case "assemble": return assemble();
+    case "styles": {
+      const { searchStyles, getStyle } = await import("./lib/styles.mjs");
+      if (pos[0] === "get") {
+        if (!pos[1]) die("Usage: umd styles get <id>");
+        return out(await getStyle(pos[1], { cwd }));
+      }
+      return out(searchStyles(pos.join(" "), { source: opt("source"), kind: opt("kind"), limit: Number(opt("limit", 8)) }));
+    }
     case "next": {
       const { nextStep } = await import("./lib/next.mjs");
       return out(nextStep(cwd, ref));

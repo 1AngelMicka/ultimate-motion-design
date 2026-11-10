@@ -22,6 +22,7 @@ Ses points forts :
   - 12 domaines et 58 vérifications, de la narration aux licences.
   - Chaque vérification réussie a une preuve : une image à t = 2,40 s, une mesure en LUFS ou une ligne de code.
   - Note sur 10. Un point bloquant ouvert plafonne la note et bloque la livraison.
+  - Un agent critique note chaque brouillon comme un jury (7 = pro, 8 = agence, 9 = prix) et fait recommencer jusqu'à la note visée.
 - **Économe et transparent sur les tokens.**
   - Environ 250 tokens chargés en permanence.
   - Les vérifications mesurables sont faites par le code, sans agent.
@@ -165,6 +166,8 @@ S'y ajoutent :
 - **des guides audio :** voix commercialisables, musique et effets sonores, mixage, sous-titres ;
 - **des guides pratiques :** assets, spécifications par plateforme, licences.
 
+**784 styles et prompts éprouvés** servent de point de départ : 66 styles de films de [lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar), 15 styles de motion design de [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) et 703 prompts de [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos). `/umd:storyboard` en propose trois adaptés à ton brief, et `umd styles <mots>` les cherche sans dépenser de tokens. Prompts prêts à copier et conseils : page [Astuces et prompts](https://1angelmicka.github.io/ultimate-motion-design/astuces.html).
+
 Le fichier [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) recense **1 073 dépôts GitHub** vérifiés le 9 novembre 2026, avec des alertes de licence.
 
 ### Le rendu déterministe
@@ -214,7 +217,7 @@ Les autres vérifications sont jugées par les auditeurs, à partir de la planch
   - des images fixes non validées avant l'animation ;
   - un asset non commercial dans une pub.
 - La note globale pondère les domaines selon le profil : `promo`, `presentation`, `explainer`, `social`, `film`, `logo` ou `web`. Les domaines sans objet sont ignorés, comme les sous-titres d'un logo ou l'audio d'une page web.
-- Les seuils se règlent par projet dans `thresholds` de `.motion/project.json` : −14 LUFS, 3 flashs par seconde, 3 s de temps mort, VMAF 93… Seuls −14 LUFS (convention des plateformes de streaming) et la limite de 3 flashs par seconde (WCAG) reposent sur une référence publiée ; les autres sont des conventions à ajuster sur tes rendus.
+- Les seuils se règlent par projet dans `thresholds` de `.motion/project.json` : −14 LUFS, 3 flashs par seconde, 3 s de temps mort, VMAF 93… Les seuils de temps mort, d'image figée, de flashs et de loudness ont été vérifiés sur 15 films de niveau agence, sans aucune fausse alerte ([docs/CALIBRATION.md](docs/CALIBRATION.md)). Ceux du VMAF, des sous-titres et du web restent des conventions.
 
 ## Licences et droits
 

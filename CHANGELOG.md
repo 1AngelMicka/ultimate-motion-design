@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 — 2026-11-10
+
+- Style library: `umd styles <words>` searches 784 proven styles and prompts (lemo-opuscar 66, mg-styles-15 15, awesome-opus5-5-videos 703) locally, at no token cost; `umd styles get <id>` downloads the chosen prompt. `/umd:storyboard` now starts by offering three styles that fit the brief; `references/styles.md` explains how to adapt a style and lists web reference galleries (free and paid).
+- Critic agent scores like a jury: 7 dimensions from 1 to 10 (style fidelity, concept and wow, motion craft, design and typography, finish, sound, technical), adapted from mg-styles-15's rubric; `quality_target` in project.json (7 pro, 8 agency by default, 9 award) drives the stills and draft rounds.
+- Calibration: the automatic checks raised zero false alarm on 15 agency-level films (docs/CALIBRATION.md); thresholds kept.
+- Documentation: new "Tips and prompts" page (brief recipe, 8 ready-to-copy prompts, styles by mood, feedback phrases, AI tells, token savings, a 20-minute real test).
+
 ## 0.2.0 — 2026-11-10
 
 - `/umd:go`: one command that reads the project state (`umd next`, local files only) and runs the next step, chaining until a decision belongs to the user (approving stills, a licence exception, delivery, optional fixes). Plain-words requests ("make me a launch video") are routed to it by the `motion` skill. The ten step commands stay available.

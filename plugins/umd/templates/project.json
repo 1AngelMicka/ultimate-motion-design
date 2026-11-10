@@ -18,6 +18,8 @@
   "license_policy": { "commercial": true, "region": "EU", "remotion": "unknown", "allow": [] },
   "models": [],
   "thresholds": {},
+  "style": null,
+  "quality_target": 8,
   "audit_model": "inherit",
   "token_budget": null
 }

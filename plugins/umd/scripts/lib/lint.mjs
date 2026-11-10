@@ -182,7 +182,8 @@ export function lint(root, { ref, project, thresholds: th = {} } = {}) {
         const r = add("determinism");
         for (const re of Object.values(rules)) r.count += locate(text, re, f, root, 8, r.at);
       }
-    } else if (TEXT.has(ext) && !/^(readme|changelog|license|contributing)/i.test(name) && !relative(root, f).startsWith("references")) {
+    } else if (TEXT.has(ext) && !/^(readme|changelog|license|contributing)/i.test(name) && !relative(root, f).startsWith("references")
+      && !/^\.motion[\\/](styles|handoff)/.test(relative(root, f))) { // downloaded style prompts are third-party text
       const s = add("slop");
       s.count += slopScan(text, words, f, root, s.at);
     }

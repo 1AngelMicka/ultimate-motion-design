@@ -15,7 +15,7 @@
     ]
   },
   "thresholds": {
-    "_note": "Defaults. Override any of them in .motion/project.json \"thresholds\". Values marked 'convention' are starting points to calibrate on real renders, not standards.",
+    "_note": "Defaults; override any of them in .motion/project.json \"thresholds\". dead_air_s, motion_floor, freeze_s, flashes_per_s and the loudness values were checked on 15 award-level films with zero false alarm (docs/CALIBRATION.md). The VMAF, caption and web values are conventions.",
     "loudness_lufs": -14,
     "loudness_tolerance_lu": 1,
     "true_peak_dbtp": -1,

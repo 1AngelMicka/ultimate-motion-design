@@ -32,8 +32,8 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). References: `${CLAU
 
 1. `umd render --draft` → compact summary + `sheet.jpg`. Fix page errors first.
 2. Read the summary: `dead_air`, `freezes`, `flashes_max_per_s`, `loudness`, `abrupt_end`. Fix anything flagged.
-3. Launch the `umd:critic` agent on the draft (project path, render folder, round number, CLI path). Apply its ranked fixes.
-4. Stop when the critic has nothing above cosmetic, or after round 3 (then tell the user what remains).
+3. Launch the `umd:critic` agent on the draft (project path, render folder, round number, CLI path). Apply its ranked fixes, the critical ones and the concept_wow one first. Keep the previous version's source until the new draft is better.
+4. Stop when every jury dimension reaches `quality_target` (default 8), or after round 3: then show the user the scores and what remains, and ask whether to spend more rounds (each costs a draft render and a critique).
 
 ## 3. Checks before handing over
 

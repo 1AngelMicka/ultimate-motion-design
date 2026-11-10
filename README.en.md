@@ -22,6 +22,7 @@ What it brings:
   - 12 domains and 58 checks, from narrative to licences.
   - Every passed check has evidence: a frame at t = 2.40 s, a LUFS measure, a line of code.
   - Score out of 10. An open blocker caps the score and locks delivery.
+  - A critic agent scores every draft like a jury (7 = professional, 8 = agency, 9 = award) and sends it back until it reaches the target.
 - **Token-frugal and transparent.**
   - About 250 tokens loaded at all times.
   - Measurable checks are done in code, without an agent.
@@ -165,6 +166,8 @@ On top of that:
 - **audio guides:** commercial-safe voices, music and sound effects, mixing, captions;
 - **practical guides:** assets, platform specs, licences.
 
+**784 proven styles and prompts** serve as starting points: 66 film styles from [lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar), 15 motion-design styles from [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) and 703 prompts from [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos). `/umd:storyboard` offers three that fit your brief, and `umd styles <words>` searches them at no token cost. Ready-to-copy prompts and advice: the [Tips and prompts](https://1angelmicka.github.io/ultimate-motion-design/en/astuces.html) page.
+
 The file [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) lists **1,073 GitHub repositories**, checked on 9 November 2026, with licence warnings.
 
 ### Deterministic rendering
@@ -214,7 +217,7 @@ The other checks are judged by the auditors, from the contact sheet and a few ta
   - stills not validated before animation;
   - a non-commercial asset in an ad.
 - The overall score weights the domains by profile: `promo`, `presentation`, `explainer`, `social`, `film`, `logo` or `web`. Domains that do not apply are ignored, such as captions for a logo or audio for a web page.
-- Thresholds can be tuned per project in the `thresholds` of `.motion/project.json`: −14 LUFS, 3 flashes per second, 3 s of dead air, VMAF 93… Only −14 LUFS (streaming-platform convention) and the 3-flashes-per-second limit (WCAG) rest on a published reference; the others are conventions to tune on your renders.
+- Thresholds can be tuned per project in the `thresholds` of `.motion/project.json`: −14 LUFS, 3 flashes per second, 3 s of dead air, VMAF 93… The dead-air, frozen-picture, flash and loudness thresholds were checked on 15 agency-level films with zero false alarm ([docs/CALIBRATION.md](docs/CALIBRATION.md)). The VMAF, caption and web ones remain conventions.
 
 ## Licences and rights
 
