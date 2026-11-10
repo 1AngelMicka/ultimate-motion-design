@@ -3,7 +3,10 @@
 // Render, encode and install commands print thousands of progress lines when only the failures matter.
 import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const SUPERVISOR = join(dirname(fileURLToPath(import.meta.url)), "supervise.mjs");
 
 const SIGNAL = /\b(error|errors|fail|failed|failing|failure|exception|traceback|panic|fatal|warn|warning|vulnerab\w*|critical|denied|refused|timeout|cannot|not found|undefined|unexpected|invalid)\b|✗|✖|×|❌|\bFAIL\b|\bERR!/i;
 const NOISE = /^\s*$|node_modules[\\/]|^\s+at\s.+\(node:internal|^\s*\^+\s*$|^frame=\s*\d+|^\s*\d+%\||Rendered \d+\/\d+|Encoded \d+\/\d+/;
@@ -37,7 +40,8 @@ export function recordSavings(statsFile, full, returned) {
 
 export function runCommand(label, command, { cwd, logDir, timeoutMs = 60 * 60 * 1000, env = {}, statsFile } = {}) {
   const started = Date.now();
-  const r = spawnSync(command, { cwd, shell: true, encoding: "utf8", timeout: timeoutMs, maxBuffer: 512 * 1024 * 1024,
+  // the supervisor kills the whole process tree on timeout (a plain spawnSync timeout kills only the shell)
+  const r = spawnSync(process.execPath, [SUPERVISOR, String(timeoutMs), command], { cwd, encoding: "utf8", maxBuffer: 512 * 1024 * 1024, windowsHide: true,
     env: { ...process.env, CI: process.env.CI || "1", FORCE_COLOR: "0", NO_COLOR: "1", ...env } });
   const output = `${r.stdout || ""}${r.stderr ? `\n${r.stderr}` : ""}`.replace(/\x1b\[[0-9;]*[A-Za-z]/g, "");
   const safe = label.replace(/[^a-z0-9_.-]+/gi, "-").slice(0, 60) || "command";
@@ -45,7 +49,7 @@ export function runCommand(label, command, { cwd, logDir, timeoutMs = 60 * 60 * 
   const logFile = join(logDir, `${safe}.log`);
   writeFileSync(logFile, `$ ${command}\n# exit ${r.status ?? "killed"} after ${Math.round((Date.now() - started) / 1000)} s\n\n${output}`);
   const result = {
-    label, command, exit_code: r.status, timed_out: r.error?.code === "ETIMEDOUT" || r.signal === "SIGTERM",
+    label, command, exit_code: r.status, timed_out: r.status === 124 && /umd: timed out after/.test(r.stderr || ""),
     duration_s: Math.round((Date.now() - started) / 100) / 10, log: relative(cwd, logFile), ...summarize(output),
   };
   const returned = estimateTokens(JSON.stringify(result));

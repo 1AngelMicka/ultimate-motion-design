@@ -322,3 +322,20 @@ test("cost: expensive steps ask first, budgets are honoured, measured runs repla
   const next = JSON.parse(umd(["next"], tmp()).stdout);
   assert.ok(next.cost === undefined || next.cost.tokens);
 });
+
+test("run: a timeout kills the whole process tree, not only the shell", async () => {
+  const { runCommand } = await import("../plugins/umd/scripts/lib/run.mjs");
+  const { existsSync } = await import("node:fs");
+  const d = tmp();
+  // the shell starts node, which would write alive.txt after 4 s: if only the shell dies, the file appears
+  writeFileSync(join(d, "sleeper.js"), "setTimeout(() => require('fs').writeFileSync('alive.txt', 'x'), 4000);");
+  const r = runCommand("sleep", `"${process.execPath}" sleeper.js`, { cwd: d, logDir: join(d, "logs"), timeoutMs: 1500 });
+  assert.equal(r.timed_out, true);
+  assert.ok(r.duration_s < 4, `returned after ${r.duration_s} s`);
+  await new Promise((res) => setTimeout(res, 4500));
+  assert.equal(existsSync(join(d, "alive.txt")), false, "a descendant survived the timeout");
+  const ok = runCommand("echo", `"${process.execPath}" -e "console.log('hello'); process.exit(3)"`, { cwd: d, logDir: join(d, "logs") });
+  assert.equal(ok.exit_code, 3);
+  assert.equal(ok.timed_out, false);
+  assert.ok(ok.last_lines.includes("hello"));
+});

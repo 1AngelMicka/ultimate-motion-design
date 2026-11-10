@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1 — 2026-11-10
+
+- When a command run by `umd run` or a command route of `umd render` times out, the whole process tree is now killed (Windows: `taskkill /T`; Linux and macOS: the process group). Before, only the shell died and a render or an encoder it had started kept running. Found by the 0.6.0 code review, missed in 0.6.0; covered by a new test.
+
 ## 0.6.0 — 2026-11-10
 
 A full review of the repository (code, method, documentation, comparison with the most-starred plugins and video skills), then fixes.
