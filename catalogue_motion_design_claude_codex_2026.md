@@ -1,6 +1,6 @@
 # Catalogue GitHub — Motion design avec Claude Code et Codex
 
-**Édition : 9 novembre 2026** · **1072 dépôts GitHub** · Descriptions volontairement courtes.
+**Édition : 9 novembre 2026** · **1073 dépôts GitHub** · Descriptions volontairement courtes.
 **Périmètre :** skills agents, motion graphics codés, vidéos, React/GSAP, animation 2D/3D, outils MCP, shaders, montage, rendu et capture, contrôle qualité, voix, musique, assets et références.
 
 > **Comment lire ce catalogue :** certains dépôts sont des **skills à installer** dans Claude/Codex, d’autres sont des **bibliothèques, logiciels ou modèles** à leur faire utiliser par code. Un dépôt n’est pas nécessairement gratuit pour tous les usages : vérifie sa licence, ses API éventuelles et ses prérequis matériels avant de l’intégrer.
@@ -27,7 +27,7 @@
 
 ---
 
-## 01. Skills et agents spécialement conçus pour le motion design (133)
+## 01. Skills et agents spécialement conçus pour le motion design (134)
 
 ### Skills et kits motion polyvalents
 
@@ -36,6 +36,7 @@
 - **[greensock/gsap-skills](https://github.com/greensock/gsap-skills)** — Skills officiels GSAP, timelines et animations au scroll.
 - **[heygen-com/hyperframes](https://github.com/heygen-com/hyperframes)** — Écrit du HTML et exporte des vidéos avec des agents.
 - **[OpenMontageInc/OpenMontage](https://github.com/OpenMontageInc/OpenMontage)** — Studio vidéo agentique avec multiples pipelines.
+- **[NiazMorshed2007/reanimate](https://github.com/NiazMorshed2007/reanimate)** — Filme une animation (site, vidéo, GIF, WebGL), la reconstruit et prouve l'écart image par image.
 - **[Vincentwei1021/video-shotcraft](https://github.com/Vincentwei1021/video-shotcraft)** — Films promotionnels cinématiques avec Remotion. ⚠️ licence Remotion
 - **[Vincentwei1021/video-talkcraft](https://github.com/Vincentwei1021/video-talkcraft)** — Explicatifs synchronisés mot à mot sur une voix.
 - **[Vincentwei1021/anything2explainer](https://github.com/Vincentwei1021/anything2explainer)** — Transforme un sujet en vidéo explicative narrée. ⚠️ non commercial

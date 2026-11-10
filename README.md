@@ -146,13 +146,13 @@ Au kickoff, Claude choisit une route selon ce que tu fais. Chaque route a son gu
 
 S'y ajoutent :
 
-- **13 recettes éprouvées :** lancement produit, démo produit, vidéo de présentation, explainer, logo animé, typographie cinétique, short vertical, data story, section hero, transitions de page, scrollytelling, micro-interactions et court métrage narratif ;
+- **14 recettes éprouvées :** lancement produit, démo produit, vidéo de présentation, explainer, logo animé, typographie cinétique, short vertical, data story, section hero, transitions de page, scrollytelling, micro-interactions, court métrage narratif, et reproduire une animation de référence ;
 - **16 guides de moteur ;**
 - **des guides de métier :** principes d'animation, tokens de mouvement, composition et zones sûres, texte à l'écran, anti-« AI slop » ;
 - **des guides audio :** voix commercialisables, musique et effets sonores, mixage, sous-titres ;
 - **des guides pratiques :** assets, spécifications par plateforme, licences.
 
-Le fichier [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) recense **1 072 dépôts GitHub** vérifiés le 9 novembre 2026, avec des alertes de licence.
+Le fichier [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) recense **1 073 dépôts GitHub** vérifiés le 9 novembre 2026, avec des alertes de licence.
 
 ### Le rendu déterministe
 
@@ -231,7 +231,7 @@ Le plugin réduit les tokens à trois endroits :
 | Mécanisme | Effet |
 | --- | --- |
 | **Presque rien en permanence** | Environ 250 tokens chargés en permanence : la description du skill `motion` et celles des deux agents. Les dix commandes `/umd:*` ne coûtent rien tant qu'on ne les lance pas. Dans un projet umd, le hook de démarrage ajoute environ 150 tokens de contexte. |
-| **Références à la demande** | 48 guides de 1 200 à 2 100 tokens chacun, lus un par un, seulement quand ils servent : par exemple la route du projet, puis le guide de son moteur. |
+| **Références à la demande** | 49 guides de 1 200 à 2 100 tokens chacun, lus un par un, seulement quand ils servent : par exemple la route du projet, puis le guide de son moteur. |
 | **Vérifications faites par le code** | 27 vérifications sur 58 sont décidées par la CLI à partir des mesures FFmpeg, du lint, des licences et des tests navigateur. Les auditeurs ne regardent que ce qui demande un œil. |
 | **Planche contact** | Chaque rendu produit une planche de 16 images, soit une seule image à lire. Claude n'extrait ensuite que 2 à 6 images ciblées si un doute reste. |
 | **Sorties compactes** | Rendus, encodages et analyses écrivent leur sortie complète sur le disque et ne renvoient qu'un résumé. Sur notre test, 3 commandes passent d'environ 3 700 tokens de sortie à environ 700. |
@@ -271,6 +271,7 @@ Ces outils ne sont pas inclus dans le plugin : ce sont des projets séparés, in
 | [rive-app/skills](https://github.com/rive-app/skills) · [splinetool/spline-skills](https://github.com/splinetool/spline-skills) | Animation vectorielle interactive · 3D éditable | Skills officiels Rive et Spline |
 | [ChromeDevTools/chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) | Débogage de pages animées | Traces de performance, images perdues |
 | [ahujasid/mcp-for-blender](https://github.com/ahujasid/mcp-for-blender) | Route `blender` uniquement | Pilote un Blender ouvert |
+| [NiazMorshed2007/reanimate](https://github.com/NiazMorshed2007/reanimate) | Une animation de référence à étudier (site, vidéo, GIF, Lottie, WebGL), ou ta propre animation à porter | La filme, en tire les durées et les courbes, la reconstruit et mesure l'écart image par image. Demande Bun ; testé sur macOS et Linux seulement. Voir [la recette](plugins/umd/references/recipes/match-reference.md) |
 
 Les commandes d'installation exactes, vérifiées dans chaque projet, sont dans [references/companions.md](plugins/umd/references/companions.md).
 

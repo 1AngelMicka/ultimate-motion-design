@@ -15,6 +15,7 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). Talk in the project
 
 1. Read `BRIEF.md` and `.motion/project.json`. If missing, stop and suggest `/umd:kickoff`.
 2. Read the matching recipe in `${CLAUDE_PLUGIN_ROOT}/references/recipes/` (one file: launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions or narrative-short).
+   - If BRIEF.md names a reference to move like, or an animation of the user's to port, also read `recipes/match-reference.md`: measure the reference first (reanimate if installed, otherwise the umd fallback), then put the measured durations and curves in the motion tokens and the measured sequence in the beats.
 3. Write the script in plain words first if there is a voice-over (no hollow phrasing: `umd lint` flags it).
 4. Fill `.motion/storyboard.md`: the arc line, then one table row per beat: `| # | Time | Shot | On-screen text | Motion | Sound | Intent |`.
    - Time as `a–b s`; beats sum to `duration_s`.

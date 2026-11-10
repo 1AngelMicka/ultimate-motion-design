@@ -27,7 +27,7 @@ description: "Craft rules and reference index for motion design work: use when c
 | Need | Read |
 | --- | --- |
 | How to produce the whole piece | `routes/` — html-video (R1, default), threejs-film (R3), blender (R2), director (R4, other models draw), web-page, explainer |
-| A proven structure for a kind of piece | `recipes/` — launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions, narrative-short |
+| A proven structure for a kind of piece | `recipes/` — launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions, narrative-short, match-reference (measure a site/video/gif animation and rebuild it, with the reanimate companion) |
 | Engine API, patterns and determinism rules | `engines/` — hyperframes, remotion, revideo, gsap, motion, css-waapi, scroll, threejs, shaders, lottie, rive, svg, canvas-2d, manim, blender, diagrams-code |
 | Timing, easing, principles | `craft/principles.md`, `craft/tokens.md` |
 | Layout, safe areas, camera language | `craft/composition.md`, `craft/text-on-screen.md` |

@@ -4,7 +4,7 @@
 
 Critères audités par `/umd:audit`. Méthode `auto` : décidé dans le code à partir des mesures ; `inspect` : jugé par un agent auditeur avec une preuve.
 
-**12 domains · 58 criteria · v0.1.0**
+**12 domains · 58 criteria · v0.1.1**
 
 ## Profils et poids des domaines
 

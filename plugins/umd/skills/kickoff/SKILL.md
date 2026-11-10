@@ -48,6 +48,7 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (written `umd` below). Refer
 
 1. `umd doctor`. If something required is missing, show the `fix` commands and ask before running `umd doctor --fix` (it installs Playwright and Chromium in `~/.umd/runtime`, and FFmpeg via winget/Homebrew; nothing in the project).
 2. Suggest at most 2 optional companions that fit the route, from `references/companions.md` (read only the matching rows). Say that MCP servers add tool definitions to every session, so install them only when the route needs them.
+3. If the user gives a reference to move like (URL, video, gif, Lottie) or wants to port their own animation, suggest the `reanimate` companion and say that `references/recipes/match-reference.md` will be used at storyboard time. Note the fidelity they want (motion-faithful by default; pixel-faithful only for their own material or with permission) in BRIEF.md.
 
 ## 6. Hand over
 

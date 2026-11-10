@@ -21,6 +21,7 @@ Optional official or well-maintained add-ons that deepen one route. umd works wi
 | nextlevelbuilder/ui-ux-pro-max-skill (MIT) | Palettes, font pairings, UI style rules | No brand kit and the piece needs a visual system | `/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill` then `/plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
 | elevenlabs/skills (MIT; paid API) | TTS, STT, sound effects, music, dubbing, voice isolation via ElevenLabs | User accepts a cloud voice service; needs `ELEVENLABS_API_KEY` | `npx skills add elevenlabs/skills` (the old `elevenlabs-mcp` is archived) |
 | rive-app/skills (MIT, official) | When and how to use Rive: state machines, runtimes | Interactive vector animation for apps and sites | `/plugin marketplace add rive-app/skills` then `/plugin install rive@rive` |
+| NiazMorshed2007/reanimate (MIT) | Records a reference (site, video, gif, Lottie, WebGL on a virtual clock), writes a motion spec, rebuilds it and verifies the copy frame by frame (timing ±80 ms, easing fit, pixel mismatch) | The brief has a reference to study or the user's own animation to port; see `recipes/match-reference.md`. Needs Bun; upstream tested on macOS/Linux only (Windows: WSL or the umd fallback) | `npx skills add NiazMorshed2007/reanimate -g -a claude-code`, then `bash <skill>/scripts/setup.sh` on first use |
 | splinetool/spline-skills (MIT, official) | Skill + hosted Spline MCP (`https://mcp.spline.design/mcp`); builds editable scenes in Spline's cloud editor | User wants an editable Spline 3D scene; requires a Spline account sign-in | `/plugin marketplace add splinetool/spline-skills` then `/plugin install spline@spline` |
 
 ## MCP servers
@@ -47,6 +48,7 @@ Notes:
 | R3 three.js single page | gsap-skills if GSAP drives the camera; chrome-devtools-mcp for frame drops |
 | R4 narrated, many scenes | humanizer; elevenlabs/skills only if cloud voice is accepted |
 | Interactive vector (apps) | rive-app/skills, LottieFiles/motion-design-skill |
+| Any route with a reference to match or an animation to port | reanimate |
 | Editable 3D for a designer | splinetool/spline-skills |
 
 ## Pitfalls

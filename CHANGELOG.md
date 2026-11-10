@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1 — 2026-11-10
+
+- New recipe `match-reference`: measure a reference animation (live site, video, gif, Lottie, WebGL) into a motion spec, convert it to motion tokens and storyboard beats, rebuild and verify it. Uses the companion skill [reanimate](https://github.com/NiazMorshed2007/reanimate) (MIT, Bun, macOS/Linux upstream), with a umd-only fallback (`umd capture <url>`, `frames`, `compare`) for Windows.
+- `/umd:kickoff` suggests reanimate when the brief has a reference; `/umd:storyboard` measures it before writing beats.
+- reanimate added to the companions and to the catalogue (1,073 repositories).
+
 ## 0.1.0 — 2026-11-10
 
 First version.
