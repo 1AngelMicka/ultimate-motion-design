@@ -2,6 +2,7 @@
 import { resolve, relative, dirname } from "node:path";
 import { mkdirSync, rmSync } from "node:fs";
 import { ff, ffOk, probe } from "./ffmpeg.mjs";
+import { shown } from "./ref.mjs";
 
 export function loudness(file, { cwd = process.cwd() } = {}) {
   const abs = resolve(cwd, file);
@@ -9,7 +10,7 @@ export function loudness(file, { cwd = process.cwd() } = {}) {
   if (r.code !== 0) throw new Error(`No audio or ffmpeg error: ${r.stderr.trim().split(/\r?\n/).slice(-2).join(" | ")}`);
   const s = r.stderr.slice(r.stderr.lastIndexOf("Summary:"));
   const pick = (re) => { const m = s.match(re); return m && m[1] !== "-inf" ? Number(m[1]) : null; };
-  return { file: relative(cwd, abs), integrated_lufs: pick(/I:\s*(-?[\d.]+|-inf)\s*LUFS/), lra_lu: pick(/LRA:\s*(-?[\d.]+)\s*LU/), true_peak_dbtp: pick(/Peak:\s*(-?[\d.]+|-inf)\s*dBFS/) };
+  return { file: shown(cwd, abs), integrated_lufs: pick(/I:\s*(-?[\d.]+|-inf)\s*LUFS/), lra_lu: pick(/LRA:\s*(-?[\d.]+)\s*LU/), true_peak_dbtp: pick(/Peak:\s*(-?[\d.]+|-inf)\s*dBFS/) };
 }
 
 function loudnormMeasure(abs, I, TP, LRA) {
@@ -23,13 +24,13 @@ export function normalize(input, output, { lufs = -14, tp = -1, lra = 11, cwd = 
   const abs = resolve(cwd, input), out = resolve(cwd, output);
   mkdirSync(dirname(out), { recursive: true });
   const m = loudnormMeasure(abs, lufs, tp, lra);
-  if (!Number.isFinite(Number(m.input_i))) throw new Error(`${relative(cwd, abs)} is silent (integrated loudness -inf): nothing to normalise. Check the mix inputs.`);
+  if (!Number.isFinite(Number(m.input_i))) throw new Error(`${shown(cwd, abs)} is silent (integrated loudness -inf): nothing to normalise. Check the mix inputs.`);
   const filter = `loudnorm=I=${lufs}:TP=${tp}:LRA=${lra}:measured_I=${m.input_i}:measured_TP=${m.input_tp}:measured_LRA=${m.input_lra}:measured_thresh=${m.input_thresh}:offset=${m.target_offset}:linear=true`;
   const info = probe(abs);
   const isVideo = !!info.width;
   const aCodec = /\.webm$/i.test(out) ? ["-c:a", "libopus", "-b:a", "160k"] : /\.(wav)$/i.test(out) ? ["-c:a", "pcm_s24le"] : ["-c:a", "aac", "-b:a", "192k"];
   ffOk(["-i", abs, ...(isVideo ? ["-map", "0:v:0", "-c:v", "copy"] : []), "-map", "0:a:0", "-af", filter, "-ar", "48000", ...aCodec, ...(isVideo && /\.mp4$/i.test(out) ? ["-movflags", "+faststart"] : []), out]);
-  return { output: relative(cwd, out), before: { integrated_lufs: Number(m.input_i), true_peak_dbtp: Number(m.input_tp) }, after: loudness(out, { cwd }) };
+  return { output: shown(cwd, out), before: { integrated_lufs: Number(m.input_i), true_peak_dbtp: Number(m.input_tp) }, after: loudness(out, { cwd }) };
 }
 
 // sfx entries: "file.wav@1.25" (start in seconds) or {file, at, gain_db}
@@ -85,5 +86,5 @@ export function mix({ voice, music, sfx = [], out, duck = 9, musicGainDb = -6, l
   ffOk([...inputs, "-filter_complex", parts.join(";"), "-map", "[mix]", "-c:a", "pcm_s24le", "-ar", "48000", tmp]);
   const n = normalize(tmp, outAbs, { lufs, tp, cwd });
   try { rmSync(tmp); } catch { /* keep */ }
-  return { output: relative(cwd, outAbs), voice: voice || null, music: music || null, music_start_s: musicStart, sfx: fx, duck_db: duck, loudness: n.after };
+  return { output: shown(cwd, outAbs), voice: voice || null, music: music || null, music_start_s: musicStart, sfx: fx, duck_db: duck, loudness: n.after };
 }

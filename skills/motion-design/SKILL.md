@@ -120,7 +120,7 @@ Record every asset the moment it enters the project (path, source, URL, licence,
 | The six rules, 16 transition mechanisms and pacing of launch films | `references/craft/motion-grammar.md` |
 | The 12 animation principles, timing tables | `references/craft/principles.md`, `references/craft/tokens.md` |
 | Layout, safe areas, camera; text on screen; AI tells | `references/craft/composition.md`, `references/craft/text-on-screen.md`, `references/craft/anti-slop.md` |
-| A proven structure for a kind of piece | `references/recipes/` (launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions, narrative-short, series, match-reference) |
+| A proven structure for a kind of piece | `references/recipes/` (concepts, launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions, narrative-short, series, match-reference) |
 | How to produce the whole piece in a route | `references/routes/` (html-video, threejs-film, blender, director, web-page, explainer) |
 | An engine's API, patterns and determinism rules | `references/engines/` (hyperframes, remotion, revideo, gsap, motion, css-waapi, scroll, threejs, shaders, lottie, rive, svg, canvas-2d, manim, blender, diagrams-code, effect-libraries) |
 | Voice, music and effects, mix, captions | `references/audio/` |

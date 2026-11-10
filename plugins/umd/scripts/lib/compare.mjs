@@ -1,6 +1,7 @@
 // Compare two renders (determinism, regressions) and measure encode quality against a master.
 import { resolve, relative } from "node:path";
 import { ff, filters } from "./ffmpeg.mjs";
+import { shown } from "./ref.mjs";
 
 function frameHashes(abs) {
   const r = ff(["-hide_banner", "-nostdin", "-i", abs, "-map", "0:v:0", "-f", "framemd5", "-"]);
@@ -21,13 +22,13 @@ export function compareVideos(a, b, { cwd = process.cwd() } = {}) {
   const n = Math.min(ha.length, hb.length);
   for (let i = 0; i < n; i++) if (ha[i] !== hb[i]) { first = i; break; }
   const identical = first === null && ha.length === hb.length;
-  return { a: relative(cwd, A), b: relative(cwd, B), frames: [ha.length, hb.length], identical, first_diff_frame: identical ? null : first ?? n,
+  return { a: shown(cwd, A), b: shown(cwd, B), frames: [ha.length, hb.length], identical, first_diff_frame: identical ? null : first ?? n,
     differing_frames: ha.slice(0, n).filter((h, i) => h !== hb[i]).length, ssim: identical ? 1 : ssim(A, B) };
 }
 
 export function vmaf(encode, master, { cwd = process.cwd() } = {}) {
   const E = resolve(cwd, encode), M = resolve(cwd, master);
-  const res = { encode: relative(cwd, E), master: relative(cwd, M), vmaf: null, ssim: null, psnr: null };
+  const res = { encode: shown(cwd, E), master: shown(cwd, M), vmaf: null, ssim: null, psnr: null };
   if (filters().has("libvmaf")) {
     const r = ff(["-hide_banner", "-nostdin", "-i", E, "-i", M, "-lavfi", "[0:v][1:v]scale2ref=flags=bicubic[d][r];[d][r]libvmaf=n_threads=4", "-f", "null", "-"]);
     const m = r.stderr.match(/VMAF score[:=]\s*([\d.]+)/i);

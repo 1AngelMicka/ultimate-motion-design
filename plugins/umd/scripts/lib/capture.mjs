@@ -9,6 +9,7 @@ import { pathToFileURL } from "node:url";
 import { loadChromium, launch } from "./playwright.mjs";
 import { ffPipe, writeFrame, encoders } from "./ffmpeg.mjs";
 import { openInput } from "./serve.mjs";
+import { shown } from "./ref.mjs";
 
 function virtualTime(seed) {
   if (window.__umd) return;
@@ -183,7 +184,7 @@ export async function capture(input, opts = {}) {
     }
     if (ff) { ff.stdin.end(); await ff.done; }
     const warnings = await page.evaluate(() => window.__umd.warnings());
-    return { out: relative(cwd, out), format, width, height, fps, duration, frames: total, draft, transparent,
+    return { out: shown(cwd, out), format, width, height, fps, duration, frames: total, draft, transparent,
       seconds: Math.round((Date.now() - started) / 100) / 10, page_errors: [...new Set([...warnings, ...errors])].slice(0, 10) };
   } finally {
     await browser.close();
@@ -204,7 +205,7 @@ export async function stills(input, opts = {}) {
       await page.evaluate((x) => window.__umd.seek(x), t);
       const f = join(outDir, `${prefix}-${String(t.toFixed(2)).replace(".", "_")}s.png`);
       await page.screenshot({ path: f, type: "png", animations: "allow", caret: "hide" });
-      files.push({ t, file: relative(cwd, f) });
+      files.push({ t, file: shown(cwd, f) });
     }
   } finally {
     await browser.close();

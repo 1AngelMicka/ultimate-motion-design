@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from "node:fs";
 import { join, relative, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { shown } from "./ref.mjs";
 
 const SUPERVISOR = join(dirname(fileURLToPath(import.meta.url)), "supervise.mjs");
 
@@ -50,7 +51,7 @@ export function runCommand(label, command, { cwd, logDir, timeoutMs = 60 * 60 * 
   writeFileSync(logFile, `$ ${command}\n# exit ${r.status ?? "killed"} after ${Math.round((Date.now() - started) / 1000)} s\n\n${output}`);
   const result = {
     label, command, exit_code: r.status, timed_out: r.status === 124 && /umd: timed out after/.test(r.stderr || ""),
-    duration_s: Math.round((Date.now() - started) / 100) / 10, log: relative(cwd, logFile), ...summarize(output),
+    duration_s: Math.round((Date.now() - started) / 100) / 10, log: shown(cwd, logFile), ...summarize(output),
   };
   const returned = estimateTokens(JSON.stringify(result));
   result.tokens = { full_output: estimateTokens(output), returned, saved: Math.max(0, estimateTokens(output) - returned) };

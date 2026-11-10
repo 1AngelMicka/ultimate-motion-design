@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.7.1 — 2026-11-10
+
+Fixes from the first real project made with the plugin (a presentation film, Windows 11, Blender 5.1.2, Radeon RX 7900 XTX).
+
+- **Install by an agent, CLI without the plugin.** The READMEs show the `settings.json` block an agent can merge (the plugin loads at the next start) and how to use the CLI right away: `npx github:1AngelMicka/ultimate-motion-design <command>`, or `node <clone>/plugins/umd/scripts/umd.mjs`; `npm link` puts `umd` on the PATH.
+- **`umd styles get`** always writes to `.motion/styles/`, as documented, even before `umd init`.
+- **`umd analyze`** prints a motion summary (mean, min, median, seconds under the floor and where) instead of the per-second timeline, which stays in `analysis.json`. Paths outside the project are shown absolute everywhere, never as a chain of `..`.
+- **No more freeze on a slow push.** FFmpeg's freezedetect saw a slow camera push over a large flat area as a frozen picture. Each detected segment is now checked end to end (PSNR between its first and last frame): a real freeze ends where it started, a slow move does not and is reported as `slow_moves`. Tested on a synthetic slow push and a still.
+- **Blender route rewritten for 5.x.** Scripts only by default, the MCP optional. A tested template (`templates/blender/shot.py`): GPU set-up for HIP (AMD), OptiX/CUDA (NVIDIA), Metal and oneAPI; animation by `keyframe_insert` on objects, light data, camera focus and node inputs; a camera tracking an animated empty; the 5.x compositor (`scene.compositing_node_group`, node options as inputs); a one-frame check. Notes on long argument names (Cycles parses `sys.argv`), the harmless "Not freed memory blocks" line, and real screen captures under AgX.
+- **`umd doctor --blender`** finds Blender outside the PATH and reports which GPU Cycles sees. **`umd estimate --frames N -- <command>`** renders one frame, times it and gives the total before a long render.
+- **Concepts before style.** A new recipe and storyboard step 0a: three film concepts in one table (idea, hero moment, thread, run-down tied to the voice timing, look, route and cost, risks) when the brief has no idea of the film yet. Kickoff asks whether characters appear on screen, with their cost and risk in code.
+- **three.js finish.** `templates/threejs/post.js`: bloom, miniature depth of field, frame-seeded grain and vignette, driven by `t`; two renders are byte-identical.
+- **Type.** No outline on a variable font in canvas or CSS: `strokeText` draws the overlapping inner contours.
+- **Library.** 285 HyperFrames blocks had a preview their registry entry did not declare: they now show a still (cut from their clip when none is hosted) and play on hover; every entry of the library has a preview.
+
 ## 0.7.0 — 2026-11-10
 
 - **The model picks the look from the library, by rule.** `umd styles match` reads BRIEF.md and project.json (project type, format, mood, medium, ambition) and ranks the whole library for this project, with a reason per pick and the best ready blocks apart. The storyboard's step 0, `/umd:go`, the `motion` skill and AGENTS.md now require it before any look is decided. Kickoff asks who picks: "show me 3 options" (`style_choice: "ask"`, default) or "choose for me" (`"auto"`, the model takes the first pick and says why).

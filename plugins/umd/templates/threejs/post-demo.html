@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>post.js check</title>
+<style>html, body { margin: 0; background: #000; } canvas { display: block; }</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script type="module">
+// A miniature table scene to check post.js: umd still post-demo.html --at 0.5,2.5 (two runs must give identical frames)
+import * as THREE from "three";
+import { createPost } from "./post.js";
+const W = innerWidth, H = innerHeight;
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("c"), antialias: true, preserveDrawingBuffer: true });
+renderer.setSize(W, H); renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0x15181d);
+const camera = new THREE.PerspectiveCamera(35, W / H, 0.1, 100);
+scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x302820, 1.2));
+const key = new THREE.DirectionalLight(0xffffff, 2.5); key.position.set(3, 5, 2); scene.add(key);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshStandardMaterial({ color: 0x2a2f38, roughness: 0.9 }));
+floor.rotation.x = -Math.PI / 2; scene.add(floor);
+const blocks = [];
+for (let i = 0; i < 9; i++) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.4 + (i % 3) * 0.3, 0.6),
+    new THREE.MeshStandardMaterial({ color: [0xe0452b, 0xf2b84b, 0x9aa4b0][i % 3], emissive: i === 4 ? 0xff5a3c : 0x000000, emissiveIntensity: 3 }));
+  m.position.set((i % 3 - 1) * 1.4, m.geometry.parameters.height / 2, (Math.floor(i / 3) - 1) * 1.4);
+  scene.add(m); blocks.push(m);
+}
+const post = createPost(renderer, scene, camera, { bloom: 0.7, focus: 7, aperture: 0.006, grain: 0.06, vignette: 0.4 });
+window.umdDuration = 3;
+window.umdRender = async (t) => {
+  const a = t * 0.25;
+  camera.position.set(Math.sin(a) * 7, 4.2, Math.cos(a) * 7);
+  camera.lookAt(0, 0.3, 0);
+  post.setFocus(camera.position.length());
+  blocks[4].scale.y = 1 + 0.25 * Math.sin(t * 3);
+  post.render(t);
+};
+</script>
+</body>
+</html>

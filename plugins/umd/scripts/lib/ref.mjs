@@ -1,6 +1,6 @@
 // Referential, project file, flags and thresholds. No dependencies.
 import { readFileSync, existsSync, readdirSync } from "node:fs";
-import { join, dirname, resolve } from "node:path";
+import { join, dirname, resolve, relative, isAbsolute } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const PLUGIN_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -73,4 +73,10 @@ export function today() {
 
 export function stamp() {
   return new Date().toISOString().replace(/[-:]/g, "").replace(/\..+/, "").replace("T", "-");
+}
+
+// a path to show the user: relative inside cwd, absolute outside it (never a long chain of ..)
+export function shown(cwd, p) {
+  const rel = relative(cwd, p);
+  return !rel ? "." : rel.startsWith("..") || isAbsolute(rel) ? resolve(p) : rel;
 }

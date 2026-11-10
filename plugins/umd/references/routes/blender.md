@@ -1,6 +1,6 @@
 # Route R2 — Claude writes Python, Blender renders
 
-Claude scripts the scene in `bpy` (through the Blender MCP while building, as files for the render), Blender renders frames headless, FFmpeg encodes. Pick it for real objects, physical materials, product shots and rigged characters.
+Claude scripts the scene in `bpy` as files, Blender renders frames headless, FFmpeg encodes. The Blender MCP is optional: it helps to explore a scene live, nothing in this route needs it. Pick it for real objects, physical materials, product shots and rigged characters.
 
 ## Use when / avoid when
 
@@ -13,23 +13,24 @@ Claude scripts the scene in `bpy` (through the Blender MCP while building, as fi
 ## Setup
 
 - **Blender** (GPL; renders you produce are yours). Engine notes: [../engines/blender.md](../engines/blender.md).
-- **Blender MCP** (`ahujasid/blender-mcp`, MIT; PyPI package now `mcp-for-blender`):
+- **Script only (default)**: nothing to install besides Blender. Start from `${CLAUDE_PLUGIN_ROOT}/templates/blender/shot.py` (GPU, animation, camera, 5.x compositor, one-frame check) and read [../engines/blender.md](../engines/blender.md) for Blender 5.x and the GPU.
+- **Blender MCP, optional** (`ahujasid/blender-mcp`, MIT; PyPI package now `mcp-for-blender`), to explore live:
   ```bash
   uvx mcp-for-blender setup                 # installs the addon and configures clients
   claude mcp add blender uvx mcp-for-blender # or manual: then `uvx mcp-for-blender install-addon`
   ```
-  Open Blender (the addon starts its server), then run `/mcp` in Claude Code and confirm `blender` is connected **before** any work. Use Opus at high effort for this route.
+  Open Blender (the addon starts its server), then check `/mcp` before using MCP tools. If the user declines the MCP, carry on with scripts. Use Opus at high effort for this route.
 - **BlenderKit** add-on (GPL-2.0) for free models and materials; each asset carries its own licence: record it in `.motion/assets.lock.json`. Poly Haven assets are CC0.
 - ⚠️ The MCP's AI model generators include Hunyuan3D: Tencent licence, not valid in the EU, UK or South Korea. Do not use in those territories.
 - Dev aids: `nutti/fake-bpy-module` (MIT, typing outside Blender), `kolibril13/bpy-gallery` (snippets). ⚠️ `carson-katri/geometry-script` is GPL-3.0: fine to render with, do not copy into the plugin.
 
 ## Core patterns
 
-**1. Direct like a junior 3D artist.** One instruction per step, with numbers: "50 mm lens, camera at 1.6 m, 15° down", "key light 45° left, 3× rim". After each step ask for a viewport screenshot and compare to the reference image. Never "make it look good".
+**1. Direct like a junior 3D artist.** One instruction per step, with numbers: "50 mm lens, camera at 1.6 m, 15° down", "key light 45° left, 3× rim". After each step render one still (`-f N`, or a viewport screenshot through the MCP) and compare it to the reference image. Never "make it look good".
 
 **2. Search the library once before building.** One BlenderKit / Poly Haven search for the hero object and materials; model from scratch only what is missing.
 
-**3. The scene lives in an idempotent script.** `scene/build.py` clears what it created, rebuilds, sets frame range, fps and output, and saves. The MCP is for exploring; the script is what renders:
+**3. The scene lives in an idempotent script.** `scene/build.py` clears what it created, rebuilds, sets frame range, fps and output, and saves. The MCP, when used, is for exploring; the script is what renders:
 
 ```python
 import bpy, random
@@ -64,7 +65,7 @@ bpy.ops.wm.save_mainfile()
 
 ### Cost
 
-Token cost is moderate (scripts are short; screenshots dominate). Time cost is render time: frames × seconds per frame. Budget it from one test frame before committing to a duration. No creator figures were reported for this route.
+Token cost is moderate (scripts are short; screenshots dominate). Time cost is render time: frames × seconds per frame. Budget it from one test frame before committing to a duration: `umd estimate --frames 570 -- blender -b --python shot.py -- --shot-config shot.json` renders that frame, times it and multiplies. Turn the GPU on first ([../engines/blender.md](../engines/blender.md)): on the CPU the estimate is many times higher. No creator figures were reported for this route.
 
 ## Rendering to video with umd
 
@@ -81,7 +82,9 @@ Token cost is moderate (scripts are short; screenshots dominate). Time cost is r
 
 | Breaks | Fix |
 | --- | --- |
-| MCP silently disconnected, Claude "builds" nothing | Check `/mcp` and the MCP tab in Blender (N panel) before each session |
+| MCP silently disconnected, Claude "builds" nothing | Work from scripts; when using the MCP, check `/mcp` and the MCP tab in Blender (N panel) |
+| Cycles on the CPU in `-b` mode | `setup_gpu()` in the script (HIP for AMD, OptiX/CUDA for NVIDIA, Metal for Apple) |
+| A 4.x recipe breaks in 5.x (`scene.node_tree`, `action.fcurves`) | The 5.x table in [../engines/blender.md](../engines/blender.md) |
 | Re-running a script duplicates objects | Script deletes what it owns (collection per script) before rebuilding |
 | Frame range or fps not matching the brief | Set both in `build.py`; `umd analyze` checks duration |
 | Fireflies, noise between frames | Enough samples + denoiser on the final; same seed everywhere |

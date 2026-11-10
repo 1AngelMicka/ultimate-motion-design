@@ -35,7 +35,7 @@ Ses points forts :
   - 1 323 styles, prompts et blocs prêts à l'emploi, classés par type de projet, ambiance, rendu et format, avec un aperçu du résultat dans la [bibliothèque en ligne](https://1angelmicka.github.io/ultimate-motion-design/library/). Ton agent y choisit seul ce qui colle à ton brief (`umd styles match`), ou te propose trois options.
   - 120 techniques nommées, du match cut au split-flap, pour parler le même langage que le critique (`umd moves`).
   - Des images libres de droits sur Wikimedia Commons, inscrites automatiquement avec leur auteur et leur licence (`umd commons`).
-- **Un vrai skill de motion design, utilisable partout.** [`skills/motion-design`](skills/motion-design/SKILL.md) condense le métier : la boucle en dix étapes et trois validations, douze règles qui séparent le savoir-faire du « slop », les chiffres qui comptent, la typo, la couleur, le son, la caméra, comment juger un travail. Dans Claude Code, il se déclenche tout seul dès qu'on anime ; il s'installe aussi dans Codex, Cursor ou tout agent qui lit les skills, avec ses 52 guides.
+- **Un vrai skill de motion design, utilisable partout.** [`skills/motion-design`](skills/motion-design/SKILL.md) condense le métier : la boucle en dix étapes et trois validations, douze règles qui séparent le savoir-faire du « slop », les chiffres qui comptent, la typo, la couleur, le son, la caméra, comment juger un travail. Dans Claude Code, il se déclenche tout seul dès qu'on anime ; il s'installe aussi dans Codex, Cursor ou tout agent qui lit les skills, avec ses 53 guides.
 - **Économe et transparent sur les tokens.**
   - Environ 270 tokens chargés en permanence.
   - Les vérifications mesurables sont faites par le code, sans agent.
@@ -107,6 +107,34 @@ Ensuite, tape simplement `/umd:go` à chaque fois pour continuer.
 
 **4. Facultatif, selon ta route :** les skills officiels et serveurs MCP utiles. Voir [Outils compagnons](#outils-compagnons) ; `/umd:kickoff` propose ceux qui servent à ton projet.
 
+### Faire installer le plugin par ton agent IA
+
+Les commandes `/plugin …` se tapent à la main : un agent ne peut pas les lancer, et `claude plugin …` est refusé depuis une session Claude Code en cours. Ton agent peut en revanche ajouter ce bloc à `~/.claude/settings.json` (pour tous tes projets) ou à `.claude/settings.json` du projet, en le fusionnant avec ce qui s'y trouve déjà :
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "ultimate-motion-design": { "source": { "source": "github", "repo": "1AngelMicka/ultimate-motion-design" } }
+  },
+  "enabledPlugins": { "umd@ultimate-motion-design": true }
+}
+```
+
+Le plugin se charge au **prochain démarrage** de Claude Code (fais confiance au dossier si on te le demande). D'ici là, la CLI ci-dessous marche déjà.
+
+### Utiliser la CLI sans le plugin
+
+Tout ce que fait `umd` (rendu, analyse, bibliothèque de styles, audit automatique) marche aussi sans le plugin, avant un redémarrage ou depuis un autre agent (Codex, Cursor…) :
+
+```bash
+npx github:1AngelMicka/ultimate-motion-design doctor
+```
+```bash
+git clone https://github.com/1AngelMicka/ultimate-motion-design && node ultimate-motion-design/plugins/umd/scripts/umd.mjs styles match
+```
+
+Sans argument, la CLI affiche son aide. Dans un clone, `npm link` installe la commande `umd` dans ton PATH.
+
 ### Installer pour toute une équipe
 
 Dans le dossier du projet, lance une fois dans ton terminal, puis versionne `.claude/settings.json` :
@@ -163,7 +191,7 @@ Toutes ces commandes s'appuient sur une CLI sans dépendance, que tu peux aussi 
 - **analyse :** `analyze` (coupes, mouvement, temps morts, flashs, loudness, planche contact), `frames` (`--cuts` : 12 images autour de chaque coupe), `compare`, `vmaf`, `webperf`, `lint`, `licenses` ;
 - **son :** `mix` (ducking, loudness, `--backtime` pour caler la fin de la musique sur le carton final), `hits` (les coups finaux d'un morceau), `sync` (chaque son contre son image), `normalize`, `loudness`, `captions`, `burn` ;
 - **ressources :** `styles` (1 323 styles, prompts et blocs ; `styles match` choisit d'après le brief), `moves` (120 techniques nommées), `commons` (images libres de Wikimedia Commons) ;
-- **suivi :** `next`, `status`, `tokens`.
+- **suivi :** `next`, `status`, `tokens`, `estimate` (durée d'un rendu à partir d'une image test).
 
 ## Routes et technos
 
@@ -282,7 +310,7 @@ Le plugin réduit les tokens à trois endroits :
 | Mécanisme | Effet |
 | --- | --- |
 | **Presque rien en permanence** | Environ 270 tokens chargés en permanence : la description du skill `motion` et celles des deux agents. Les onze commandes `/umd:*` ne coûtent rien tant qu'on ne les lance pas. Dans un projet umd, le hook de démarrage ajoute environ 150 tokens de contexte. |
-| **Références à la demande** | 53 guides de 800 à 2 300 tokens chacun, lus un par un, seulement quand ils servent : par exemple la route du projet, puis le guide de son moteur. |
+| **Références à la demande** | 54 guides de 800 à 2 300 tokens chacun, lus un par un, seulement quand ils servent : par exemple la route du projet, puis le guide de son moteur. |
 | **Vérifications faites par le code** | 29 vérifications sur 64 sont décidées par la CLI à partir des mesures FFmpeg, du lint, des licences et des tests navigateur. Les auditeurs ne regardent que ce qui demande un œil. |
 | **Planche contact** | Chaque rendu produit une planche de 16 images, soit une seule image à lire. Claude n'extrait ensuite que 2 à 6 images ciblées si un doute reste. |
 | **Sorties compactes** | Rendus, encodages et analyses écrivent leur sortie complète sur le disque et ne renvoient qu'un résumé. Sur notre test, 3 commandes passent d'environ 3 700 tokens de sortie à environ 700. |

@@ -2,9 +2,9 @@
 // command to get each missing piece on this OS. `--fix` runs the safe installs (Playwright runtime and
 // Chromium in ~/.umd/runtime; FFmpeg through winget or Homebrew when available).
 import { spawnSync } from "node:child_process";
-import { mkdirSync, existsSync, writeFileSync } from "node:fs";
+import { mkdirSync, existsSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { platform } from "node:os";
+import { platform, tmpdir } from "node:os";
 import { ff, filters, encoders, FFMPEG } from "./ffmpeg.mjs";
 import { resolvePlaywright, RUNTIME_DIR, loadChromium, launch } from "./playwright.mjs";
 
@@ -27,14 +27,49 @@ const FFMPEG_INSTALL = {
 };
 
 const ROUTE_TOOLS = {
-  blender: [{ name: "blender", cmd: "blender", args: ["--version"], fix: { win32: "winget install --id BlenderFoundation.Blender -e", darwin: "brew install --cask blender", linux: "sudo snap install blender --classic" }, note: "Route R2 (Python + Blender). Add the Blender MCP server too: see references/companions.md." }],
+  blender: [{ name: "blender", cmd: "blender", args: ["--version"], fix: { win32: "winget install --id BlenderFoundation.Blender -e", darwin: "brew install --cask blender", linux: "sudo snap install blender --classic" }, note: "Route R2 (Python + Blender). The Blender MCP is optional: scripts are enough (references/engines/blender.md)." }],
   manim: [{ name: "manim", cmd: "manim", args: ["--version"], fix: { all: "uv tool install manim   (or pipx install manim; needs a LaTeX distribution for MathTex)" }, note: "Explainer route with Manim." }],
   remotion: [{ name: "remotion (project)", cmd: "npx", args: ["--no-install", "remotion", "--version"], fix: { all: "npx create-video@latest   (or npm i remotion @remotion/cli in the project)" }, note: "Remotion licence: free up to 3 employees, company licence above." }],
   hyperframes: [{ name: "hyperframes", cmd: "npx", args: ["--no-install", "hyperframes", "--version"], fix: { all: "see references/engines/hyperframes.md for the install command" }, note: "HyperFrames engine." }],
   voice: [{ name: "python", cmd: OS === "win32" ? "python" : "python3", args: ["--version"], fix: { win32: "winget install Python.Python.3.12", darwin: "brew install python", linux: "sudo apt install -y python3 python3-pip" }, note: "Local TTS, alignment and music models are Python tools (see references/audio/)." }],
 };
 
-export async function doctor({ cwd = process.cwd(), project = null, fix = false } = {}) {
+// Blender is rarely on the PATH on Windows and macOS: look in the usual install folders too (newest first)
+export function findBlender() {
+  if (process.env.UMD_BLENDER && existsSync(process.env.UMD_BLENDER)) return process.env.UMD_BLENDER;
+  if (has("blender")) return "blender";
+  const dirs = OS === "win32" ? [process.env.ProgramFiles || "C:\\Program Files", process.env["ProgramFiles(x86)"]].filter(Boolean).map((p) => join(p, "Blender Foundation")) : [];
+  for (const d of dirs) {
+    if (!existsSync(d)) continue;
+    const versions = readdirSync(d).filter((x) => /^Blender/.test(x)).sort((a, b) => b.localeCompare(a, undefined, { numeric: true }));
+    for (const v of versions) { const exe = join(d, v, "blender.exe"); if (existsSync(exe)) return exe; }
+  }
+  if (OS === "darwin" && existsSync("/Applications/Blender.app/Contents/MacOS/Blender")) return "/Applications/Blender.app/Contents/MacOS/Blender";
+  return null;
+}
+
+// which GPU backends and devices Cycles sees on this machine (a few seconds: Blender starts headless once)
+function cyclesDevices(bin) {
+  const py = join(tmpdir(), "umd-cycles-devices.py");
+  writeFileSync(py, [
+    "import bpy",
+    "p = bpy.context.preferences.addons['cycles'].preferences",
+    "found = []",
+    "for k in ('OPTIX', 'CUDA', 'HIP', 'METAL', 'ONEAPI'):",
+    "    try:",
+    "        p.compute_device_type = k",
+    "    except TypeError:",
+    "        continue",
+    "    p.refresh_devices()",
+    "    found += [k + ': ' + d.name for d in p.devices if d.type == k]",
+    "print('UMD_GPU ' + (' | '.join(found) or 'none'))",
+  ].join("\n"));
+  const r = spawnSync(bin, ["-b", "--factory-startup", "--python", py], { encoding: "utf8", timeout: 120000, windowsHide: true });
+  const m = `${r.stdout || ""}`.match(/UMD_GPU (.*)/);
+  return m ? m[1].trim() : null;
+}
+
+export async function doctor({ cwd = process.cwd(), project = null, fix = false, blender = false } = {}) {
   const checks = [];
   const fixed = [];
   const add = (c) => checks.push(c);
@@ -93,7 +128,7 @@ export async function doctor({ cwd = process.cwd(), project = null, fix = false 
   // Route-specific tools
   const wanted = new Set();
   const route = String(project?.route || ""), engine = String(project?.engine || "");
-  if (/blender|r2/i.test(route + engine)) wanted.add("blender");
+  const wantBlender = blender || /blender|r2/i.test(route + engine);
   if (/manim/i.test(engine)) wanted.add("manim");
   if (/remotion/i.test(engine)) wanted.add("remotion");
   if (/hyperframes/i.test(engine)) wanted.add("hyperframes");
@@ -101,6 +136,16 @@ export async function doctor({ cwd = process.cwd(), project = null, fix = false 
   for (const key of wanted) for (const t of ROUTE_TOOLS[key] || []) {
     const r = sh(t.cmd, t.args, { cwd });
     add({ name: t.name, ok: r.ok, optional: true, version: r.ok ? firstLine(r.out) : null, note: t.note, fix: r.ok ? null : (t.fix[OS] || t.fix.all) });
+  }
+  if (wantBlender) {
+    const bin = findBlender();
+    const v = bin ? spawnSync(bin, ["--version"], { encoding: "utf8", timeout: 60000, windowsHide: true }) : null;
+    const version = v?.status === 0 ? firstLine(v.stdout) : null;
+    const gpu = version ? cyclesDevices(bin) : null;
+    const t = ROUTE_TOOLS.blender[0];
+    add({ name: "blender", ok: !!version, optional: true, version, path: bin && bin !== "blender" ? bin : undefined,
+      note: version ? `Cycles sees: ${gpu === "none" ? "no GPU, renders on the CPU" : gpu || "unknown (probe failed)"}. Call setup_gpu() in your script: references/engines/blender.md` : t.note,
+      fix: version ? null : `${t.fix[OS] || t.fix.linux}   (or set UMD_BLENDER to blender's path)` });
   }
   const required = checks.filter((c) => !c.optional);
   return { ok: required.every((c) => c.ok), os: OS, checks, fixed, runtime_dir: RUNTIME_DIR };

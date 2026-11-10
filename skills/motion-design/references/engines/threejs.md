@@ -50,7 +50,7 @@ function render(t) {
 
 **5. Lighting**: environment map (HDRI) + one key light with soft shadows; ACES or AgX tone mapping; keep `outputColorSpace` sRGB. Matcaps for stylised looks.
 
-**6. React-three-fiber**: `<Canvas camera={{ fov: 35 }} dpr={[1, 2]}>`, drei `<Environment>`, `<ContactShadows>`, `<Float>`, `<Text>` (troika SDF text), `<MeshTransmissionMaterial>`; `@react-three/postprocessing` `<EffectComposer><Bloom mipmapBlur luminanceThreshold={0.9} /><Noise opacity={0.03} /><Vignette /></EffectComposer>`. Keep bloom selective; grain hides banding ([shaders.md](shaders.md)).
+**6. React-three-fiber**: `<Canvas camera={{ fov: 35 }} dpr={[1, 2]}>`, drei `<Environment>`, `<ContactShadows>`, `<Float>`, `<Text>` (troika SDF text), `<MeshTransmissionMaterial>`; `@react-three/postprocessing` `<EffectComposer><Bloom mipmapBlur luminanceThreshold={0.9} /><Noise opacity={0.03} /><Vignette /></EffectComposer>`. Keep bloom selective; grain hides banding ([shaders.md](shaders.md)). Plain HTML: `templates/threejs/post.js` (EffectComposer with bloom, Bokeh depth of field, a frame-seeded grain and a vignette, all driven by `t`).
 
 **7. Plain HTML with drei-vanilla** for `umd capture` and HyperFrames: same materials without React, e.g. `new MeshTransmissionMaterial({...})`, `new Sparkles({...})`, updated in `render(t)`.
 

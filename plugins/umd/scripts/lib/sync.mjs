@@ -3,6 +3,7 @@
 import { resolve, relative } from "node:path";
 import { spawnSync } from "node:child_process";
 import { FFMPEG, probe } from "./ffmpeg.mjs";
+import { shown } from "./ref.mjs";
 
 const HOP_S = 0.01; // 10 ms analysis frames
 const round = (x, n = 3) => Math.round(x * 10 ** n) / 10 ** n;
@@ -12,7 +13,7 @@ export function envelope(file, { cwd = process.cwd() } = {}) {
   const abs = resolve(cwd, file);
   const r = spawnSync(FFMPEG, ["-hide_banner", "-nostdin", "-v", "error", "-i", abs, "-map", "0:a:0", "-ac", "1", "-ar", "16000", "-f", "s16le", "-"], { maxBuffer: 1024 * 1024 * 1024 });
   if (r.error) throw new Error(r.error.code === "ENOENT" ? `${FFMPEG} not found. Run: node umd.mjs doctor` : r.error.message);
-  if (r.status !== 0) throw new Error(`No audio stream or ffmpeg error in ${relative(cwd, abs)}`);
+  if (r.status !== 0) throw new Error(`No audio stream or ffmpeg error in ${shown(cwd, abs)}`);
   const buf = r.stdout;
   const n = Math.floor(buf.length / 2);
   const hop = 160;
@@ -78,7 +79,7 @@ export function syncCues(file, cues, { cwd = process.cwd(), toleranceMs = 45, wi
     return { ...c, hit_at: best.t, offset_ms: off, offset_frames: round(off / (1000 / frame), 1), status: Math.abs(off) <= toleranceMs ? "ok" : "off" };
   });
   return {
-    file: relative(cwd, resolve(cwd, file)), fps: frame, tolerance_ms: toleranceMs, cues: rows.length,
+    file: shown(cwd, resolve(cwd, file)), fps: frame, tolerance_ms: toleranceMs, cues: rows.length,
     ok: rows.filter((r) => r.status === "ok").length, off: rows.filter((r) => r.status === "off").length, missing: rows.filter((r) => r.status === "missing").length,
     worst_ms: rows.reduce((w, r) => (r.offset_ms != null && Math.abs(r.offset_ms) > Math.abs(w) ? r.offset_ms : w), 0),
     rows, onsets_found: on.length,
@@ -102,6 +103,6 @@ export function finalHits(file, { cwd = process.cwd(), search = 20 } = {}) {
     i += 6;
   }
   const best = [...rows].sort((a, b) => b.drop_after_db - a.drop_after_db)[0] || null;
-  return { file: relative(cwd, resolve(cwd, file)), duration: round(env.length * HOP_S, 2), candidates: rows.slice(-12), likely_final_hit: best?.t ?? null,
+  return { file: shown(cwd, resolve(cwd, file)), duration: round(env.length * HOP_S, 2), candidates: rows.slice(-12), likely_final_hit: best?.t ?? null,
     note: "Listen to the last candidates before choosing: a ring-out can hold later attacks with bigger drops." };
 }

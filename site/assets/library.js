@@ -195,7 +195,9 @@
   const sub = (it) => [it.o === "opus" ? it.c : L("origin", it.o), it.d ? `${Math.round(it.d)} ${T().s}` : null, it.F[0] || null].filter(Boolean).join(" · ");
 
   function card(it) {
-    const img = it.p ? el("img", { src: media(it.p), alt: "", loading: "lazy", decoding: "async", width: 480, height: 270, onerror: (e) => e.target.replaceWith(ph(it)) }) : ph(it);
+    // no still but a clip: show the clip's first frames instead of a placeholder
+    const img = it.p ? el("img", { src: media(it.p), alt: "", loading: "lazy", decoding: "async", width: 480, height: 270, onerror: (e) => e.target.replaceWith(ph(it)) })
+      : it.v ? el("video", { src: `${media(it.v)}#t=0.5`, muted: true, playsinline: true, preload: "metadata", "aria-hidden": "true" }) : ph(it);
     const fig = el("div", { class: "lt-media" + (it.F[0] === "9:16" ? " tall" : "") }, img,
       el("span", { class: `lt-badge t${it.q}`, text: L("tier", String(it.q)) }),
       it.k !== "style" ? el("span", { class: "lt-kind", text: L("kind", it.k) }) : null);

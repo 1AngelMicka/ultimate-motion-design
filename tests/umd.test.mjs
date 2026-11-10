@@ -244,6 +244,40 @@ test("FFmpeg analysis of a synthetic clip", { skip: !hasFfmpeg() && "ffmpeg not 
   assert.ok(s.loudness.lufs < -5);
 });
 
+test("a slow push over a flat frame is not a freeze, a still frame is", { skip: !hasFfmpeg() && "ffmpeg not installed" }, () => {
+  const d = tmp();
+  const make = (name, vf) => spawnSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", "-f", "lavfi", "-i",
+    "color=c=0x202830:s=1280x720:r=30:d=4,drawbox=x=520:y=260:w=240:h=200:color=0x9aa4b0:t=fill", "-vf", vf, "-pix_fmt", "yuv420p", join(d, name)]);
+  make("push.mp4", "zoompan=z='1+0.0008*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:s=1280x720:fps=30");
+  make("still.mp4", "null");
+  const push = JSON.parse(umd(["analyze", join(d, "push.mp4"), "--out", join(d, "a1")], d).stdout);
+  const still = JSON.parse(umd(["analyze", join(d, "still.mp4"), "--out", join(d, "a2")], d).stdout);
+  assert.equal(push.freezes.length, 0, JSON.stringify(push.freezes));
+  assert.ok(still.freezes.some((x) => x.duration >= 3));
+  assert.ok(!Array.isArray(push.motion), "stdout gets a motion summary, the timeline stays on disk");
+  assert.ok(typeof push.motion.median === "number");
+  // a path outside the working folder is shown absolute, never as a chain of ..
+  const out = JSON.parse(umd(["analyze", join(d, "still.mp4"), "--out", join(d, "a3")], ROOT).stdout);
+  assert.ok(!out.full.startsWith(".."), out.full);
+});
+
+test("umd estimate times one frame and multiplies", () => {
+  const d = tmp();
+  const r = JSON.parse(umd(["estimate", "--frames", "100", "--", process.execPath, "-e", "setTimeout(() => {}, 300)"], d).stdout);
+  assert.equal(r.ok, true);
+  assert.ok(r.per_frame_s >= 0.3 && r.total_s >= 30, JSON.stringify(r));
+  assert.notEqual(umd(["estimate", "--frames", "10"], d).status, 0);
+});
+
+test("styles get writes into .motion/styles even before init; the npx bin exists", () => {
+  const d = tmp();
+  const id = JSON.parse(umd(["styles", "--source", "oscar", "--limit", "1"], d).stdout).results[0].id;
+  const r = JSON.parse(umd(["styles", "get", id], d).stdout);
+  assert.ok(r.file.replace(/\\/g, "/").startsWith(".motion/styles/"), r.file);
+  const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
+  assert.ok(readFileSync(join(ROOT, pkg.bin.umd), "utf8").startsWith("#!/usr/bin/env node"));
+});
+
 test("umd sync measures cues on a synthetic clip", { skip: !hasFfmpeg() && "ffmpeg not installed" }, () => {
   const dir = mkdtempSync(join(tmpdir(), "umd-sync-"));
   const f = join(dir, "beeps.mp4");

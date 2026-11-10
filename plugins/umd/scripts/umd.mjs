@@ -3,7 +3,7 @@
 //
 // Setup
 //   next                                The next step for this project (what /umd:go runs), from local files only
-//   doctor [--fix]                     Check FFmpeg, Playwright, Chromium and the route's tools; --fix installs what it safely can
+//   doctor [--fix] [--blender]         Check FFmpeg, Playwright, Chromium and the route's tools (--blender: Blender and the GPU Cycles sees); --fix installs what it safely can
 //   detect                              Guess engine, route and profile from the current folder
 //   init [--force]                      Create .motion/ (project.json, storyboard, tokens, assets lock) and BRIEF.md from templates
 //   rules [domain|group...]             Build rules of the domains that apply to this project (compact)
@@ -37,9 +37,10 @@
 //   deliver [--name n]                              Copy the audited render to deliverables/ (refused while a blocker is open)
 //   tokens [--days 30] [--session id] [--json]      Token use per /umd:* command, from the session transcripts
 //   run <label> "<command>"                         Run a command, keep the log on disk, print a compact summary
+//   estimate --frames N [--parallel P] -- <command rendering one frame>   Time one frame, multiply: render time before committing
 //   version                                         Plugin version
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, copyFileSync, statSync } from "node:fs";
-import { join, relative, resolve, extname, basename } from "node:path";
+import { join, relative, resolve, extname, basename, isAbsolute } from "node:path";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { loadReferential, loadProject, motionDir, projectFlags, applies, allDomains, thresholds, today, stamp, PLUGIN_ROOT } from "./lib/ref.mjs";
@@ -48,13 +49,18 @@ import { estimateTokens, recordSavings } from "./lib/run.mjs";
 
 const ref = loadReferential();
 const cwd = process.cwd();
+// a path to show: relative inside the project, absolute outside it (never ......AppData…)
+const rel = (p) => { const r = relative(cwd, p); return !r ? "." : r.startsWith("..") || isAbsolute(r) ? resolve(p) : r; };
 const argv = process.argv.slice(2);
 const cmd = argv.shift();
+// everything after a lone "--" is a command line for umd estimate, never parsed as options
+const dashdash = argv.indexOf("--");
+const tailCommand = dashdash >= 0 ? argv.splice(dashdash).slice(1) : [];
 const flags = new Set();
 const opts = {};
 const pos = [];
 // boolean flags never take a value, so `umd capture --draft page.html` keeps page.html as the input
-const BOOL = new Set(["allow-sa", "backtime", "cuts", "draft", "fix", "force", "incremental", "json", "no-analyze", "sheet", "transparent", "twice"]);
+const BOOL = new Set(["allow-sa", "backtime", "blender", "cuts", "draft", "fix", "force", "incremental", "json", "no-analyze", "sheet", "transparent", "twice"]);
 for (let i = 0; i < argv.length; i++) {
   const a = argv[i];
   if (a.startsWith("--")) {
@@ -96,11 +102,19 @@ function latestRender() {
   return existsSync(f) ? JSON.parse(readFileSync(f, "utf8")) : null;
 }
 
+// the per-second motion timeline stays in analysis.json; stdout gets its shape
+function motionSummary(m, th) {
+  if (!m?.timeline?.length) return null;
+  const t = [...m.timeline].sort((a, b) => a - b), floor = th?.motion_floor ?? 0.4;
+  const low = m.timeline.flatMap((v, i) => (v < floor ? [Math.round(i * m.bucket_s * 10) / 10] : []));
+  return { mean: m.mean, min: t[0], median: t[Math.floor(t.length / 2)], below_floor_s: Math.round(low.length * m.bucket_s * 10) / 10, below_floor_at: low.slice(0, 12) };
+}
+
 function analysisSummary(a) {
   if (!a) return null;
   return {
     file: a.file, duration: a.probe?.duration, size: a.probe?.width ? `${a.probe.width}x${a.probe.height}@${a.probe.fps}` : null,
-    scenes: a.scenes?.count, dead_air: a.dead_air, freezes: (a.freezes || []).filter((x) => x.duration >= 1), black: a.black,
+    scenes: a.scenes?.count, dead_air: a.dead_air, freezes: (a.freezes || []).filter((x) => x.duration >= 1), slow_moves: a.slow_moves?.length ? a.slow_moves : undefined, black: a.black,
     flashes_max_per_s: a.flashes?.max_per_s, stillness: a.stillness ? `${a.stillness.per_30s}s per 30 s, longest ${a.stillness.longest_s}s` : null, loudness: a.loudness ? { lufs: a.loudness.integrated, true_peak: a.loudness.true_peak, lra: a.loudness.lra } : null,
     abrupt_end: a.audio_end?.abrupt, motion_mean: a.motion?.mean, sheet: a.sheet ? `${a.sheet.file} (${a.sheet.layout}, times ${a.sheet.times.join(" ")})` : null,
   };
@@ -123,7 +137,7 @@ function changedSince(ms) {
       if (changed.length > 300) return;
       const p = join(dir, e.name);
       if (e.isDirectory()) { if (!skip.has(e.name)) rec(p); }
-      else if (e.isFile() && statSync(p).mtimeMs > ms && !/token-savings\.json$/.test(e.name)) changed.push(relative(cwd, p));
+      else if (e.isFile() && statSync(p).mtimeMs > ms && !/token-savings\.json$/.test(e.name)) changed.push(rel(p));
     }
   };
   rec(cwd);
@@ -181,7 +195,7 @@ async function evidence() {
   writeFileSync(join(dir, "parts", "auto.json"), JSON.stringify({ group: "auto", render: lr?.id || null, results }, null, 2));
   const counts = {};
   for (const r of Object.values(results)) counts[r.status] = (counts[r.status] || 0) + 1;
-  const summary = { date, out_dir: relative(cwd, dir), render: lr ? `${lr.output}${lr.draft ? " (draft)" : ""}` : null, auto_criteria: Object.keys(results).length, counts,
+  const summary = { date, out_dir: rel(dir), render: lr ? `${lr.output}${lr.draft ? " (draft)" : ""}` : null, auto_criteria: Object.keys(results).length, counts,
     not_passing: Object.entries(results).filter(([, r]) => r.status !== "pass").map(([id, r]) => `${id} ${r.status}: ${r.evidence}`.slice(0, 220)),
     sheet: ev.analysis?.sheet?.file || null, notes };
   compact("evidence-summary", { ...summary, evidence: ev }, summary, null);
@@ -236,7 +250,7 @@ function plan(scope, incremental) {
     }
     if (domains.length) groups.push({ group: g.group, label: g.label.en, domains });
   }
-  const result = { date, out_dir: relative(cwd, dir), umd_cli: fileURLToPath(import.meta.url), plugin_root: PLUGIN_ROOT, project: project.name, profile: project.profile,
+  const result = { date, out_dir: rel(dir), umd_cli: fileURLToPath(import.meta.url), plugin_root: PLUGIN_ROOT, project: project.name, profile: project.profile,
     language: project.language || "fr", flags: [...fl].sort(), mode, incremental: inc, audit_model: project.audit_model || "inherit",
     render: latestRender(), auto_decided: auto, criteria_for_auditors: count, groups };
   writeFileSync(join(dir, "plan.json"), JSON.stringify(result, null, 2));
@@ -250,7 +264,7 @@ function assemble() {
   const date = opt("date", today());
   const dir = join(auditsDir(), date);
   const partsDir = join(dir, "parts");
-  if (!existsSync(partsDir)) die(`No ${relative(cwd, partsDir)}: run umd evidence first.`);
+  if (!existsSync(partsDir)) die(`No ${rel(partsDir)}: run umd evidence first.`);
   const known = new Map(allDomains(ref).flatMap((d) => d.criteria.map((c) => [c.id, c])));
   const results = {};
   const warnings = [];
@@ -300,7 +314,7 @@ function assemble() {
   writeFileSync(join(auditsDir(), `${date}.report.json`), JSON.stringify(report, null, 2));
   out({ date, global: report.global, grade: report.global == null ? null : grade(report.global, ref, lang), global_capped: report.global_capped,
     previous_global: prevReport?.global ?? null, open_blockers: report.open_blockers, counts: report.counts, auto_checked: autoChecked, mode, carried_forward: carried,
-    token_savings: tokenSavings?.saved ?? null, warnings, report: relative(cwd, join(md, "AUDIT.md")),
+    token_savings: tokenSavings?.saved ?? null, warnings, report: rel(join(md, "AUDIT.md")),
     top_issues: report.issues.slice(0, 10).map((i) => ({ id: i.id, severity: i.severity, status: i.status, label: i.label[lang], fix: i.fix })) });
 }
 
@@ -330,7 +344,7 @@ function deliver() {
   try { const j = JSON.parse(readFileSync(lockF, "utf8")); lock = Array.isArray(j) ? j : j.assets || []; } catch { /* none */ }
   const credits = lock.filter((a) => a.attribution_required || /^cc-by/i.test(a.license || "")).map((a) => `${a.path} — ${a.author || "unknown author"} — ${a.license} — ${a.url || a.source}`);
   if (credits.length) writeFileSync(join(cwd, "deliverables", "credits.txt"), credits.join("\n") + "\n");
-  const manifest = { file: relative(cwd, dest), sha256: sha256(dest), render: lr.id, audit: report.date, score: report.global, profile: report.profile, delivered_at: new Date().toISOString(), credits: credits.length };
+  const manifest = { file: rel(dest), sha256: sha256(dest), render: lr.id, audit: report.date, score: report.global, profile: report.profile, delivered_at: new Date().toISOString(), credits: credits.length };
   writeFileSync(dest + ".manifest.json", JSON.stringify(manifest, null, 2));
   out(manifest);
 }
@@ -371,7 +385,7 @@ async function render() {
         ffOk(["-i", keep, "-i", resolve(cwd, r.audio), "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-af", "apad", "-t", String(vlen), "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart", muxed]);
         copyFileSync(muxed, keep);
       }
-      return { output: relative(cwd, keep), command: { exit_code: res.exit_code, duration_s: res.duration_s, log: res.log, signal_lines: res.signal_lines.slice(0, 8) } };
+      return { output: rel(keep), command: { exit_code: res.exit_code, duration_s: res.duration_s, log: res.log, signal_lines: res.signal_lines.slice(0, 8) } };
     }
     die('project.json has no "render": set render.capture {entry} or render.command + render.output (see the route reference).');
   };
@@ -398,7 +412,7 @@ async function render() {
   const posix = (x) => String(x).split("\\").join("/"); // portable between Windows, macOS and Linux
   info.output = posix(info.output);
   writeFileSync(join(dir, "render.json"), JSON.stringify(info, null, 2));
-  writeFileSync(join(md, "renders", "latest.json"), JSON.stringify({ id, dir: posix(relative(cwd, dir)), output: posix(a.output), draft, probe: info.probe || null }, null, 2));
+  writeFileSync(join(md, "renders", "latest.json"), JSON.stringify({ id, dir: posix(rel(dir)), output: posix(a.output), draft, probe: info.probe || null }, null, 2));
   out({ id, ok: true, output: a.output, seconds: info.seconds, page_errors: a.capture?.page_errors?.length ? a.capture.page_errors : undefined,
     determinism: determinism ? { identical: determinism.identical, ssim: determinism.ssim } : undefined, analysis: analysisSummary(analysis) });
 }
@@ -412,11 +426,11 @@ function initProject() {
   const created = [], kept = [];
   const name = basename(cwd);
   for (const [tpl, dest] of files) {
-    if (existsSync(dest) && !flags.has("force")) { kept.push(relative(cwd, dest)); continue; }
+    if (existsSync(dest) && !flags.has("force")) { kept.push(rel(dest)); continue; }
     let txt = readFileSync(join(PLUGIN_ROOT, "templates", tpl), "utf8").replaceAll("{{name}}", name);
     if (tpl === "project.json") { const j = JSON.parse(txt); j.name = name; txt = JSON.stringify(j, null, 2) + "\n"; }
     writeFileSync(dest, txt);
-    created.push(relative(cwd, dest));
+    created.push(rel(dest));
   }
   const gi = join(cwd, ".gitignore");
   const lines = [".motion/renders/", ".motion/audits/*/logs/", ".motion/token-savings.json"];
@@ -470,11 +484,12 @@ async function main() {
   switch (cmd) {
     case "doctor": {
       const { doctor } = await import("./lib/doctor.mjs");
-      const r = await doctor({ cwd, project: loadProject(cwd), fix: flags.has("fix") });
+      const r = await doctor({ cwd, project: loadProject(cwd), fix: flags.has("fix"), blender: flags.has("blender") });
       if (flags.has("json")) return out(r);
       return out({ ok: r.ok, os: r.os, ready: r.checks.filter((c) => c.ok).map((c) => c.name),
         missing: r.checks.filter((c) => !c.ok).map(({ name, optional, note, fix }) => ({ name, optional: !!optional, note: note || undefined, fix })),
-        fixed: r.fixed.length ? r.fixed : undefined, runtime_dir: r.runtime_dir });
+        fixed: r.fixed.length ? r.fixed : undefined, runtime_dir: r.runtime_dir,
+        blender: (({ ok, version, path, note } = {}) => (ok ? { version, path, note } : undefined))(r.checks.find((c) => c.name === "blender")) });
     }
     case "detect": return detect();
     case "init": return initProject();
@@ -499,7 +514,7 @@ async function main() {
       const p = loadProject(cwd);
       const dir = opt("out") ? resolve(cwd, opt("out")) : join(existsSync(md) ? join(md, "analysis") : join(cwd, "umd-analysis"), basename(pos[0]).replace(/\W+/g, "-"));
       const a = analyze(pos[0], { cwd, outDir: dir, thresholds: thresholds(p, ref) });
-      return compact("analysis-full", a, { ...analysisSummary(a), motion_timeline: a.motion?.timeline, full: relative(cwd, join(dir, "analysis.json")) }, null);
+      return compact("analysis-full", a, { ...analysisSummary(a), motion: motionSummary(a.motion, thresholds(p, ref)), full: rel(join(dir, "analysis.json")) }, null);
     }
     case "frames": {
       if (!pos[0]) die("Usage: umd frames <video> --at 1,2.5 | --every 2 [--out dir]");
@@ -510,7 +525,7 @@ async function main() {
         const cuts = (an(pos[0], { cwd, sheet: false }).scenes?.cuts || []).map((c) => c.t ?? c.time ?? c);
         return out(cutStrips(pos[0], { cwd, cuts, outDir: dir }));
       }
-      if (flags.has("sheet")) { const { probe } = await import("./lib/ffmpeg.mjs"); mkdirSync(dir, { recursive: true }); const s = contactSheet(resolve(cwd, pos[0]), probe(resolve(cwd, pos[0])), join(dir, "sheet.jpg")); return out({ ...s, file: relative(cwd, s.file) }); }
+      if (flags.has("sheet")) { const { probe } = await import("./lib/ffmpeg.mjs"); mkdirSync(dir, { recursive: true }); const s = contactSheet(resolve(cwd, pos[0]), probe(resolve(cwd, pos[0])), join(dir, "sheet.jpg")); return out({ ...s, file: rel(s.file) }); }
       return out(frames(pos[0], { cwd, at: list("at").map(Number), every: opt("every") ? Number(opt("every")) : null, outDir: dir, width: Number(opt("width", 960)) }));
     }
     case "sync": {
@@ -518,9 +533,9 @@ async function main() {
       const { parseCues, syncCues } = await import("./lib/sync.mjs");
       const p = loadProject(cwd);
       const sbf = resolve(cwd, opt("cues", join(".motion", "storyboard.md")));
-      if (!existsSync(sbf)) die(`No ${relative(cwd, sbf)}: list the cues under "## Sound cues" (one per line: "6.5s click: cursor press" or "f195 click").`);
+      if (!existsSync(sbf)) die(`No ${rel(sbf)}: list the cues under "## Sound cues" (one per line: "6.5s click: cursor press" or "f195 click").`);
       const cues = parseCues(readFileSync(sbf, "utf8"), p?.format?.fps || 30);
-      if (!cues.length) die(`No cue in ${relative(cwd, sbf)}: add a "## Sound cues" section (one per line: "6.5s click: cursor press").`);
+      if (!cues.length) die(`No cue in ${rel(sbf)}: add a "## Sound cues" section (one per line: "6.5s click: cursor press").`);
       return out(syncCues(pos[0], cues, { cwd, fps: p?.format?.fps, toleranceMs: Number(opt("tolerance-ms", thresholds(p, ref).sync_tolerance_ms ?? 45)) }));
     }
     case "moves": {
@@ -658,6 +673,20 @@ async function main() {
         `| **Total** | ${n(r.total.input)} | ${n(r.total.output)} | ${n(r.total.cache_write)} | ${n(r.total.cache_read)} | ${n(r.total.total)} | ${r.total.turns} |`, "",
         saved ? `Compact outputs avoided ~${n(saved.saved)} tokens over ${saved.commands} command(s).` : "",
         budget ? `Budget: ${n(budget)} tokens; used ${Math.round((r.total.total / budget) * 100)}%.` : "", r.note].filter((x) => x !== "").join("\n") + "\n");
+    }
+    case "estimate": {
+      // render one frame with the user's command, time it, multiply by the frame count (process start included: a ceiling)
+      const frames = Number(opt("frames"));
+      const command = tailCommand.length ? tailCommand.map((a) => (/\s/.test(a) ? `"${a}"` : a)).join(" ") : pos.join(" ");
+      if (!frames || !command) die('Usage: umd estimate --frames 570 [--parallel 1] -- <command that renders ONE frame>   (or the command as one quoted string)');
+      const { runCommand } = await import("./lib/run.mjs");
+      const r = runCommand("estimate", command, { cwd, logDir: join(existsSync(md) ? md : cwd, "logs"), timeoutMs: Number(opt("timeout", 1800)) * 1000 });
+      const par = Math.max(1, Number(opt("parallel", 1)));
+      const total = (r.duration_s * frames) / par;
+      const hm = (x) => (x >= 3600 ? `${Math.floor(x / 3600)} h ${Math.round((x % 3600) / 60)} min` : x >= 60 ? `${Math.round(x / 60)} min` : `${Math.round(x)} s`);
+      return out({ ok: r.exit_code === 0, per_frame_s: r.duration_s, frames, parallel: par, total_s: Math.round(total), total: hm(total),
+        note: r.exit_code === 0 ? "One process per frame, start-up included: a ceiling. Rendering all frames in one process (-a) is usually faster." : "The test frame failed: fix it before estimating (see the log).",
+        log: r.log, signal_lines: r.exit_code === 0 ? undefined : r.signal_lines?.slice(0, 8) });
     }
     case "run": {
       const { runCommand } = await import("./lib/run.mjs");

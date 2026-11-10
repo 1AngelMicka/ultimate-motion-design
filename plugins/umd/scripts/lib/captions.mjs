@@ -2,6 +2,7 @@
 // write ASS (karaoke / pop / line), SRT or VTT, and check a caption file against the reference words.
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve, relative, extname, dirname } from "node:path";
+import { shown } from "./ref.mjs";
 
 const clean = (w) => String(w || "").replace(/\s+/g, " ").trim();
 
@@ -91,7 +92,7 @@ export function makeCaptions(wordsFile, out, opts = {}) {
   mkdirSync(dirname(outAbs), { recursive: true });
   const ext = extname(outAbs).toLowerCase();
   writeFileSync(outAbs, ext === ".srt" ? toSrt(cues) : ext === ".vtt" ? toSrt(cues, true) : toAss(cues, opts));
-  return { output: relative(cwd, outAbs), words: words.length, cues: cues.length, style: opts.style || "karaoke" };
+  return { output: shown(cwd, outAbs), words: words.length, cues: cues.length, style: opts.style || "karaoke" };
 }
 
 const parseClock = (s) => { const m = s.trim().match(/(?:(\d+):)?(\d+):(\d+)[.,](\d+)/); if (!m) return NaN; const frac = m[4].length === 2 ? Number(m[4]) / 100 : Number(m[4]) / 1000; return Number(m[1] || 0) * 3600 + Number(m[2]) * 60 + Number(m[3]) + frac; };
@@ -146,7 +147,7 @@ export function checkCaptions(subsFile, wordsFile, { cwd = process.cwd() } = {})
   const refCount = words.filter((w) => normWord(w.word)).length;
   const cps = cues.map((c) => c.text.replace(/\s+/g, " ").length / Math.max(0.1, c.end - c.start));
   return {
-    subs: relative(cwd, resolve(cwd, subsFile)), cues: cues.length, reference_words: refCount,
+    subs: shown(cwd, resolve(cwd, subsFile)), cues: cues.length, reference_words: refCount,
     coverage: refCount ? Math.round((matched / refCount) * 1000) / 1000 : 0,
     max_offset_ms: offsets.length ? Math.round(Math.max(...offsets)) : null,
     mean_offset_ms: offsets.length ? Math.round(offsets.reduce((s, x) => s + x, 0) / offsets.length) : null,

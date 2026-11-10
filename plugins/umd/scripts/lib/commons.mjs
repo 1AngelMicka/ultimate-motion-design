@@ -2,6 +2,7 @@
 // .motion/assets.lock.json with its author, licence and page. Idea from Moh4696/cinematic-skill (MIT).
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, relative, extname } from "node:path";
+import { shown } from "./ref.mjs";
 
 const API = "https://commons.wikimedia.org/w/api.php";
 // Wikimedia asks automated clients for a descriptive User-Agent; this names the tool, not the user.
@@ -68,7 +69,7 @@ export async function getCommons(title, { cwd = process.cwd(), dir = "assets/com
   let lock = { assets: [] };
   if (existsSync(lockFile)) {
     try { lock = JSON.parse(readFileSync(lockFile, "utf8")); }
-    catch (e) { throw new Error(`${relative(cwd, lockFile)} is not valid JSON (${e.message}): fix it first, nothing was changed. The file was downloaded to ${rel}.`); }
+    catch (e) { throw new Error(`${shown(cwd, lockFile)} is not valid JSON (${e.message}): fix it first, nothing was changed. The file was downloaded to ${rel}.`); }
   }
   const list = Array.isArray(lock) ? lock : (lock.assets ||= []);
   const entry = { path: rel, source: "Wikimedia Commons", url: it.page, license: it.licence, author: it.author, credit_line: `${t.slice(5)} by ${it.author}, ${it.licence}, via Wikimedia Commons`, ...(it.class === "sa" ? { note: "share-alike: adaptations must use the same licence" } : {}) };
@@ -76,5 +77,5 @@ export async function getCommons(title, { cwd = process.cwd(), dir = "assets/com
   if (i >= 0) list[i] = entry; else list.push(entry);
   mkdirSync(join(cwd, ".motion"), { recursive: true });
   writeFileSync(lockFile, JSON.stringify(Array.isArray(lock) ? list : lock, null, 2) + "\n");
-  return { file: rel, bytes: buf.length, ...entry, lock: relative(cwd, lockFile) };
+  return { file: rel, bytes: buf.length, ...entry, lock: shown(cwd, lockFile) };
 }

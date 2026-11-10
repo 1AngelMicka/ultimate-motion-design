@@ -1,0 +1,12 @@
+{
+  "name": "ultimate-motion-design",
+  "version": "0.7.1",
+  "description": "The umd CLI of the Ultimate Motion Design plugin: deterministic HTML-to-video rendering, measures, audit, style library. Zero dependencies.",
+  "license": "MIT",
+  "private": true,
+  "bin": { "umd": "plugins/umd/scripts/umd.mjs" },
+  "files": ["plugins/umd/", "LICENSE", "README.en.md"],
+  "engines": { "node": ">=18" },
+  "repository": { "type": "git", "url": "git+https://github.com/1AngelMicka/ultimate-motion-design.git" },
+  "homepage": "https://1angelmicka.github.io/ultimate-motion-design/"
+}

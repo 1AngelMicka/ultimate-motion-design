@@ -50,6 +50,8 @@ ffmpeg -i ref.png -i .motion/stills/<still>.png -filter_complex "[0]scale=-2:720
 
 **6. Light like a set.** Environment map (`RoomEnvironment` + `PMREMGenerator`), one key light with shadows, a rim light, tone mapping set once and kept for stills and final.
 
+**6b. Finish in one module.** `${CLAUDE_PLUGIN_ROOT}/templates/threejs/post.js` adds bloom, a miniature depth of field, grain and vignette, all driven by `t` (grain seeded by the frame number, so two renders stay identical; checked with `templates/threejs/post-demo.html`). Call `post.render(t)` instead of `renderer.render(scene, camera)`, and `post.setFocus(d)` for a focus pull.
+
 **7. Characters**: eyes lead the body by 6–10 frames, idle breathing, blinks, nothing frozen on the last shot ([../recipes/narrative-short.md](../recipes/narrative-short.md)).
 
 ### The loop

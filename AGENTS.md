@@ -32,7 +32,7 @@ Slash commands can only be typed by the user. Pick one path:
 }
 ```
 
-Do not run `claude plugin …` from inside a running Claude Code session: nested sessions are refused.
+Do not run `claude plugin …` from inside a running Claude Code session: nested sessions are refused. For every project of the user, the same block goes in `~/.claude/settings.json` (ask first: it is their global configuration). The plugin loads at the next start; until then use the CLI directly (below): `npx github:1AngelMicka/ultimate-motion-design <command>` or `node <clone>/plugins/umd/scripts/umd.mjs <command>`.
 
 ## Prerequisites and check
 
@@ -51,7 +51,7 @@ Do not run `claude plugin …` from inside a running Claude Code session: nested
 
 ## Use without Claude Code (other agents)
 
-**The skill alone:** `skills/motion-design/` is a standalone skill (SKILL.md plus 52 reference guides, generated from the plugin by `tools/build.mjs`). Copy it into the agent's skills folder, or `npx skills add 1AngelMicka/ultimate-motion-design` and pick `motion-design`. It carries the method and the craft; the CLI below adds rendering, measures and the audit.
+**The skill alone:** `skills/motion-design/` is a standalone skill (SKILL.md plus 53 reference guides, generated from the plugin by `tools/build.mjs`). Copy it into the agent's skills folder, or `npx skills add 1AngelMicka/ultimate-motion-design` and pick `motion-design`. It carries the method and the craft; the CLI below adds rendering, measures and the audit.
 
 The engine is a zero-dependency Node CLI usable by any agent:
 

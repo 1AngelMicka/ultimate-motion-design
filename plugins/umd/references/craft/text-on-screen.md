@@ -78,6 +78,8 @@ Minimum sizes (conventions, check on a phone-size still; these are not platform 
 
 ## Pitfalls
 
+- **No outline on a variable font in canvas.** `strokeText` draws every contour of a variable font, including the overlapping ones inside the letters: they look broken (seen with Bricolage Grotesque). Fill only; for separation use a shadow (`shadowBlur`, `shadowColor`), a fill drawn twice with a small offset, or a plate behind the text. In CSS, `-webkit-text-stroke` has the same problem; `paint-order: stroke fill` hides part of it but not all. A static instance of the font (one weight) strokes cleanly.
+
 - Text animated in, then immediately animated out: viewers see motion, not words.
 - Long sentences on a single kinetic card to "match the voice": split, or let captions carry it.
 - Light grey on white, white on pastel gradients: fails contrast on most phones outdoors.

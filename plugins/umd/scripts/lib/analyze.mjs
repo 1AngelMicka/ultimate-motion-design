@@ -4,6 +4,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { ff, ffOk, probe } from "./ffmpeg.mjs";
+import { shown } from "./ref.mjs";
 
 const round = (x, d = 2) => (x == null || Number.isNaN(x) ? null : Math.round(x * 10 ** d) / 10 ** d);
 
@@ -168,17 +169,34 @@ export function contactSheet(file, info, outFile, n = 16) {
   return { file: outFile, layout: `${cols}x${rows}`, order: "row-major", times };
 }
 
+// freezedetect compares each frame with the next: a slow push over a large flat area changes so little per frame that
+// it reads as frozen. A real freeze ends where it started; a slow move does not. Compare the two ends of each segment.
+export function confirmFreezes(file, freezes, { maxPsnr = 40 } = {}) {
+  const frozen = [], slow = [];
+  for (const f of freezes.slice(0, 12)) {
+    const end = f.until_end ? f.end - 0.1 : f.end - 0.04;
+    const r = ff(['-hide_banner', '-nostdin', '-ss', String(f.start + 0.02), '-i', file, '-ss', String(Math.max(f.start + 0.05, end)), '-i', file, '-frames:v', '1',
+      '-lavfi', '[0:v]scale=320:-2,format=yuv420p[x];[1:v]scale=320:-2,format=yuv420p[y];[x][y]psnr', '-f', 'null', '-']);
+    const m = r.stderr.match(/average:(inf|[\d.]+)/);
+    const psnr = !m ? null : m[1] === 'inf' ? Infinity : Number(m[1]);
+    if (psnr != null && psnr < maxPsnr) slow.push({ ...f, ends_psnr_db: round(psnr, 1) }); else frozen.push(f);
+  }
+  return { frozen: [...frozen, ...freezes.slice(12)], slow };
+}
+
 export function analyze(file, { outDir, thresholds = {}, sheet = true, cwd = process.cwd() } = {}) {
   const abs = resolve(cwd, file);
   const info = probe(abs);
-  info.file = relative(cwd, abs);
+  info.file = shown(cwd, abs);
   const res = { file: info.file, probe: info };
   if (info.width) {
     const v = videoPass(abs, info);
     const bucket = 0.5;
     const timeline = motionTimeline(v.frames, bucket);
     res.scenes = { count: v.scenes.length, cuts: v.scenes.slice(0, 40) };
-    res.freezes = v.freezes;
+    const fz = confirmFreezes(abs, v.freezes, { maxPsnr: thresholds.freeze_psnr_db ?? 40 });
+    res.freezes = fz.frozen;
+    if (fz.slow.length) res.slow_moves = fz.slow; // near-identical neighbours but different ends: slow motion, not a freeze
     res.black = v.black;
     res.flashes = countFlashes(v.frames, thresholds.flash_delta ?? 0.1);
     res.motion = { bucket_s: bucket, timeline, mean: round(timeline.reduce((s, x) => s + x, 0) / (timeline.length || 1), 1) };
@@ -192,7 +210,7 @@ export function analyze(file, { outDir, thresholds = {}, sheet = true, cwd = pro
     mkdirSync(outDir, { recursive: true });
     if (sheet && info.width) {
       const s = contactSheet(abs, info, join(outDir, "sheet.jpg"));
-      res.sheet = { ...s, file: relative(cwd, s.file) };
+      res.sheet = { ...s, file: shown(cwd, s.file) };
       // long pieces: one extra 16-frame sheet per stretch, about one frame every 2.5 s overall (at most 4 sheets)
       if (info.duration > 40) {
         const count = Math.min(4, Math.ceil(info.duration / 40));
@@ -203,7 +221,7 @@ export function analyze(file, { outDir, thresholds = {}, sheet = true, cwd = pro
           const times = Array.from({ length: 16 }, (_, i) => round(k * span + (span * (i + 0.5)) / 16));
           const portrait = info.height > info.width, cols = portrait ? 8 : 4, cellW = Math.floor(1536 / cols / 2) * 2;
           ffOk(["-ss", String(round(k * span)), "-t", String(round(span)), "-i", abs, "-vf", `fps=16/${round(span)},scale=${cellW}:-2,tile=${cols}x${Math.ceil(16 / cols)}:padding=4:color=black`, "-frames:v", "1", "-q:v", "4", f]);
-          res.sheets.push({ file: relative(cwd, f), from: round(k * span), to: round((k + 1) * span), times });
+          res.sheets.push({ file: shown(cwd, f), from: round(k * span), to: round((k + 1) * span), times });
         }
       }
     }
@@ -222,9 +240,9 @@ export function frames(file, { at = [], every = null, outDir, cwd = process.cwd(
   for (const t of times) {
     const f = join(outDir, `frame-${String(t.toFixed(2)).replace(".", "_")}s.jpg`);
     ffOk(["-ss", String(t), "-i", abs, "-frames:v", "1", "-vf", `scale=${width}:-2`, "-q:v", "3", f]);
-    out.push({ t, file: relative(cwd, f) });
+    out.push({ t, file: shown(cwd, f) });
   }
-  return { video: relative(cwd, abs), frames: out };
+  return { video: shown(cwd, abs), frames: out };
 }
 
 // Dense frames around each cut: one strip per cut, 12 frames from 0.2 s before to 0.2 s after (text over text,
@@ -238,8 +256,8 @@ export function cutStrips(file, { cuts, outDir, cwd = process.cwd(), max = 12, w
   for (const t of list) {
     const f = join(outDir, `cut-${String(t.toFixed(2)).replace(".", "_")}s.jpg`);
     ffOk(["-ss", String(Math.max(0, t - 0.2)), "-t", "0.4", "-i", abs, "-vf", `fps=30,scale=${width}:-2,tile=6x2:padding=2:color=black`, "-frames:v", "1", "-q:v", "4", f]);
-    out.push({ cut: round(t), from: round(Math.max(0, t - 0.2)), to: round(t + 0.2), file: relative(cwd, f), layout: "6x2 row-major, 1/30 s apart" });
+    out.push({ cut: round(t), from: round(Math.max(0, t - 0.2)), to: round(t + 0.2), file: shown(cwd, f), layout: "6x2 row-major, 1/30 s apart" });
   }
-  return { video: relative(cwd, abs), strips: out, skipped: Math.max(0, (cuts || []).length - out.length) };
+  return { video: shown(cwd, abs), strips: out, skipped: Math.max(0, (cuts || []).length - out.length) };
 }
 

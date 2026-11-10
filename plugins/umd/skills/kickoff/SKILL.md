@@ -24,6 +24,7 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (written `umd` below). Refer
 - **What**: promo / product launch · presentation video · explainer · social short (9:16) · narrative animated short · logo animation · animated web page. → `profile`: promo, presentation, explainer, social, film, logo, web.
 - **Format and length**: platform(s), aspect (16:9, 9:16, 1:1, 4:5), target duration, sound on or off by default.
 - **Look**: references described in words (shot length, camera, how things enter, palette, type), brand assets available, and who picks the style from the library: "show me 3 options" (`style_choice: "ask"`, default) or "choose for me" (`"auto"`). Put the mood and medium words in BRIEF.md: `umd styles match` reads them.
+- **Characters on screen?** (people, mascots, animals). Say the cost: made in code (HTML, three.js, Blender scripts) they often look stiff and take the most rounds; a concept without characters (objects, hands, cursors, silhouettes, type) is safer. → `flags.has_characters`.
 - **Use and licences**: commercial? team size if Remotion is an option (free up to 3 employees, company licence above)? Voice-over? Music?
 - **Ambition** (only if unclear): professional (`quality_target` 7, fewer rounds), agency (8, default) or award level (9, more rounds and tokens).
 

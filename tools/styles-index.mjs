@@ -147,6 +147,39 @@ if (existsSync(op)) {
 
 // 4. HyperFrames registry: ready-made blocks and components, installable with one command
 const hfDir = join(HF_REPO, "registry");
+// Many registry items do not declare their preview, but the docs catalogue hosts one at a fixed address.
+// With --media: probe those addresses (cached in tools/hf-previews.json) and cut a 400 px poster from the clip
+// when no still is hosted (Apache-2.0 allows it; credited in THIRD_PARTY_NOTICES).
+const HF_CACHE = join(ROOT, "tools", "hf-previews.json");
+const hfPrev = existsSync(HF_CACHE) ? JSON.parse(readFileSync(HF_CACHE, "utf8")) : {};
+const HF_CDN = "https://static.heygen.ai/hyperframes-oss/docs/images/catalog";
+if (MEDIA && existsSync(hfDir)) {
+  const todo = [];
+  for (const type of ["examples", "blocks", "components"]) {
+    if (!existsSync(join(hfDir, type))) continue;
+    for (const n of readdirSync(join(hfDir, type))) {
+      const fi = join(hfDir, type, n, "registry-item.json");
+      if (!existsSync(fi)) continue;
+      const it = JSON.parse(readFileSync(fi, "utf8"));
+      if (!it.preview?.video && !hfPrev[n]?.video) todo.push([type, n]);
+    }
+  }
+  const ok = async (u) => (await fetch(u, { method: "HEAD", signal: AbortSignal.timeout(15000) }).catch(() => null))?.ok || false;
+  let i = 0;
+  await Promise.all(Array.from({ length: 4 }, async () => {
+    while (i < todo.length) {
+      const [type, n] = todo[i++];
+      const base = `${HF_CDN}/${type}/${n}`;
+      hfPrev[n] = { video: (await ok(base + ".mp4")) ? base + ".mp4" : null, poster: (await ok(base + ".png")) ? base + ".png" : null };
+    }
+  }));
+  writeFileSync(HF_CACHE, JSON.stringify(Object.fromEntries(Object.entries(hfPrev).sort()), null, 1) + "\n");
+  mkdirSync(join(LIB_OUT, "hf"), { recursive: true });
+  for (const [n, p] of Object.entries(hfPrev)) {
+    const out = join(LIB_OUT, "hf", `${n}.jpg`);
+    if (p.video && !p.poster && !existsSync(out)) for (const at of ["1.5", "0.2"]) { try { ff("-ss", at, "-i", p.video, "-frames:v", "1", "-vf", "scale=400:-2", "-q:v", "6", out); } catch { /* short clip: try earlier */ } if (existsSync(out)) break; } // a clip shorter than 1.5 s gives no frame at 1.5 s
+  }
+}
 if (existsSync(hfDir)) {
   for (const type of ["examples", "blocks", "components"]) {
     const d = join(hfDir, type);
@@ -155,6 +188,10 @@ if (existsSync(hfDir)) {
       const f = join(d, n, "registry-item.json");
       if (!existsSync(f)) continue;
       const it = JSON.parse(readFileSync(f, "utf8"));
+      const found = hfPrev[n] || {};
+      const video = it.preview?.video || found.video || null;
+      const localPoster = existsSync(join(LIB_OUT, "hf", `${n}.jpg`)) ? `${SITE}/assets/library/hf/${n}.jpg` : null;
+      const poster = it.preview?.poster || found.poster || localPoster;
       const tags = it.tags || [];
       if (tags.includes("transitions-dev-port")) continue; // transitions.dev terms: no repackaging
       const lic = it.license || "Apache-2.0";
@@ -167,7 +204,7 @@ if (existsSync(hfDir)) {
         install: `npx hyperframes add ${n}`,
         prompt_url: `https://raw.githubusercontent.com/heygen-com/hyperframes/${HF_SHA}/registry/${type}/${n}/registry-item.json`,
         preview_url: `https://github.com/heygen-com/hyperframes/tree/${HF_SHA}/registry/${type}/${n}`,
-        poster_url: it.preview?.poster || null, clip_url: it.preview?.video || null, film_url: it.preview?.video || null,
+        poster_url: poster, clip_url: video, film_url: video,
         licence: `${lic} (HyperFrames registry, HeyGen)`,
       });
     }

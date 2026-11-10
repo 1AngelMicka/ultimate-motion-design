@@ -119,7 +119,7 @@ Record every asset the moment it enters the project (path, source, URL, licence,
 | The six rules, 16 transition mechanisms and pacing of launch films | `${CLAUDE_PLUGIN_ROOT}/references/craft/motion-grammar.md` |
 | The 12 animation principles, timing tables | `${CLAUDE_PLUGIN_ROOT}/references/craft/principles.md`, `${CLAUDE_PLUGIN_ROOT}/references/craft/tokens.md` |
 | Layout, safe areas, camera; text on screen; AI tells | `${CLAUDE_PLUGIN_ROOT}/references/craft/composition.md`, `${CLAUDE_PLUGIN_ROOT}/references/craft/text-on-screen.md`, `${CLAUDE_PLUGIN_ROOT}/references/craft/anti-slop.md` |
-| A proven structure for a kind of piece | `${CLAUDE_PLUGIN_ROOT}/references/recipes/` (launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions, narrative-short, series, match-reference) |
+| A proven structure for a kind of piece | `${CLAUDE_PLUGIN_ROOT}/references/recipes/` (concepts, launch-video, product-demo, presentation-video, explainer-video, logo-sting, kinetic-typography, social-short, data-story, hero-section, page-transitions, scrollytelling, micro-interactions, narrative-short, series, match-reference) |
 | How to produce the whole piece in a route | `${CLAUDE_PLUGIN_ROOT}/references/routes/` (html-video, threejs-film, blender, director, web-page, explainer) |
 | An engine's API, patterns and determinism rules | `${CLAUDE_PLUGIN_ROOT}/references/engines/` (hyperframes, remotion, revideo, gsap, motion, css-waapi, scroll, threejs, shaders, lottie, rive, svg, canvas-2d, manim, blender, diagrams-code, effect-libraries) |
 | Voice, music and effects, mix, captions | `${CLAUDE_PLUGIN_ROOT}/references/audio/` |

@@ -156,7 +156,8 @@ export async function getStyle(id, { cwd = process.cwd() } = {}) {
         `Size ${e.size || "any"}, ${e.duration_s ? `${e.duration_s} s` : "any length"}. Preview: ${e.clip_url || e.preview_url}`].join("\n");
     }
   }
-  const dir = existsSync(join(cwd, ".motion")) ? join(cwd, ".motion", "styles") : join(cwd, "styles");
+  // always where the docs say, even before `umd init` (next.mjs keys on project.json, not on the folder)
+  const dir = join(cwd, ".motion", "styles");
   mkdirSync(dir, { recursive: true });
   const file = join(dir, `${id.replace(/[^a-z0-9-]+/gi, "-")}.md`);
   const credit = (CREDIT[e.source] || (() => e.licence))(e);

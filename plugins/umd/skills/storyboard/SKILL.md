@@ -13,6 +13,10 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). Talk in the project
 
 
 Naming a technique in the Motion column? `umd moves <words>` (no tokens) gives 120 named moves with one line each (match cut, whip pan, split-flap, cursor-led demo…); use their names so the critic and the user share the vocabulary.
+## 0a. Concept (when the brief has no idea of the film yet)
+
+If `BRIEF.md` has no `## Concept` and the brief does not fix one (a storyboard, a reference film to match, a set logo sting), follow `${CLAUDE_PLUGIN_ROOT}/references/recipes/concepts.md`: three concepts in the same table (idea, hero moment, thread, run-down tied to the voice timing, look from `umd styles match`, route and cost, risks), a recommendation in one line, and the user's choice recorded under `## Concept`. With `style_choice: "auto"`, take the recommended one and say why. Cost: one text answer, no images.
+
 ## 0. Style (before any beat)
 
 **Rule: never invent a look from a blank page when the library has one that fits.** If `project.json` has no `style` yet, choose it from the library before any beat (`${CLAUDE_PLUGIN_ROOT}/references/styles.md`). A strict brand system does not skip this step: it narrows it (keep the brand's colours and type, take the motion and composition from the style).

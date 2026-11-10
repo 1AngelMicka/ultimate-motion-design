@@ -1,0 +1,1242 @@
+{
+ "agent-cursor": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/agent-cursor.mp4",
+  "poster": null
+ },
+ "ai-answer-rank": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/ai-answer-rank.mp4",
+  "poster": null
+ },
+ "animated-bar-chart": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/animated-bar-chart.mp4",
+  "poster": null
+ },
+ "arc-motion-path": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/arc-motion-path.mp4",
+  "poster": null
+ },
+ "ascii-render-pass": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/ascii-render-pass.mp4",
+  "poster": null
+ },
+ "ascii-trail-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/ascii-trail-reveal.mp4",
+  "poster": null
+ },
+ "aurora-drift": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/aurora-drift.mp4",
+  "poster": null
+ },
+ "avatar-cloud": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/avatar-cloud.mp4",
+  "poster": null
+ },
+ "avatar-group-hover": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/avatar-group-hover.mp4",
+  "poster": null
+ },
+ "badge-pop": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/badge-pop.mp4",
+  "poster": null
+ },
+ "bar-chart-race": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/bar-chart-race.mp4",
+  "poster": null
+ },
+ "beat-accent": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/beat-accent.mp4",
+  "poster": null
+ },
+ "beat-freeze-cut": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/beat-freeze-cut.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/beat-freeze-cut.png"
+ },
+ "beat-pulse-background": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/beat-pulse-background.mp4",
+  "poster": null
+ },
+ "beat-timeline": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/beat-timeline.mp4",
+  "poster": null
+ },
+ "before-after-wipe": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/before-after-wipe.mp4",
+  "poster": null
+ },
+ "blur-in": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/blur-in.mp4",
+  "poster": null
+ },
+ "blur-out-up": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/blur-out-up.mp4",
+  "poster": null
+ },
+ "bottom-up-letters": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/bottom-up-letters.mp4",
+  "poster": null
+ },
+ "browser-device-stage": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/browser-device-stage.mp4",
+  "poster": null
+ },
+ "camera-dolly-zoom": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/camera-dolly-zoom.mp4",
+  "poster": null
+ },
+ "camera-rig-depth-stack": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/camera-rig-depth-stack.mp4",
+  "poster": null
+ },
+ "camera-scan-gate": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/camera-scan-gate.mp4",
+  "poster": null
+ },
+ "camera-shake": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/camera-shake.mp4",
+  "poster": null
+ },
+ "caption-blend-difference": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/caption-blend-difference.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/caption-blend-difference.png"
+ },
+ "caption-camera-follow": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/caption-camera-follow.mp4",
+  "poster": null
+ },
+ "card-resize": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/card-resize.mp4",
+  "poster": null
+ },
+ "caret-swap": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/caret-swap.mp4",
+  "poster": null
+ },
+ "carousel-circle-1": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-circle-1.mp4",
+  "poster": null
+ },
+ "carousel-circle-2": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-circle-2.mp4",
+  "poster": null
+ },
+ "carousel-circle-3": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-circle-3.mp4",
+  "poster": null
+ },
+ "carousel-circle-4": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-circle-4.mp4",
+  "poster": null
+ },
+ "carousel-circle-5": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-circle-5.mp4",
+  "poster": null
+ },
+ "carousel-orbit-1": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-orbit-1.mp4",
+  "poster": null
+ },
+ "carousel-orbit-2": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-orbit-2.mp4",
+  "poster": null
+ },
+ "carousel-orbit-3": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-orbit-3.mp4",
+  "poster": null
+ },
+ "carousel-orbit-4": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-orbit-4.mp4",
+  "poster": null
+ },
+ "carousel-orbit-5": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-orbit-5.mp4",
+  "poster": null
+ },
+ "carousel-path-1": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-path-1.mp4",
+  "poster": null
+ },
+ "carousel-path-2": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-path-2.mp4",
+  "poster": null
+ },
+ "carousel-path-3": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-path-3.mp4",
+  "poster": null
+ },
+ "carousel-path-4": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-path-4.mp4",
+  "poster": null
+ },
+ "carousel-path-5": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-path-5.mp4",
+  "poster": null
+ },
+ "carousel-text-circle-1": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-text-circle-1.mp4",
+  "poster": null
+ },
+ "carousel-text-circle-2": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-text-circle-2.mp4",
+  "poster": null
+ },
+ "carousel-text-circle-3": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-text-circle-3.mp4",
+  "poster": null
+ },
+ "carousel-text-circle-4": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-text-circle-4.mp4",
+  "poster": null
+ },
+ "carousel-text-circle-5": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-text-circle-5.mp4",
+  "poster": null
+ },
+ "carousel-vision-1": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-vision-1.mp4",
+  "poster": null
+ },
+ "carousel-vision-2": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-vision-2.mp4",
+  "poster": null
+ },
+ "carousel-vision-3": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-vision-3.mp4",
+  "poster": null
+ },
+ "carousel-vision-4": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-vision-4.mp4",
+  "poster": null
+ },
+ "carousel-vision-5": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/carousel-vision-5.mp4",
+  "poster": null
+ },
+ "char-slam-explode": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/char-slam-explode.mp4",
+  "poster": null
+ },
+ "chart-story": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/chart-story.mp4",
+  "poster": null
+ },
+ "chat-message": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/chat-message.mp4",
+  "poster": null
+ },
+ "chat-thread": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/chat-thread.mp4",
+  "poster": null
+ },
+ "chromatic-aberration-wipe": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/chromatic-aberration-wipe.mp4",
+  "poster": null
+ },
+ "cinemagraph": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/cinemagraph.mp4",
+  "poster": null
+ },
+ "code-snippet-dark-2026": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-snippet-dark-2026.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-snippet-dark-2026.png"
+ },
+ "code-snippet-dark-modern": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-snippet-dark-modern.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/code-snippet-dark-modern.png"
+ },
+ "code-terminal-run": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/code-terminal-run.mp4",
+  "poster": null
+ },
+ "colorama-wipe": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/colorama-wipe.mp4",
+  "poster": null
+ },
+ "comparison-split": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/comparison-split.mp4",
+  "poster": null
+ },
+ "confetti": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/confetti.mp4",
+  "poster": null
+ },
+ "conic-progress-ring": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/conic-progress-ring.mp4",
+  "poster": null
+ },
+ "constellation-hub": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/constellation-hub.mp4",
+  "poster": null
+ },
+ "cosmic-orb": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/cosmic-orb.mp4",
+  "poster": null
+ },
+ "count-up": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/count-up.mp4",
+  "poster": null
+ },
+ "cta-close": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/cta-close.mp4",
+  "poster": null
+ },
+ "cta-lockup": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/cta-lockup.mp4",
+  "poster": null
+ },
+ "cursor-annotate": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/cursor-annotate.mp4",
+  "poster": null
+ },
+ "cursor-context-menu": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/cursor-context-menu.mp4",
+  "poster": null
+ },
+ "cursor-drag-drop": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/cursor-drag-drop.mp4",
+  "poster": null
+ },
+ "cursor-glyph-trail": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/cursor-glyph-trail.mp4",
+  "poster": null
+ },
+ "cursor-marquee-select": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/cursor-marquee-select.mp4",
+  "poster": null
+ },
+ "cursor-text-select": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/cursor-text-select.mp4",
+  "poster": null
+ },
+ "cursor-zoom-follow": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/cursor-zoom-follow.mp4",
+  "poster": null
+ },
+ "curtain-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/curtain-reveal.mp4",
+  "poster": null
+ },
+ "cut-the-curve": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/cut-the-curve.mp4",
+  "poster": null
+ },
+ "dart-cursor": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/dart-cursor.mp4",
+  "poster": null
+ },
+ "decision-tree": {
+  "video": null,
+  "poster": null
+ },
+ "decline-chart": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/decline-chart.mp4",
+  "poster": null
+ },
+ "device-frame-stage": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/device-frame-stage.mp4",
+  "poster": null
+ },
+ "directional-wipe": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/directional-wipe.mp4",
+  "poster": null
+ },
+ "drift-hold": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/drift-hold.mp4",
+  "poster": null
+ },
+ "dynamic-grid": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/dynamic-grid.mp4",
+  "poster": null
+ },
+ "echo-smear": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/echo-smear.mp4",
+  "poster": null
+ },
+ "echo-trail": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/echo-trail.mp4",
+  "poster": null
+ },
+ "exploded-stack": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/exploded-stack.mp4",
+  "poster": null
+ },
+ "extended-keyframe": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/extended-keyframe.mp4",
+  "poster": null
+ },
+ "extruded-logo": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/extruded-logo.mp4",
+  "poster": null
+ },
+ "facet-morph": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/facet-morph.mp4",
+  "poster": null
+ },
+ "fade-through": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/fade-through.mp4",
+  "poster": null
+ },
+ "focus-blur-resolve": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/focus-blur-resolve.mp4",
+  "poster": null
+ },
+ "focus-rack": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/focus-rack.mp4",
+  "poster": null
+ },
+ "focus-swap": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/focus-swap.mp4",
+  "poster": null
+ },
+ "gallery-tunnel": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/gallery-tunnel.mp4",
+  "poster": null
+ },
+ "gesture-tap": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/gesture-tap.mp4",
+  "poster": null
+ },
+ "glass-hero": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/glass-hero.mp4",
+  "poster": null
+ },
+ "gloss-sweep": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/gloss-sweep.mp4",
+  "poster": null
+ },
+ "gooey-split": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/gooey-split.mp4",
+  "poster": null
+ },
+ "grade-split-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/grade-split-reveal.mp4",
+  "poster": null
+ },
+ "grain-field": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/grain-field.mp4",
+  "poster": null
+ },
+ "grain-overlay": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/grain-overlay.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/grain-overlay.png"
+ },
+ "grid-card-assemble": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/grid-card-assemble.mp4",
+  "poster": null
+ },
+ "grid-pixelate-wipe": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/grid-pixelate-wipe.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/grid-pixelate-wipe.png"
+ },
+ "halftone-dissolve": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/halftone-dissolve.mp4",
+  "poster": null
+ },
+ "halftone-field": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/halftone-field.mp4",
+  "poster": null
+ },
+ "headline-slam": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/headline-slam.mp4",
+  "poster": null
+ },
+ "hw-arrow": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/hw-arrow.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/hw-arrow.png"
+ },
+ "hw-boil": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/hw-boil.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/hw-boil.png"
+ },
+ "hw-box-label": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/hw-box-label.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/hw-box-label.png"
+ },
+ "hw-callout-circle": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/hw-callout-circle.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/hw-callout-circle.png"
+ },
+ "hw-frame": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-frame.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-frame.png"
+ },
+ "hw-path-text": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-path-text.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-path-text.png"
+ },
+ "hw-pipeline": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-pipeline.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-pipeline.png"
+ },
+ "hw-scribble-transition": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-scribble-transition.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-scribble-transition.png"
+ },
+ "hw-text-cloud": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-text-cloud.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-text-cloud.png"
+ },
+ "hw-title": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-title.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-title.png"
+ },
+ "hw-underline": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/hw-underline.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/hw-underline.png"
+ },
+ "hw-write-title": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/hw-write-title.mp4",
+  "poster": null
+ },
+ "icon-morph-beat": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/icon-morph-beat.mp4",
+  "poster": null
+ },
+ "icon-swap": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/icon-swap.mp4",
+  "poster": null
+ },
+ "ink-bleed-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/ink-bleed-reveal.mp4",
+  "poster": null
+ },
+ "inline-highlight": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/inline-highlight.mp4",
+  "poster": null
+ },
+ "input-feedback": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/input-feedback.mp4",
+  "poster": null
+ },
+ "iris-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/iris-reveal.mp4",
+  "poster": null
+ },
+ "keyframe-scrub-stack": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/keyframe-scrub-stack.mp4",
+  "poster": null
+ },
+ "kinetic-center-build": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/kinetic-center-build.mp4",
+  "poster": null
+ },
+ "kinetic-type": {
+  "video": null,
+  "poster": null
+ },
+ "kinetic-type-swap": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/kinetic-type-swap.mp4",
+  "poster": null
+ },
+ "light-sweep-pass": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/light-sweep-pass.mp4",
+  "poster": null
+ },
+ "line-by-line-slide": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/line-by-line-slide.mp4",
+  "poster": null
+ },
+ "line-swap": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/line-swap.mp4",
+  "poster": null
+ },
+ "locked-nucleus-orbit": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/locked-nucleus-orbit.mp4",
+  "poster": null
+ },
+ "logo-brand-close": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/logo-brand-close.mp4",
+  "poster": null
+ },
+ "logo-sting": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/logo-sting.mp4",
+  "poster": null
+ },
+ "logo-wall": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/logo-wall.mp4",
+  "poster": null
+ },
+ "lottie-character-walk": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lottie-character-walk.mp4",
+  "poster": null
+ },
+ "lower-third-bild": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lower-third-bild.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lower-third-bild.png"
+ },
+ "lt-accent-underline": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-accent-underline.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-accent-underline.png"
+ },
+ "lt-bold-block": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-bold-block.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-bold-block.png"
+ },
+ "lt-clean-bar": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-clean-bar.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-clean-bar.png"
+ },
+ "lt-color-block": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-color-block.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-color-block.png"
+ },
+ "lt-dark-card": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-dark-card.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-dark-card.png"
+ },
+ "lt-kicker-name": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-kicker-name.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-kicker-name.png"
+ },
+ "lt-mask-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-mask-reveal.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-mask-reveal.png"
+ },
+ "lt-neon-border": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-neon-border.mp4",
+  "poster": null
+ },
+ "lt-side-rule": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-side-rule.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-side-rule.png"
+ },
+ "lt-soft-pill": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-soft-pill.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-soft-pill.png"
+ },
+ "lt-stack-bars": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-stack-bars.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/lt-stack-bars.png"
+ },
+ "magnetic-cursor": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/magnetic-cursor.mp4",
+  "poster": null
+ },
+ "marker-checklist-card": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/marker-checklist-card.mp4",
+  "poster": null
+ },
+ "marker-highlight": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/marker-highlight.mp4",
+  "poster": null
+ },
+ "match-cut": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/match-cut.mp4",
+  "poster": null
+ },
+ "matrix-decode": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/matrix-decode.mp4",
+  "poster": null
+ },
+ "menu-morph": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/menu-morph.mp4",
+  "poster": null
+ },
+ "mesh-gradient-bg": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/mesh-gradient-bg.mp4",
+  "poster": null
+ },
+ "micro-transitions": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/micro-transitions.mp4",
+  "poster": null
+ },
+ "mk-background": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-background.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-background.png"
+ },
+ "mk-callout-highlight": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-callout-highlight.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-callout-highlight.png"
+ },
+ "mk-clone-wall-transition": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-clone-wall-transition.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-clone-wall-transition.png"
+ },
+ "mk-emphasis-type": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/mk-emphasis-type.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/mk-emphasis-type.png"
+ },
+ "mk-line-graph": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-line-graph.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-line-graph.png"
+ },
+ "mk-placeholder-grid": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-placeholder-grid.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-placeholder-grid.png"
+ },
+ "mk-progress-stat": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-progress-stat.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-progress-stat.png"
+ },
+ "mk-specs-list": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-specs-list.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/mk-specs-list.png"
+ },
+ "mk-usage-arc": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/mk-usage-arc.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/mk-usage-arc.png"
+ },
+ "modal-morph": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/modal-morph.mp4",
+  "poster": null
+ },
+ "morph-swap": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/morph-swap.mp4",
+  "poster": null
+ },
+ "motion-blur": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/motion-blur.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/motion-blur.png"
+ },
+ "multi-device-splay": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/multi-device-splay.mp4",
+  "poster": null
+ },
+ "multiplayer-cursors": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/multiplayer-cursors.mp4",
+  "poster": null
+ },
+ "native-notification-pop": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/native-notification-pop.mp4",
+  "poster": null
+ },
+ "news-ticker": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/news-ticker.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/news-ticker.png"
+ },
+ "notes-typing": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/notes-typing.mp4",
+  "poster": null
+ },
+ "notification-pileup": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/notification-pileup.mp4",
+  "poster": null
+ },
+ "notification-stack": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/notification-stack.mp4",
+  "poster": null
+ },
+ "number-pop-in": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/number-pop-in.mp4",
+  "poster": null
+ },
+ "number-wheel": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/number-wheel.mp4",
+  "poster": null
+ },
+ "nyt-graph": {
+  "video": null,
+  "poster": null
+ },
+ "offset-path-traveler": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/offset-path-traveler.mp4",
+  "poster": null
+ },
+ "onboarding-stepper-flow": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/onboarding-stepper-flow.mp4",
+  "poster": null
+ },
+ "ordered-dither-pass": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/ordered-dither-pass.mp4",
+  "poster": null
+ },
+ "outline-draw": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/outline-draw.mp4",
+  "poster": null
+ },
+ "oversized-cursor": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/oversized-cursor.mp4",
+  "poster": null
+ },
+ "overwhelm-surround": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/overwhelm-surround.mp4",
+  "poster": null
+ },
+ "page-slide": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/page-slide.mp4",
+  "poster": null
+ },
+ "pan-stations": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/pan-stations.mp4",
+  "poster": null
+ },
+ "panel-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/panel-reveal.mp4",
+  "poster": null
+ },
+ "paper-collage-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/paper-collage-reveal.mp4",
+  "poster": null
+ },
+ "parallax-device-dive": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/parallax-device-dive.mp4",
+  "poster": null
+ },
+ "parallax-unzoom": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/parallax-unzoom.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/parallax-unzoom.png"
+ },
+ "parallax-zoom": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/parallax-zoom.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/parallax-zoom.png"
+ },
+ "particle-image-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/particle-image-reveal.mp4",
+  "poster": null
+ },
+ "particle-text-dissolve": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/particle-text-dissolve.mp4",
+  "poster": null
+ },
+ "path-traced-3d": {
+  "video": null,
+  "poster": null
+ },
+ "pendulum-swing": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/pendulum-swing.mp4",
+  "poster": null
+ },
+ "per-word-crossfade": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/per-word-crossfade.mp4",
+  "poster": null
+ },
+ "per-word-rise": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/per-word-rise.mp4",
+  "poster": null
+ },
+ "perspective-marquee": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/perspective-marquee.mp4",
+  "poster": null
+ },
+ "physical-exit": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/physical-exit.mp4",
+  "poster": null
+ },
+ "play-mode": {
+  "video": null,
+  "poster": null
+ },
+ "press-ripple": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/press-ripple.mp4",
+  "poster": null
+ },
+ "product-promo": {
+  "video": null,
+  "poster": null
+ },
+ "product-turntable": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/product-turntable.mp4",
+  "poster": null
+ },
+ "pull-back-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/pull-back-reveal.mp4",
+  "poster": null
+ },
+ "pull-to-refresh": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/pull-to-refresh.mp4",
+  "poster": null
+ },
+ "push-in": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/push-in.mp4",
+  "poster": null
+ },
+ "rack-focus": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/rack-focus.mp4",
+  "poster": null
+ },
+ "radial-surround": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/radial-surround.mp4",
+  "poster": null
+ },
+ "rgb-glitch-text": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/rgb-glitch-text.mp4",
+  "poster": null
+ },
+ "rubber-band-bumper": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/rubber-band-bumper.mp4",
+  "poster": null
+ },
+ "scan-band": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/scan-band.mp4",
+  "poster": null
+ },
+ "scramble-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/scramble-reveal.mp4",
+  "poster": null
+ },
+ "screen-flow-carousel": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/screen-flow-carousel.mp4",
+  "poster": null
+ },
+ "scroll-camera-story": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/scroll-camera-story.mp4",
+  "poster": null
+ },
+ "scroll-feed": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/scroll-feed.mp4",
+  "poster": null
+ },
+ "segmentation-flood": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/segmentation-flood.mp4",
+  "poster": null
+ },
+ "separator": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/separator.mp4",
+  "poster": null
+ },
+ "settings-toggle-flow": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/settings-toggle-flow.mp4",
+  "poster": null
+ },
+ "shared-axis-y": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/shared-axis-y.mp4",
+  "poster": null
+ },
+ "shared-axis-z": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/shared-axis-z.mp4",
+  "poster": null
+ },
+ "sheet-spring-up": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/sheet-spring-up.mp4",
+  "poster": null
+ },
+ "shimmer-sweep": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/shimmer-sweep.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/shimmer-sweep.png"
+ },
+ "shutter-slam": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/shutter-slam.mp4",
+  "poster": null
+ },
+ "signup-flow": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/signup-flow.mp4",
+  "poster": null
+ },
+ "skeleton-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/skeleton-reveal.mp4",
+  "poster": null
+ },
+ "slit-scan-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/slit-scan-reveal.mp4",
+  "poster": null
+ },
+ "slot-machine-roll": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/slot-machine-roll.mp4",
+  "poster": null
+ },
+ "social-proof-card": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/social-proof-card.mp4",
+  "poster": null
+ },
+ "soft-blob-touch": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/soft-blob-touch.mp4",
+  "poster": null
+ },
+ "soft-blur-in": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/soft-blur-in.mp4",
+  "poster": null
+ },
+ "spiral-galaxy": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/spiral-galaxy.mp4",
+  "poster": null
+ },
+ "split-flap-board": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/split-flap-board.mp4",
+  "poster": null
+ },
+ "split-tilt-cards": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/split-tilt-cards.mp4",
+  "poster": null
+ },
+ "spotlight-card": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/spotlight-card.mp4",
+  "poster": null
+ },
+ "spring-pop": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/spring-pop.mp4",
+  "poster": null
+ },
+ "spring-stack-shuffle": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/spring-stack-shuffle.mp4",
+  "poster": null
+ },
+ "stagger-cascade": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/stagger-cascade.mp4",
+  "poster": null
+ },
+ "stagger-lattice": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/stagger-lattice.mp4",
+  "poster": null
+ },
+ "staggered-fade-up": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/staggered-fade-up.mp4",
+  "poster": null
+ },
+ "star-rating-fill": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/star-rating-fill.mp4",
+  "poster": null
+ },
+ "state-chip-rail": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/state-chip-rail.mp4",
+  "poster": null
+ },
+ "sticky-mock-swap": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/sticky-mock-swap.mp4",
+  "poster": null
+ },
+ "stitched-text-draw": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/stitched-text-draw.mp4",
+  "poster": null
+ },
+ "stop-motion-cadence": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/stop-motion-cadence.mp4",
+  "poster": null
+ },
+ "store-badge-lockup": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/store-badge-lockup.mp4",
+  "poster": null
+ },
+ "streaming-text": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/streaming-text.mp4",
+  "poster": null
+ },
+ "strikethrough-replace": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/strikethrough-replace.mp4",
+  "poster": null
+ },
+ "success-check": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/success-check.mp4",
+  "poster": null
+ },
+ "svg-line-draw-loader": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/svg-line-draw-loader.mp4",
+  "poster": null
+ },
+ "svg-mask-reveal": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/svg-mask-reveal.mp4",
+  "poster": null
+ },
+ "svg-stroke-trace": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/svg-stroke-trace.mp4",
+  "poster": null
+ },
+ "swipe-rail": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/swipe-rail.mp4",
+  "poster": null
+ },
+ "swiss-grid": {
+  "video": null,
+  "poster": null
+ },
+ "tabs-slide-indicator": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/tabs-slide-indicator.mp4",
+  "poster": null
+ },
+ "telemetry-hud": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/telemetry-hud.mp4",
+  "poster": null
+ },
+ "terminal-simulator": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/terminal-simulator.mp4",
+  "poster": null
+ },
+ "testimonial-card": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/testimonial-card.mp4",
+  "poster": null
+ },
+ "testimonial-proof-card": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/testimonial-proof-card.mp4",
+  "poster": null
+ },
+ "text-match-cut": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/text-match-cut.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/text-match-cut.png"
+ },
+ "text-shimmer": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/text-shimmer.mp4",
+  "poster": null
+ },
+ "text-stagger": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/text-stagger.mp4",
+  "poster": null
+ },
+ "text-state-swap": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/text-state-swap.mp4",
+  "poster": null
+ },
+ "texture-mask-text": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/texture-mask-text.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/texture-mask-text.png"
+ },
+ "thread-message-stack": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/thread-message-stack.mp4",
+  "poster": null
+ },
+ "three-orbiting-cards": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/three-orbiting-cards.mp4",
+  "poster": null
+ },
+ "ticker-takeover": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/ticker-takeover.mp4",
+  "poster": null
+ },
+ "tilt-card": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/tilt-card.mp4",
+  "poster": null
+ },
+ "titlecard-calm": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/titlecard-calm.mp4",
+  "poster": null
+ },
+ "titlecard-lockup": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/titlecard-lockup.mp4",
+  "poster": null
+ },
+ "toggle-flip": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/toggle-flip.mp4",
+  "poster": null
+ },
+ "top-down-letters": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/top-down-letters.mp4",
+  "poster": null
+ },
+ "torn-paper-rip": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/torn-paper-rip.mp4",
+  "poster": null
+ },
+ "touch-indicator": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/touch-indicator.mp4",
+  "poster": null
+ },
+ "tracing-beam": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/tracing-beam.mp4",
+  "poster": null
+ },
+ "tracking-in": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/tracking-in.mp4",
+  "poster": null
+ },
+ "trust-strip": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/trust-strip.mp4",
+  "poster": null
+ },
+ "type-match-cut": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/type-match-cut.mp4",
+  "poster": null
+ },
+ "typed-prompt": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/typed-prompt.mp4",
+  "poster": null
+ },
+ "typewriter": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/typewriter.mp4",
+  "poster": null
+ },
+ "typing-indicator": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/typing-indicator.mp4",
+  "poster": null
+ },
+ "ui-focus-zoom": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/ui-focus-zoom.mp4",
+  "poster": null
+ },
+ "variable-axis-type": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/variable-axis-type.mp4",
+  "poster": null
+ },
+ "variable-font-flex": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/variable-font-flex.mp4",
+  "poster": null
+ },
+ "vector-editor-rig": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/vector-editor-rig.mp4",
+  "poster": null
+ },
+ "velocity-throw-snap": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/velocity-throw-snap.mp4",
+  "poster": null
+ },
+ "vfx-anamorphic-flare": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/vfx-anamorphic-flare.mp4",
+  "poster": null
+ },
+ "vignelli": {
+  "video": null,
+  "poster": null
+ },
+ "vignette": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/vignette.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/vignette.png"
+ },
+ "vox-annotate": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/vox-annotate.mp4",
+  "poster": null
+ },
+ "warm-grain": {
+  "video": null,
+  "poster": null
+ },
+ "week-in-merges": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/week-in-merges.mp4",
+  "poster": null
+ },
+ "weight-wave": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/weight-wave.mp4",
+  "poster": null
+ },
+ "whip-pan-cut": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/whip-pan-cut.mp4",
+  "poster": null
+ },
+ "whiteboard-ink": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/whiteboard-ink.mp4",
+  "poster": null
+ },
+ "wordmark-tiles": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/wordmark-tiles.mp4",
+  "poster": null
+ },
+ "x-follow-card": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/x-follow-card.mp4",
+  "poster": null
+ },
+ "yt-camera-move": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/yt-camera-move.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/yt-camera-move.png"
+ },
+ "yt-circle-pointer": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/yt-circle-pointer.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/yt-circle-pointer.png"
+ },
+ "yt-comment-card": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/yt-comment-card.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/yt-comment-card.png"
+ },
+ "yt-feather-highlight": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/yt-feather-highlight.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/yt-feather-highlight.png"
+ },
+ "yt-lcd-background": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/yt-lcd-background.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/yt-lcd-background.png"
+ },
+ "yt-logo-intro": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/yt-logo-intro.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/yt-logo-intro.png"
+ },
+ "yt-prism-title": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/yt-prism-title.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/yt-prism-title.png"
+ },
+ "yt-screen-warp": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/yt-screen-warp.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/yt-screen-warp.png"
+ },
+ "yt-vertical-fill": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/yt-vertical-fill.mp4",
+  "poster": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/blocks/yt-vertical-fill.png"
+ },
+ "zoom-through-transition": {
+  "video": "https://static.heygen.ai/hyperframes-oss/docs/images/catalog/components/zoom-through-transition.mp4",
+  "poster": null
+ }
+}
