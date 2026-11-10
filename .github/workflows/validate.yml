@@ -16,5 +16,7 @@ jobs:
         run: node plugins/umd/scripts/umd.mjs doctor --fix
       - name: Referential is valid and generated files are committed
         run: node tools/build.mjs --check
+      - name: Documentation site builds
+        run: node tools/site.mjs
       - name: Tests
         run: node --test tests/

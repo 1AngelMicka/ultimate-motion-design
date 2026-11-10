@@ -1,0 +1,28 @@
+# Ultimate Motion Design
+
+> Claude Code plugin (`umd`) to make and audit high-end motion design: promo, presentation, explainer and social videos, logo animations, animated films, animated web pages and 3D. Deterministic HTML-to-video rendering, 58 quality checks scored out of 10 with evidence, licence guard, token report. One command: `/umd:go`. MIT, no telemetry, French and English.
+
+Install in Claude Code: `/plugin marketplace add 1AngelMicka/ultimate-motion-design` then `/plugin install umd@ultimate-motion-design`, restart, then `/umd:doctor`. Agents installing it for a user should read AGENTS.md first.
+
+## For agents
+
+- [AGENTS.md](https://github.com/1AngelMicka/ultimate-motion-design/blob/main/AGENTS.md): how to install, check and guide a user, and how to use the CLI without Claude Code
+- [llms-full.txt](https://1angelmicka.github.io/ultimate-motion-design/llms-full.txt): the whole documentation in one file
+
+## Docs
+
+- [Install](https://1angelmicka.github.io/ultimate-motion-design/en/installation.html): requirements, team install, update, uninstall
+- [First project](https://1angelmicka.github.io/ultimate-motion-design/en/premier-projet.html): from `/umd:go` to a delivered video
+- [Commands](https://1angelmicka.github.io/ultimate-motion-design/en/commandes.html): every command, its arguments, the `umd` CLI and the files it creates
+- [Routes and tech](https://1angelmicka.github.io/ultimate-motion-design/en/routes.html): routes, recipes, engines and every guide
+- [Quality checks](https://1angelmicka.github.io/ultimate-motion-design/en/qualite.html): the 12 domains, 58 checks, profiles, thresholds and scoring
+- [Licences](https://1angelmicka.github.io/ultimate-motion-design/en/licences.html): policy, install guard, known traps
+- [Token economy](https://1angelmicka.github.io/ultimate-motion-design/en/tokens.html): what is loaded, what is measured in code, `/umd:tokens`
+- [Troubleshooting](https://1angelmicka.github.io/ultimate-motion-design/en/depannage.html)
+
+## Source
+
+- [Repository](https://github.com/1AngelMicka/ultimate-motion-design)
+- [Referential (JSON)](https://github.com/1AngelMicka/ultimate-motion-design/tree/main/plugins/umd/referential)
+- [Skills (the steps)](https://github.com/1AngelMicka/ultimate-motion-design/tree/main/plugins/umd/skills)
+- [References (routes, recipes, engines)](https://github.com/1AngelMicka/ultimate-motion-design/tree/main/plugins/umd/references)

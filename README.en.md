@@ -1,6 +1,6 @@
 # Ultimate Motion Design
 
-[Français](README.md) · **English**
+[Français](README.md) · **English** · **[Documentation](https://1angelmicka.github.io/ultimate-motion-design/en/)** · [For AI agents](AGENTS.md)
 
 A plugin for [Claude Code](https://claude.com/claude-code) that makes Claude produce high-end motion design, then checks it frame by frame before delivering it. It covers:
 
@@ -34,6 +34,14 @@ What it brings:
 - **Free, open source, no telemetry**, in French and English.
 
 ## How it works
+
+**One command to remember: `/umd:go`.** It looks at where your project stands and runs the next step, then chains on its own until the next decision that is yours: approving the look, accepting a licence exception, delivering.
+
+```
+/umd:go a 30-second launch video for our app, 16:9
+```
+
+Under the hood it follows these steps, which you can also run one by one:
 
 ```
 /umd:kickoff → /umd:storyboard → /umd:build → /umd:render → /umd:audit → /umd:fix → /umd:deliver
@@ -77,8 +85,10 @@ It checks Node, FFmpeg and the filters it needs, Playwright and Chromium, and yo
 **3. Start your first project:**
 
 ```
-/umd:kickoff a 30-second launch video for our app, 16:9
+/umd:go a 30-second launch video for our app, 16:9
 ```
+
+Then just type `/umd:go` each time to carry on.
 
 **4. Optional, depending on your route:** the useful official skills and MCP servers. See [Companion tools](#companion-tools); `/umd:kickoff` suggests the ones that fit your project.
 
@@ -112,8 +122,11 @@ Your project keeps its `.motion/` folder and deliverables; delete them if you no
 
 ## Commands
 
+`/umd:go` is all you need day to day. The other commands drive one specific step.
+
 | Command | For |
 | --- | --- |
+| `/umd:go [what you want to make]` | **The command to remember.** Runs the next step and chains until the next decision. `/umd:go audit`, `/umd:go deliver`… forces a step |
 | `/umd:kickoff [what you want to make]` | Set up or update the project: brief, profile, format, route, engine, licence policy, tools |
 | `/umd:storyboard [notes]` | Write the beats and validate the look on stills before animating |
 | `/umd:build [beats or notes]` | Build the piece, with drafts reviewed over up to 3 rounds |
@@ -230,7 +243,7 @@ The plugin cuts tokens in three places:
 
 | Mechanism | Effect |
 | --- | --- |
-| **Almost nothing loaded at all times** | About 250 tokens loaded at all times: the description of the `motion` skill and those of the two agents. The ten `/umd:*` commands cost nothing until you run them. In a umd project, the startup hook adds about 150 tokens of context. |
+| **Almost nothing loaded at all times** | About 250 tokens loaded at all times: the description of the `motion` skill and those of the two agents. The eleven `/umd:*` commands cost nothing until you run them. In a umd project, the startup hook adds about 150 tokens of context. |
 | **References on demand** | 49 guides of 1,200 to 2,100 tokens each, read one at a time, only when needed: for example the project's route, then its engine's guide. |
 | **Checks done in code** | 27 of the 58 checks are decided by the CLI from FFmpeg measures, lint, licences and browser tests. The auditors only look at what needs eyes. |
 | **Contact sheet** | Each render produces a 16-frame sheet: a single image to read. Claude then extracts only 2 to 6 targeted frames if a doubt remains. |

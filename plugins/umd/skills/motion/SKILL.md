@@ -22,6 +22,8 @@ description: "Craft rules and reference index for motion design work: use when c
 
 `umd rules [domain]` prints the project's build rules per quality domain in its language.
 
+**Plain-words requests.** When the user asks, without a command, to make, continue, check or deliver a whole motion piece ("fais-moi une vidéo de lancement", "on continue la vidéo", "vérifie la vidéo"), read `${CLAUDE_PLUGIN_ROOT}/skills/go/SKILL.md` and follow it with their words as arguments, exactly as if they had typed `/umd:go`.
+
 ## Where to look
 
 | Need | Read |

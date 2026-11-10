@@ -1,6 +1,6 @@
 # Ultimate Motion Design
 
-**Français** · [English](README.en.md)
+**Français** · [English](README.en.md) · **[Documentation](https://1angelmicka.github.io/ultimate-motion-design/)** · [Pour les agents IA](AGENTS.md)
 
 Un plugin pour [Claude Code](https://claude.com/claude-code) qui fait produire à Claude du motion design de très haute qualité, puis le vérifie image par image avant de le livrer. Il couvre :
 
@@ -34,6 +34,14 @@ Ses points forts :
 - **Gratuit, open source, sans télémétrie**, en français et en anglais.
 
 ## Le principe
+
+**Une seule commande à retenir : `/umd:go`.** Elle regarde où en est ton projet et lance l'étape suivante, puis enchaîne toute seule jusqu'à la prochaine décision qui t'appartient : valider le look, accepter une exception de licence, livrer.
+
+```
+/umd:go une vidéo de lancement de 30 s pour notre app, format 16:9
+```
+
+Sous le capot, elle suit ces étapes, que tu peux aussi lancer une par une :
 
 ```
 /umd:kickoff → /umd:storyboard → /umd:build → /umd:render → /umd:audit → /umd:fix → /umd:deliver
@@ -77,8 +85,10 @@ Il vérifie Node, FFmpeg et les filtres dont il a besoin, Playwright et Chromium
 **3. Lance ton premier projet :**
 
 ```
-/umd:kickoff une vidéo de lancement de 30 s pour notre app, format 16:9
+/umd:go une vidéo de lancement de 30 s pour notre app, format 16:9
 ```
+
+Ensuite, tape simplement `/umd:go` à chaque fois pour continuer.
 
 **4. Facultatif, selon ta route :** les skills officiels et serveurs MCP utiles. Voir [Outils compagnons](#outils-compagnons) ; `/umd:kickoff` propose ceux qui servent à ton projet.
 
@@ -112,8 +122,11 @@ Ton projet garde son dossier `.motion/` et ses livrables ; supprime-les si tu n'
 
 ## Commandes
 
+`/umd:go` suffit au quotidien. Les autres commandes servent à piloter une étape précise.
+
 | Commande | Pour |
 | --- | --- |
+| `/umd:go [ce que tu veux faire]` | **La commande à retenir.** Lance l'étape suivante et enchaîne jusqu'à la prochaine décision. `/umd:go audit`, `/umd:go livrer`… force une étape |
 | `/umd:kickoff [ce que tu veux faire]` | Configurer ou mettre à jour le projet : brief, profil, format, route, moteur, politique de licences, outils |
 | `/umd:storyboard [notes]` | Écrire le découpage et valider le look sur images fixes avant d'animer |
 | `/umd:build [beats ou notes]` | Construire la pièce, avec des brouillons relus jusqu'à 3 tours |
@@ -230,7 +243,7 @@ Le plugin réduit les tokens à trois endroits :
 
 | Mécanisme | Effet |
 | --- | --- |
-| **Presque rien en permanence** | Environ 250 tokens chargés en permanence : la description du skill `motion` et celles des deux agents. Les dix commandes `/umd:*` ne coûtent rien tant qu'on ne les lance pas. Dans un projet umd, le hook de démarrage ajoute environ 150 tokens de contexte. |
+| **Presque rien en permanence** | Environ 250 tokens chargés en permanence : la description du skill `motion` et celles des deux agents. Les onze commandes `/umd:*` ne coûtent rien tant qu'on ne les lance pas. Dans un projet umd, le hook de démarrage ajoute environ 150 tokens de contexte. |
 | **Références à la demande** | 49 guides de 1 200 à 2 100 tokens chacun, lus un par un, seulement quand ils servent : par exemple la route du projet, puis le guide de son moteur. |
 | **Vérifications faites par le code** | 27 vérifications sur 58 sont décidées par la CLI à partir des mesures FFmpeg, du lint, des licences et des tests navigateur. Les auditeurs ne regardent que ce qui demande un œil. |
 | **Planche contact** | Chaque rendu produit une planche de 16 images, soit une seule image à lire. Claude n'extrait ensuite que 2 à 6 images ciblées si un doute reste. |

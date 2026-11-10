@@ -10,7 +10,7 @@ Thanks for helping. Everything runs on Node 18+ with no dependencies; FFmpeg and
    - references: `plugins/umd/references/**` following [tools/REFERENCE_GUIDE.md](tools/REFERENCE_GUIDE.md) (English, 60–140 lines, verified facts only);
    - CLI: `plugins/umd/scripts/`.
 2. `node tools/build.mjs` validates the referential and regenerates `docs/` and the versions (from `VERSION`).
-3. `node --test tests/` must pass.
+3. `node --test tests/` must pass, and `node tools/site.mjs` must build the documentation site (`_site/`, not committed; GitHub Actions publishes it).
 4. New automatic criterion: add its check in `scripts/lib/autocheck.mjs` (the build fails otherwise) and a test.
 
 ## Principles

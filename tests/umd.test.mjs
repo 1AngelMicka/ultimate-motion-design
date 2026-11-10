@@ -119,6 +119,18 @@ test("autocheck decides auto criteria from evidence", () => {
   assert.equal(r["REN-01"].status, "unknown");
 });
 
+test("next step follows the project state", () => {
+  const d = tmp();
+  const step = () => JSON.parse(umd(["next"], d).stdout).step;
+  umd(["init"], d);
+  if (!JSON.parse(umd(["next"], d).stdout).state.tools.ffmpeg) return; // doctor first on machines without FFmpeg
+  assert.equal(step(), "kickoff");
+  writeFileSync(join(d, "BRIEF.md"), "# Brief\n\n## Goal\nA short clip for the docs, three words over a knot.\n");
+  assert.equal(step(), "storyboard");
+  writeFileSync(join(d, ".motion", "storyboard.md"), "| # | Time | Shot | On-screen text | Motion | Sound | Intent |\n|---|---|---|---|---|---|---|\n| 1 | 0-2s | a | Hi | in | - | joy |\nStills validated 2026-11-10\n");
+  assert.equal(step(), "build");
+});
+
 test("CLI: init, rules, deliver refused without audit", () => {
   const d = tmp();
   assert.equal(umd(["init"], d).status, 0);

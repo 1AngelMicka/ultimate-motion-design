@@ -2,7 +2,8 @@
 // Ultimate Motion Design CLI. Zero dependencies, Node 18+. Needs FFmpeg; Playwright for HTML capture and web checks.
 //
 // Setup
-//   doctor [--fix]                      Check FFmpeg, Playwright, Chromium and the route's tools; --fix installs what it safely can
+//   next                                The next step for this project (what /umd:go runs), from local files only
+//   doctor [--fix]                     Check FFmpeg, Playwright, Chromium and the route's tools; --fix installs what it safely can
 //   detect                              Guess engine, route and profile from the current folder
 //   init [--force]                      Create .motion/ (project.json, storyboard, tokens, assets lock) and BRIEF.md from templates
 //   rules [domain|group...]             Build rules of the domains that apply to this project (compact)
@@ -544,6 +545,10 @@ async function main() {
     case "evidence": return evidence();
     case "plan": return plan(pos.filter((x) => x !== "incremental"), flags.has("incremental"));
     case "assemble": return assemble();
+    case "next": {
+      const { nextStep } = await import("./lib/next.mjs");
+      return out(nextStep(cwd, ref));
+    }
     case "status": {
       const files = auditFiles();
       const p = loadProject(cwd);
