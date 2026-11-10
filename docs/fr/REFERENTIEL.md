@@ -4,7 +4,7 @@
 
 Critères audités par `/umd:audit`. Méthode `auto` : décidé dans le code à partir des mesures ; `inspect` : jugé par un agent auditeur avec une preuve.
 
-**12 domains · 59 criteria · v0.4.0**
+**12 domains · 60 criteria · v0.5.0**
 
 ## Profils et poids des domaines
 
@@ -92,6 +92,7 @@ S'applique si: toujours
 | TIM-03 | Coupes et accents calés sur la musique _(has_music)_ | mineur | inspect | Comparer scenes (umd analyze) aux temps forts (beat_this ou librosa si installés, sinon écoute) : écart de 2 images au plus. |
 | TIM-04 | Durée conforme au brief et à la plateforme _(is_video)_ | majeur | auto (analyze) | umd analyze : probe.duration à ±thresholds.duration_tolerance de project.json duration_s. |
 | TIM-05 | Plans assez longs pour être lus _(is_video)_ | mineur | inspect | scenes d'umd analyze : aucun plan sous 0,5 s hors montage rapide voulu ; plans avec texte assez longs (voir TXT-01). |
+| TIM-06 | Les coupes tombent sur du mouvement, jamais entre deux plans arrêtés _(is_video)_ | majeur | auto (analyze) | umd analyze : seams.parked = 0 (mouvement moyen sous motion_floor dans les 0,25 s avant ET après une coupe). |
 
 ### LIF — Vie et densité
 

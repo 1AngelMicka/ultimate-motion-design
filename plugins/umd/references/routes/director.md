@@ -22,7 +22,7 @@ Claude writes the script, shot list and prompts, calls image, voice, music and v
 | Music / SFX | ACE-Step 1.5 (MIT) — [../audio/music-sfx.md](../audio/music-sfx.md) | ⚠️ MusicGen, MMAudio weights non-commercial |
 | Lip-sync | LatentSync, MuseTalk (check weights) | ⚠️ LivePortrait, Wav2Lip non-commercial |
 
-Hosted APIs (OpenRouter, fal, Replicate, ElevenLabs) are allowed when their terms allow commercial use of outputs: record the terms URL in the lock entry.
+umd recommends no paid hosted API. If the user brings one of their own, it is allowed when their terms allow commercial use of outputs: record the terms URL in the lock entry.
 
 **Local generation**: ComfyUI (GPL-3.0, run locally, outputs are yours) driven by `artokun/comfyui-mcp` (MIT):
 

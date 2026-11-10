@@ -4,7 +4,7 @@
 
 Criteria audited by `/umd:audit`. Method `auto`: decided in code from measurements; `inspect`: judged by an auditor agent with evidence.
 
-**12 domains · 59 criteria · v0.4.0**
+**12 domains · 60 criteria · v0.5.0**
 
 ## Profiles and domain weights
 
@@ -92,6 +92,7 @@ Applies if: always
 | TIM-03 | Cuts and accents land on the music _(has_music)_ | minor | inspect | Compare scenes (umd analyze) with beats (beat_this or librosa if installed, otherwise listening): 2 frames apart at most. |
 | TIM-04 | Duration matches the brief and the platform _(is_video)_ | major | auto (analyze) | umd analyze: probe.duration within ±thresholds.duration_tolerance of project.json duration_s. |
 | TIM-05 | Shots long enough to be read _(is_video)_ | minor | inspect | umd analyze scenes: no shot under 0.5 s outside a deliberate montage; text shots long enough (see TXT-01). |
+| TIM-06 | Cuts land on motion, never between two parked shots _(is_video)_ | major | auto (analyze) | umd analyze: seams.parked = 0 (mean motion below motion_floor in the 0.25 s before AND after a cut). |
 
 ### LIF — Life and density
 

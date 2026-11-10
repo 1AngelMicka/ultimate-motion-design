@@ -17,7 +17,7 @@ Install in Claude Code: `/plugin marketplace add 1AngelMicka/ultimate-motion-des
 - [Style library](https://1angelmicka.github.io/ultimate-motion-design/en/bibliotheque.html): 784 styles and prompts with a preview of the result (still or video) and the prompt; each entry has a link `bibliotheque.html#<id>`
 - [Commands](https://1angelmicka.github.io/ultimate-motion-design/en/commandes.html): every command, its arguments, the `umd` CLI and the files it creates
 - [Routes and tech](https://1angelmicka.github.io/ultimate-motion-design/en/routes.html): routes, recipes, engines and every guide
-- [Quality checks](https://1angelmicka.github.io/ultimate-motion-design/en/qualite.html): the 12 domains, 59 checks, profiles, thresholds and scoring
+- [Quality checks](https://1angelmicka.github.io/ultimate-motion-design/en/qualite.html): the 12 domains, 60 checks, profiles, thresholds and scoring
 - [Licences](https://1angelmicka.github.io/ultimate-motion-design/en/licences.html): policy, install guard, known traps
 - [Token economy](https://1angelmicka.github.io/ultimate-motion-design/en/tokens.html): what is loaded, what is measured in code, `/umd:tokens`
 - [Troubleshooting](https://1angelmicka.github.io/ultimate-motion-design/en/depannage.html)

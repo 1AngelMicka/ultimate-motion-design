@@ -236,6 +236,25 @@
             "fr": "scenes d'umd analyze : aucun plan sous 0,5 s hors montage rapide voulu ; plans avec texte assez longs (voir TXT-01).",
             "en": "umd analyze scenes: no shot under 0.5 s outside a deliberate montage; text shots long enough (see TXT-01)."
           }
+        },
+        {
+          "id": "TIM-06",
+          "severity": "major",
+          "check": {
+            "method": "auto",
+            "tool": "analyze"
+          },
+          "applies_if": [
+            "is_video"
+          ],
+          "label": {
+            "fr": "Les coupes tombent sur du mouvement, jamais entre deux plans arrêtés",
+            "en": "Cuts land on motion, never between two parked shots"
+          },
+          "verify": {
+            "fr": "umd analyze : seams.parked = 0 (mouvement moyen sous motion_floor dans les 0,25 s avant ET après une coupe).",
+            "en": "umd analyze: seams.parked = 0 (mean motion below motion_floor in the 0.25 s before AND after a cut)."
+          }
         }
       ]
     },

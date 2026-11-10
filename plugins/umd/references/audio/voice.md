@@ -1,6 +1,6 @@
 # Voice-over
 
-Script → spoken track. Default to a local, commercially licensed TTS; use ElevenLabs only when the user accepts a paid cloud service.
+Script → spoken track. Use a local, commercially licensed TTS.
 
 ## Use when / avoid when
 
@@ -16,12 +16,10 @@ Script → spoken track. Default to a local, commercially licensed TTS; use Elev
 | VoxCPM2 (premium, 2B) | Apache-2.0 / Apache-2.0 | yes (30 languages), voice design, cloning, 48 kHz out | `pip install voxcpm` |
 | Qwen3-TTS (premium) | Apache-2.0 / Apache-2.0 | yes (10 languages), voice design, 3 s clone | `pip install -U qwen-tts` |
 | Pocket-TTS (CPU only) | MIT / ⚠️ CC-BY-4.0 weights (gated on HF) | yes, voice `estelle` | `uvx pocket-tts generate --language french --voice estelle --text "…"` |
-| ElevenLabs (cloud, paid) | elevenlabs/skills MIT; service under ElevenLabs terms | yes | `npx skills add elevenlabs/skills`, needs `ELEVENLABS_API_KEY` |
 
 - ⚠️ `ff_siwis` is trained on the SIWIS corpus, marked CC BY in Kokoro's VOICES.md: add an attribution line and record it in `assets.lock.json`.
 - ⚠️ Pocket-TTS weights are CC-BY-4.0 and each voice has its own licence (see huggingface.co/kyutai/tts-voices): attribution required, check the voice before use.
 - Kokoro on Windows needs espeak-ng (MSI from the espeak-ng releases); Kokoro outputs 24 kHz, resample to 48 kHz before the mix (AUD).
-- The archived `elevenlabs/elevenlabs-mcp` is replaced by `elevenlabs/skills`; do not install the MCP.
 
 ### Non-commercial or restricted: off by default
 
@@ -95,5 +93,5 @@ sf.write("voice/beat-01.wav", wav, m.tts_model.sample_rate)
 - https://github.com/remsky/Kokoro-FastAPI
 - https://github.com/OpenBMB/VoxCPM, https://github.com/QwenLM/Qwen3-TTS
 - https://github.com/kyutai-labs/pocket-tts, https://huggingface.co/kyutai/pocket-tts
-- https://github.com/elevenlabs/skills, https://github.com/blader/humanizer
+- https://github.com/blader/humanizer
 - research_notes/Dépôts motion design pour agents/audio_captions_ai_assets.md (licence checks, 2026-11-09)

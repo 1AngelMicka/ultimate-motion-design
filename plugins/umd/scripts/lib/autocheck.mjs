@@ -54,6 +54,10 @@ export function autocheck(ev, th, project) {
         `${src}: ${st.still_s}s near-still (motion < ${th.motion_floor}) = ${st.per_30s}s per 30 s, longest ${st.longest_s}s${st.longest_at != null ? ` at ${st.longest_at}s` : ""}, last ${st.end_card_excluded_s}s excluded`,
         "Keep the frame alive between events: a slow 3–5 % push, a drifting light, a supporting stagger; hold still only on the end card.");
       else unknown("LIF-05", "analysis.json has no stillness block (rendered with an older umd)", "Run umd analyze on the render again.");
+      const sm = a.seams;
+      if (sm) set("TIM-06", sm.parked === 0 ? "pass" : sm.parked <= Math.max(1, Math.floor(sm.cuts / 4)) ? "partial" : "fail",
+        `${src}: ${sm.parked} of ${sm.cuts} cut(s) between two parked shots${sm.parked ? ` (${sm.rows.filter((r) => r.parked).slice(0, 3).map((r) => `${r.t}s`).join(", ")})` : ""}`,
+        "Cut while something moves: let the outgoing shot keep moving into the cut and start the incoming one mid-flight, or carry an object across (craft/motion-grammar.md).");
       const fl = a.flashes || { max_per_s: 0 };
       set("SAF-01", fl.max_per_s <= th.flashes_per_s ? "pass" : "fail", `${src}: max ${fl.max_per_s} flash(es) per second${fl.at != null ? ` at ${fl.at}s` : ""} (full-frame luminance)`,
         "Slow down or soften the flashing (fewer than 3 per second, smaller luminance change).");

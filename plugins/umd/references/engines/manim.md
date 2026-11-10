@@ -15,7 +15,7 @@ Use Manim CE (`ManimCommunity/manim`), not 3b1b's personal `manimgl`: different 
 ## Setup
 
 - `pip install manim` (0.22.x in Nov 2026; `uv` works too). Needs FFmpeg; a LaTeX distribution only for `MathTex`/`Tex` (`Text` uses Pango, no LaTeX). Licence MIT.
-- Narration: `pip install "manim-voiceover[gemini]"` (or `[azure]`, `[gtts]`, `[openai]`, `[elevenlabs]`, `[pyttsx3]`, `[recorder]` for your own voice; `[transcribe]` for bookmark timing). manim-voiceover 0.4.x, MIT. Local voice: `xposed73/kokoro-manim-voiceover` (MIT). Check each TTS service's terms for commercial use; gTTS uses Google Translate's unofficial endpoint.
+- Narration: `pip install "manim-voiceover[pyttsx3]"` (local voices; or a local TTS from `audio/voice.md` recorded per line). manim-voiceover 0.4.x, MIT. Local voice: `xposed73/kokoro-manim-voiceover` (MIT). Check each TTS service's terms for commercial use; gTTS uses Google Translate's unofficial endpoint.
 - Slides: `pip install manim-slides` (5.7.x, MIT, repo `jeertmans/manim-slides`).
 
 ## Core patterns

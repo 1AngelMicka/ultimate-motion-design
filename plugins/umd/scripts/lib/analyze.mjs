@@ -126,6 +126,18 @@ function audioPass(file, info) {
   };
 }
 
+// Seams: is the picture moving on both sides of each cut? A cut between two parked frames reads as a slideshow.
+// Motion = mean frame-to-frame luma difference over `win` s before the cut (the frames right at it excluded) and after it.
+export function seams(frames, cuts, { floor = 0.4, win = 0.25, gap = 0.04 } = {}) {
+  const mean = (a, b) => { const xs = frames.filter((f) => f.t > a && f.t < b).map((f) => f.ydif); return xs.length ? xs.reduce((s, x) => s + x, 0) / xs.length : null; };
+  const rows = cuts.map((c) => {
+    const t = c.t ?? c;
+    const before = mean(t - win - gap, t - gap), after = mean(t + gap, t + win + gap);
+    return { t, before: before == null ? null : round(before, 2), after: after == null ? null : round(after, 2), parked: before != null && after != null && before < floor && after < floor };
+  });
+  return { cuts: rows.length, parked: rows.filter((r) => r.parked).length, rows: rows.slice(0, 40) };
+}
+
 // Near-still time: 0.5 s buckets below the motion floor, the last `endCard` seconds excluded (an end card may hold)
 export function stillness(timeline, bucket, floor, endCard = 2) {
   const keep = Math.max(0, timeline.length - Math.round(endCard / bucket));
@@ -164,6 +176,7 @@ export function analyze(file, { outDir, thresholds = {}, sheet = true, cwd = pro
     res.flashes = countFlashes(v.frames, thresholds.flash_delta ?? 0.1);
     res.motion = { bucket_s: bucket, timeline, mean: round(timeline.reduce((s, x) => s + x, 0) / (timeline.length || 1), 1) };
     res.dead_air = deadAir(timeline, bucket, thresholds.motion_floor ?? 0.4, thresholds.dead_air_s ?? 3);
+    res.seams = seams(v.frames, v.scenes, { floor: thresholds.motion_floor ?? 0.4 });
     res.stillness = stillness(timeline, bucket, thresholds.motion_floor ?? 0.4, thresholds.end_card_s ?? 2);
     res.first_frame_black = v.black.some((b) => b.start <= 0.04);
   }

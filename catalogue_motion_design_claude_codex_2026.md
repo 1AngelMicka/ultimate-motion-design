@@ -1,6 +1,6 @@
 # Catalogue GitHub — Motion design avec Claude Code et Codex
 
-**Édition : 9 novembre 2026** · **1075 dépôts GitHub** · Descriptions volontairement courtes.
+**Édition : 9 novembre 2026** · **1113 dépôts GitHub** · Descriptions volontairement courtes.
 **Périmètre :** skills agents, motion graphics codés, vidéos, React/GSAP, animation 2D/3D, outils MCP, shaders, montage, rendu et capture, contrôle qualité, voix, musique, assets et références.
 
 > **Comment lire ce catalogue :** certains dépôts sont des **skills à installer** dans Claude/Codex, d’autres sont des **bibliothèques, logiciels ou modèles** à leur faire utiliser par code. Un dépôt n’est pas nécessairement gratuit pour tous les usages : vérifie sa licence, ses API éventuelles et ses prérequis matériels avant de l’intégrer.
@@ -1366,6 +1366,49 @@
 
 
 ---
+
+## 19. Ajouts du 10 novembre 2026 (38)
+
+Repérés dans les posts partagés le 10 novembre 2026 et vérifiés un par un (licence, activité). Détail et usage dans `SOURCES.md` et `plugins/umd/references/engines/effect-libraries.md`.
+
+- **[Leonxlnx/cinetic](https://github.com/Leonxlnx/cinetic)** — Films de lancement et de mise à jour en Remotion ou HyperFrames : 34 scènes, 7 modèles, contrôle du script (MIT).
+- **[edenfunf/reelmimic](https://github.com/edenfunf/reelmimic)** — Refait le style d'une vidéo de référence ; registre des coupes (direction, vitesse) (MIT).
+- **[codepawl/creator-generalist](https://github.com/codepawl/creator-generalist)** — Skills généralistes 2D/3D : rig Blender, sculpture, montage, recette depuis une vidéo (MIT).
+- **[Moh4696/cinematic-skill](https://github.com/Moh4696/cinematic-skill)** — Documentaires narrés dessinés en code (Skia), une caméra sur un tableau d'archives (MIT).
+- **[kajisho5/ffmpeg-skill](https://github.com/kajisho5/ffmpeg-skill)** — 42 recettes FFmpeg et revue du montage par l'agent (MIT).
+- **[motionvideohq/motionvideo.xyz](https://github.com/motionvideohq/motionvideo.xyz)** — Galerie de vidéos motion IA avec prompts, 120 techniques nommées, MCP gratuit (MIT).
+- **[Yusuke710/manim-skill](https://github.com/Yusuke710/manim-skill)** — Animations mathématiques façon 3Blue1Brown (MIT).
+- **[gokayfem/shader-skills](https://github.com/gokayfem/shader-skills)** — Shaders GLSL à la demande (MIT).
+- **[RobLe3/cc-blender-skill](https://github.com/RobLe3/cc-blender-skill)** — Pilotage de Blender depuis Claude Code (MIT).
+- **[majidmanzarpour/blender-game-skills](https://github.com/majidmanzarpour/blender-game-skills)** — Assets de jeu dans Blender (MIT).
+- **[js713-lab/sonic-match-mcp](https://github.com/js713-lab/sonic-match-mcp)** — MCP de recherche de sons assortis à l'image (MIT).
+- **[7PH/powerglitch](https://github.com/7PH/powerglitch)** — Effet glitch sur n'importe quel élément (MIT).
+- **[bradley/Blotter](https://github.com/bradley/Blotter)** — Texte qui fond et coule, WebGL (MIT, 2020).
+- **[robin-dela/hover-effect](https://github.com/robin-dela/hover-effect)** — Transition liquide entre deux images (MIT).
+- **[evanw/webgl-water](https://github.com/evanw/webgl-water)** — Eau et caustiques en WebGL : sans licence, à étudier seulement.
+- **[amandaghassaei/gpu-io](https://github.com/amandaghassaei/gpu-io)** — Simulations de fluides sur GPU (MIT).
+- **[cmiscm/leonsans](https://github.com/cmiscm/leonsans)** — Typo qui se dessine (MIT, 2020).
+- **[sarcadass/granim.js](https://github.com/sarcadass/granim.js)** — Dégradés vivants (MIT).
+- **[qrohlf/trianglify](https://github.com/qrohlf/trianglify)** — Fonds low-poly : GPL-3.0, piège pour du code livré.
+- **[daybrush/scenejs](https://github.com/daybrush/scenejs)** — Scènes d'images clés CSS (MIT).
+- **[metafizzy/zdog](https://github.com/metafizzy/zdog)** — Pseudo-3D plate (MIT).
+- **[piqnt/planck.js](https://github.com/piqnt/planck.js)** — Physique 2D (MIT).
+- **[google/filament](https://github.com/google/filament)** — Rendu physique temps réel (Apache-2.0).
+- **[guillaumeblanc/ozz-animation](https://github.com/guillaumeblanc/ozz-animation)** — Animation squelettale C++ (MIT).
+- **[xiph/rnnoise](https://github.com/xiph/rnnoise)** — Débruitage de la voix (BSD-3-Clause).
+- **[obsproject/obs-studio](https://github.com/obsproject/obs-studio)** — Capture d'écran et streaming (GPL-2.0, outil).
+- **[fand/vfx-js](https://github.com/fand/vfx-js)** — Glitch, bloom, pixels sur le DOM (MIT).
+- **[NVIDIA/warp](https://github.com/NVIDIA/warp)** — Simulation physique GPU en Python (Apache-2.0).
+- **[amandaghassaei/OrigamiSimulator](https://github.com/amandaghassaei/OrigamiSimulator)** — Simulation de pliage (MIT).
+- **[AcademySoftwareFoundation/MaterialX](https://github.com/AcademySoftwareFoundation/MaterialX)** — Échange de matériaux (Apache-2.0).
+- **[alembic/alembic](https://github.com/alembic/alembic)** — Échange de géométrie animée (BSD).
+- **[katspaugh/wavesurfer.js](https://github.com/katspaugh/wavesurfer.js)** — Formes d'onde sur le web (BSD-3-Clause).
+- **[mitsuba-renderer/mitsuba3](https://github.com/mitsuba-renderer/mitsuba3)** — Path tracer de recherche (BSD).
+- **[gkjohnson/three-bvh-csg](https://github.com/gkjohnson/three-bvh-csg)** — Booléens de maillages three.js (MIT).
+- **[AcademySoftwareFoundation/OpenColorIO](https://github.com/AcademySoftwareFoundation/OpenColorIO)** — Gestion des couleurs (BSD-3-Clause).
+- **[goldfire/howler.js](https://github.com/goldfire/howler.js)** — Audio web (MIT).
+- **[georgmartius/vid.stab](https://github.com/georgmartius/vid.stab)** — Stabilisation vidéo (GPL-2.0).
+- **[hahnec/color-matcher](https://github.com/hahnec/color-matcher)** — Étalonnage calé sur une image de référence (GPL-3.0, outil).
 
 ## Installer un skill dans Claude Code ou Codex
 

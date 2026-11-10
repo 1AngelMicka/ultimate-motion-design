@@ -19,7 +19,7 @@ Ses points forts :
   - Claude choisit la bonne route pour chaque projet.
 - **Rendu déterministe intégré.** `umd capture` transforme n'importe quelle page HTML animée en vidéo, image par image, sans licence Remotion. Deux rendus donnent des images strictement identiques.
 - **Un vrai contrôle qualité.**
-  - 12 domaines et 59 vérifications, de la narration aux licences.
+  - 12 domaines et 60 vérifications, de la narration aux licences.
   - Chaque vérification réussie a une preuve : une image à t = 2,40 s, une mesure en LUFS ou une ligne de code.
   - Note sur 10. Un point bloquant ouvert plafonne la note et bloque la livraison.
   - Un agent critique note chaque brouillon comme un jury (7 = pro, 8 = agence, 9 = prix) et fait recommencer jusqu'à la note visée. Un nouveau critique à chaque tour, qui ne voit jamais le raisonnement du constructeur et vérifie point par point les corrections du tour précédent.
@@ -170,7 +170,7 @@ S'y ajoutent :
 
 **784 styles et prompts éprouvés** servent de point de départ : 66 styles de films de [lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar), 15 styles de motion design de [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) et 703 prompts de [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos). `/umd:storyboard` en propose trois adaptés à ton brief, et `umd styles <mots>` les cherche sans dépenser de tokens. Pour choisir à l'œil : la [Bibliothèque de styles](https://1angelmicka.github.io/ultimate-motion-design/bibliotheque.html) montre chaque style avec un aperçu du résultat (image ou vidéo) et son prompt à copier. Prompts prêts à copier et conseils : page [Astuces et prompts](https://1angelmicka.github.io/ultimate-motion-design/astuces.html).
 
-Le fichier [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) recense **1 075 dépôts GitHub** vérifiés le 9 et le 10 novembre 2026, avec des alertes de licence.
+Le fichier [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) recense **1 113 dépôts GitHub** vérifiés le 9 et le 10 novembre 2026, et [SOURCES.md](SOURCES.md) tous les liens partagés, testés ou utilisés depuis le début, avec ce qu'on en a fait, avec des alertes de licence.
 
 ### Le rendu déterministe
 
@@ -193,9 +193,10 @@ Le fichier [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_desig
 
 Les règles et les vérifications sont détaillées dans [docs/fr/REFERENTIEL.md](docs/fr/REFERENTIEL.md).
 
-28 des 59 vérifications sont mesurées par le code, sans agent (celles qui s'appliquent dépendent du profil) :
+29 des 60 vérifications sont mesurées par le code, sans agent (celles qui s'appliquent dépendent du profil) :
 
 - durée et format de sortie ;
+- coupes faites sur du mouvement, jamais entre deux plans arrêtés ;
 - images figées, temps morts et temps quasi figé cumulé (moins d'1 s par 30 s, carton final exclu) ;
 - sons calés sur leur image, quand le storyboard liste des repères sonores (`umd sync`) ;
 - images noires ;
@@ -251,7 +252,7 @@ Le plugin réduit les tokens à trois endroits :
 | --- | --- |
 | **Presque rien en permanence** | Environ 250 tokens chargés en permanence : la description du skill `motion` et celles des deux agents. Les onze commandes `/umd:*` ne coûtent rien tant qu'on ne les lance pas. Dans un projet umd, le hook de démarrage ajoute environ 150 tokens de contexte. |
 | **Références à la demande** | 49 guides de 1 200 à 2 100 tokens chacun, lus un par un, seulement quand ils servent : par exemple la route du projet, puis le guide de son moteur. |
-| **Vérifications faites par le code** | 28 vérifications sur 59 sont décidées par la CLI à partir des mesures FFmpeg, du lint, des licences et des tests navigateur. Les auditeurs ne regardent que ce qui demande un œil. |
+| **Vérifications faites par le code** | 29 vérifications sur 60 sont décidées par la CLI à partir des mesures FFmpeg, du lint, des licences et des tests navigateur. Les auditeurs ne regardent que ce qui demande un œil. |
 | **Planche contact** | Chaque rendu produit une planche de 16 images, soit une seule image à lire. Claude n'extrait ensuite que 2 à 6 images ciblées si un doute reste. |
 | **Sorties compactes** | Rendus, encodages et analyses écrivent leur sortie complète sur le disque et ne renvoient qu'un résumé. Sur notre test, 3 commandes passent d'environ 3 700 tokens de sortie à environ 700. |
 | **Audit incrémental par défaut** | Seules les vérifications qu'un fichier modifié ou un nouveau rendu peut affecter sont revérifiées. Si rien n'a changé, aucun auditeur n'est lancé. |
@@ -286,8 +287,7 @@ Ces outils ne sont pas inclus dans le plugin : ce sont des projets séparés, in
 | [LottieFiles/motion-design-skill](https://github.com/LottieFiles/motion-design-skill) | Toutes les routes | Principes de timing, d'easing et de chorégraphie |
 | [kylezantos/design-motion-principles](https://github.com/kylezantos/design-motion-principles) | Interfaces et pages animées | Mode audit et liste anti-tics IA |
 | [blader/humanizer](https://github.com/blader/humanizer) | Pièces avec voix off ou beaucoup de texte | Retire les tournures IA des scripts et des sous-titres |
-| [elevenlabs/skills](https://github.com/elevenlabs/skills) | Si tu acceptes une voix en ligne payante | Voix, effets sonores, musique |
-| [rive-app/skills](https://github.com/rive-app/skills) · [splinetool/spline-skills](https://github.com/splinetool/spline-skills) | Animation vectorielle interactive · 3D éditable | Skills officiels Rive et Spline |
+| [rive-app/skills](https://github.com/rive-app/skills) | Animation vectorielle interactive | Skills officiels Rive |
 | [ChromeDevTools/chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) | Débogage de pages animées | Traces de performance, images perdues |
 | [ahujasid/mcp-for-blender](https://github.com/ahujasid/mcp-for-blender) | Route `blender` uniquement | Pilote un Blender ouvert |
 | [NiazMorshed2007/reanimate](https://github.com/NiazMorshed2007/reanimate) | Une animation de référence à étudier (site, vidéo, GIF, Lottie, WebGL), ou ta propre animation à porter | La filme, en tire les durées et les courbes, la reconstruit et mesure l'écart image par image. Demande Bun ; testé sur macOS et Linux seulement. Voir [la recette](plugins/umd/references/recipes/match-reference.md) |

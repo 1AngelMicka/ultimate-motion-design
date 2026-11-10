@@ -1,7 +1,7 @@
 {
   "name": "umd",
   "description": "Ultimate Motion Design: make and audit high-quality motion (promo, presentation, explainer and social videos, logo animation, animated web pages, 3D) with Claude Code. Deterministic HTML-to-video rendering, motion quality referential scored out of 10, licence guard, token reporting. Créer et auditer du motion design de haute qualité.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": {
     "name": "Micka",
     "url": "https://github.com/1AngelMicka"

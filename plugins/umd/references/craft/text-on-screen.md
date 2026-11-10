@@ -96,3 +96,10 @@ Minimum sizes (conventions, check on a phone-size still; these are not platform 
 - WCAG 2.2, 2.3.1 Three Flashes or Below Threshold: https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html
 - Netflix English Timed Text Style Guide: https://partnerhelp.netflixstudios.com/hc/en-us/articles/217350977
 - https://github.com/color-js/color.js, https://github.com/fontsource/fontsource
+
+## Copy that a stranger understands
+
+- Launch film: by 3 s a line says what the product is in plain words ("[Name] turns [input] into [output]"); then one concrete thing per line, with a verb, while the picture shows it; close on the name and the next action.
+- On screen, one line at a time, 2 to 7 words, one claim, no metaphor ("second brain", "superpower"), no slogan shape ("Meet X", "X, reimagined", "Less X. More Y."). `umd lint` flags the hollow words (NAR-05).
+- Narration: at most about 22 words per line, numbers written as words, and never the same sentence typed on screen and spoken word for word.
+(After Leonxlnx/cinetic's copy check and Moh4696/cinematic-skill's narration rules, both MIT.)

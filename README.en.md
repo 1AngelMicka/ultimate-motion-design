@@ -19,7 +19,7 @@ What it brings:
   - Claude picks the right route for each project.
 - **Built-in deterministic rendering.** `umd capture` turns any animated HTML page into a video, frame by frame, with no Remotion licence. Two renders give identical frames.
 - **Real quality control.**
-  - 12 domains and 59 checks, from narrative to licences.
+  - 12 domains and 60 checks, from narrative to licences.
   - Every passed check has evidence: a frame at t = 2.40 s, a LUFS measure, a line of code.
   - Score out of 10. An open blocker caps the score and locks delivery.
   - A critic agent scores every draft like a jury (7 = professional, 8 = agency, 9 = award) and sends it back until it reaches the target. A fresh critic every round, which never sees the builder's reasoning and checks the previous round's fixes item by item.
@@ -170,7 +170,7 @@ On top of that:
 
 **784 proven styles and prompts** serve as starting points: 66 film styles from [lemo-opuscar](https://github.com/lemomo-ai/lemo-opuscar), 15 motion-design styles from [mg-styles-15](https://github.com/Vincentwei1021/mg-styles-15) and 703 prompts from [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos). `/umd:storyboard` offers three that fit your brief, and `umd styles <words>` searches them at no token cost. To choose by eye: the [Style library](https://1angelmicka.github.io/ultimate-motion-design/en/bibliotheque.html) shows every style with a preview of the result (still or video) and its prompt to copy. Ready-to-copy prompts and advice: the [Tips and prompts](https://1angelmicka.github.io/ultimate-motion-design/en/astuces.html) page.
 
-The file [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) lists **1,075 GitHub repositories**, checked on 9 and 10 November 2026, with licence warnings.
+The file [catalogue_motion_design_claude_codex_2026.md](catalogue_motion_design_claude_codex_2026.md) lists **1,113 GitHub repositories**, checked on 9 and 10 November 2026, and [SOURCES.md](SOURCES.md) every link shared, tested or used since the start, with what was done with it, with licence warnings.
 
 ### Deterministic rendering
 
@@ -193,9 +193,10 @@ On every frame it pauses every CSS and Web Animations animation and every `<vide
 
 Every rule and check is detailed in [docs/en/REFERENTIAL.md](docs/en/REFERENTIAL.md).
 
-28 of the 59 checks are measured in code, without an agent (which ones apply depends on the profile):
+29 of the 60 checks are measured in code, without an agent (which ones apply depends on the profile):
 
 - output length and format;
+- cuts made on motion, never between two parked shots;
 - frozen frames, dead air and total near-still time (under 1 s per 30 s, end card excluded);
 - sounds landing on their picture, when the storyboard lists sound cues (`umd sync`);
 - black frames;
@@ -251,7 +252,7 @@ The plugin cuts tokens in three places:
 | --- | --- |
 | **Almost nothing loaded at all times** | About 250 tokens loaded at all times: the description of the `motion` skill and those of the two agents. The eleven `/umd:*` commands cost nothing until you run them. In a umd project, the startup hook adds about 150 tokens of context. |
 | **References on demand** | 49 guides of 1,200 to 2,100 tokens each, read one at a time, only when needed: for example the project's route, then its engine's guide. |
-| **Checks done in code** | 28 of the 59 checks are decided by the CLI from FFmpeg measures, lint, licences and browser tests. The auditors only look at what needs eyes. |
+| **Checks done in code** | 29 of the 60 checks are decided by the CLI from FFmpeg measures, lint, licences and browser tests. The auditors only look at what needs eyes. |
 | **Contact sheet** | Each render produces a 16-frame sheet: a single image to read. Claude then extracts only 2 to 6 targeted frames if a doubt remains. |
 | **Compact output** | Renders, encodes and analyses write their full output to disk and return only a summary. In our test, 3 commands went from about 3,700 tokens of output to about 700. |
 | **Incremental audit by default** | Only the checks that a changed file or a new render can affect are re-checked. If nothing changed, no auditor is started. |
@@ -286,8 +287,7 @@ These tools are not included in the plugin: they are separate projects, installe
 | [LottieFiles/motion-design-skill](https://github.com/LottieFiles/motion-design-skill) | Every route | Timing, easing and choreography principles |
 | [kylezantos/design-motion-principles](https://github.com/kylezantos/design-motion-principles) | Animated UIs and pages | Audit mode and anti-AI-tell checklist |
 | [blader/humanizer](https://github.com/blader/humanizer) | Pieces with voice-over or lots of text | Removes AI phrasing from scripts and captions |
-| [elevenlabs/skills](https://github.com/elevenlabs/skills) | If you accept a paid online voice service | Voices, sound effects, music |
-| [rive-app/skills](https://github.com/rive-app/skills) · [splinetool/spline-skills](https://github.com/splinetool/spline-skills) | Interactive vector animation · editable 3D | Official Rive and Spline skills |
+| [rive-app/skills](https://github.com/rive-app/skills) | Interactive vector animation | Official Rive skills |
 | [ChromeDevTools/chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) | Debugging animated pages | Performance traces, dropped frames |
 | [ahujasid/mcp-for-blender](https://github.com/ahujasid/mcp-for-blender) | `blender` route only | Drives a running Blender |
 | [NiazMorshed2007/reanimate](https://github.com/NiazMorshed2007/reanimate) | A reference animation to study (site, video, gif, Lottie, WebGL), or your own animation to port | Records it, extracts its durations and curves, rebuilds it and measures the gap frame by frame. Needs Bun; tested on macOS and Linux only. See [the recipe](plugins/umd/references/recipes/match-reference.md) |

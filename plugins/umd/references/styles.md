@@ -34,20 +34,19 @@ Nothing to install. `umd styles` searches a local index of 784 entries (no token
 
 For animated sites and landing pages, pick 2 or 3 references before writing a component, and describe in BRIEF.md what you take from each (structure, rhythm, one interaction), never the whole look.
 
+Only free resources are listed: no paid plan, no freemium library whose useful part is locked, no collection whose licence forbids reuse. Galleries are for looking: describe what you take, never copy a site.
+
 | Source | For | Access |
 | --- | --- | --- |
-| godly.website, land-book.com, landdding.com, recent.design | Whole landing pages and award sites | Free to browse |
-| supahero.io | Hero sections | Free (paid extras) |
+| godly.website, land-book.com, landdding.com, recent.design, landing.love, onepagelove.com, lapa.ninja, siteinspire.com, minimal.gallery | Whole landing pages and award sites | Free to browse |
 | navbar.gallery, footer.design, cta.gallery | Navbars, footers, calls to action | Free to browse |
-| styles.refero.design | Design systems of real products as DESIGN.md files (colours, type, spacing, components); a Refero MCP and the `referodesign/refero_skill` plugin fetch them | Free account; describe what you take, never clone a brand |
-| saaspo.com, posts.design | SaaS sites; launch posts and visuals from large companies | Free to browse |
-| mobbin.com | Real app screens and flows, for product demo shots | Free tier, paid plans |
-| inspora.design, curate.gallery | Design inspiration collected from X; curated websites | Free to browse |
+| saaspo.com, posts.design, inspora.design, curate.gallery | SaaS sites, launch visuals, inspiration collected from X | Free to browse |
+| vibrant.design | Websites, sections and launch videos, each entry with its own link | Free to browse; inspiration only |
 | brandguidelines.net | Brand guideline books (logo use, colour, type) | Free to browse |
-| backgrounds.supply, horizonx.so | Backgrounds and premium design assets | Check each asset's licence before use; record it in assets.lock.json |
-| scrollshaders.com | Animated shader backgrounds in 11 styles | Check the licence before shipping one; open alternatives: Paper Shaders, ShaderGradient (`engines/shaders.md`) |
-| 60fps.design | Mobile UI animation | Free (paid extras) |
-| scrolltide.co, motionsites.ai | Prompt libraries for 3D and scroll-driven sites, with code | Freemium; full libraries paid (scrolltide lists a $299 lifetime plan, checked 2026-11-10). Check their terms before reusing code in client work |
+| reactbits.dev, animata.design, magicui.design | Animated React components with their code | Free, open source; check each component's licence |
+| fontshare.com | Fonts under the ITF Free Font License | Free, commercial use allowed; self-host them |
+| coolors.co, realtimecolors.com | Palettes; trying colours and fonts on a real page | Free |
+| ShaderGradient, Paper Shaders | Moving gradients and shader backgrounds | Open source (`engines/shaders.md`) |
 
 Then use the `web-page` route, `recipes/hero-section.md`, `recipes/scrollytelling.md`, and `umd webperf` to keep it smooth.
 

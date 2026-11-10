@@ -33,6 +33,12 @@ The 15 films of [Vincentwei1021/mg-styles-15](https://github.com/Vincentwei1021/
 | Near-still time (0.5 s buckets below `motion_floor`, last 2 s excluded), per 30 s | 0 s for all 15; longest still run 0 s | LIF-05 added: at most `still_per_30s_max` = 1 s per 30 s. Zero false alarm; the budget comes from echris6/motion-video-kit, where a draft with 10 s frozen out of 36 s passed every builder check |
 | Loudness range (LRA) | 1.0 to 9.0 LU; 6 films under 3 LU (line art 1.6, 3D render 2.3, collage 1.2, morph 2.7, Bauhaus 2.5, paperclip 2.5, pixel 1.0) | Not a criterion: a "≥ 3 LU for energetic scores" rule would flag 6 award films out of 15. Shown in `umd analyze` and read by the critic only |
 
+## Added in 0.5.0: cuts on motion (seams)
+
+| Measure | 15 reference films | Decision |
+| --- | --- | --- |
+| Cuts where the mean motion is below `motion_floor` both in the 0.25 s before and the 0.25 s after | 0 of 28 cuts (one-sided calm cuts exist: Bauhaus 0.33 → 8.56, collage 0 → 11.41, which are fine: the incoming shot starts mid-flight) | TIM-06 added: no cut between two parked shots. A slideshow of still images (synthetic test) is flagged |
+
 ## Negative checks: what the thresholds do catch
 
 | Case | Measure | Caught by |

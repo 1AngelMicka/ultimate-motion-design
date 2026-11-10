@@ -60,7 +60,6 @@ How umd classifies every dependency, model and asset, what each class means for 
 | GSAP | Standard "no charge" licence; prohibited in no-code visual animation builders competing with Webflow | ok for videos and sites |
 | easings.net | GPL-3.0 site: cite curve names, do not copy its source | gpl-redistribution |
 | Remotion and everything built on it (snapcn, caption kits, template-tiktok) | Remotion licence inherited at runtime | remotion |
-| elevenlabs-mcp | archived; use elevenlabs/skills (MIT) + paid API terms | ok (service terms) |
 
 ## Core patterns
 

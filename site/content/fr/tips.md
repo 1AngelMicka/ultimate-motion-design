@@ -129,6 +129,7 @@ Le plugin suffit pour proposer un petit service. Le format le plus simple à ven
 - Avant de commencer, mets par écrit : script, fichiers fournis, date, paiement, nombre de retouches, où le client peut utiliser la vidéo et si tu peux la montrer dans ton portfolio.
 - Pendant la production : les trois images clés pour valider la direction, puis le brouillon, puis le rendu final. Les retours se donnent par instant (« à 7 s… »), ce qui garde le tour de retouches clair.
 - Le fichier `.motion/LEDGER.md` (chaque tour de critique, ce qui a changé, les mesures) et le rapport d'audit montrent le soin apporté : joins-les à la livraison si le client les apprécie.
+- Autre format qui se vend bien : une **série** avec le même personnage et un épisode court chaque jour ou chaque semaine, vendue au mois à une app ou une marque (pilote de 3 à 5 épisodes, puis abonnement). La méthode est dans la référence « A recurring animated series » : bible de série, héros verrouillé, épisodes tirés des avis et des nouveautés du produit, validation humaine avant chaque publication.
 - Remotion, si tu l'utilises, demande une licence payante au-delà de 3 personnes dans l'entreprise : `umd capture` et HyperFrames n'ont pas cette limite.
 
 ## Ce qui trahit une vidéo faite par une IA

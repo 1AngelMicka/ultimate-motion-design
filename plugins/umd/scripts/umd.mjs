@@ -10,6 +10,9 @@
 // Make
 //   styles <words> [--source lemo|mg|opus] [--kind style|prompt]   Search 784 proven styles and prompts (no tokens spent)
 //   styles get <id>                                   Download that style prompt into .motion/styles/
+//   moves <words> [--family transitions|camera|type|...]   120 named motion techniques (match cut, whip pan, split-flap…)
+//   commons <words> [--allow-sa]                      Wikimedia Commons media under PD, CC0 or CC BY (BY-SA on request)
+//   commons get "File:Name.jpg" [--dir assets/commons] [--width 1920]   Download it and record it in assets.lock.json
 //   still<html|url> --at 0,1.5 [--out dir] [--width W --height H]      Key stills on virtual time
 //   capture <html|url> --out f.mp4 [--fps 30] [--duration s] [--width 1920 --height 1080] [--from s]
 //           [--draft] [--transparent] [--format mp4|webm|mov|gif|png] [--audio f] [--seed n]   Deterministic HTML → video
@@ -508,6 +511,19 @@ async function main() {
       const cues = parseCues(readFileSync(sbf, "utf8"), p?.format?.fps || 30);
       if (!cues.length) die(`No cue in ${relative(cwd, sbf)}: add a "## Sound cues" section (one per line: "6.5s click: cursor press").`);
       return out(syncCues(pos[0], cues, { cwd, fps: p?.format?.fps, toleranceMs: Number(opt("tolerance-ms", thresholds(p, ref).sync_tolerance_ms ?? 45)) }));
+    }
+    case "moves": {
+      const { searchMoves } = await import("./lib/moves.mjs");
+      return out(searchMoves(pos.join(" "), { family: opt("family"), limit: Number(opt("limit", 8)) }));
+    }
+    case "commons": {
+      const c = await import("./lib/commons.mjs");
+      if (pos[0] === "get") {
+        if (!pos[1]) die('Usage: umd commons get "File:Name.jpg" [--dir assets/commons] [--width 1920] [--allow-sa]');
+        return out(await c.getCommons(pos.slice(1).join(" "), { cwd, dir: opt("dir", "assets/commons"), width: Number(opt("width", 1920)), allowSa: flags.has("allow-sa") }));
+      }
+      if (!pos.length) die("Usage: umd commons <words> [--allow-sa] [--limit 12]   |   umd commons get \"File:…\"");
+      return out(await c.searchCommons(pos.join(" "), { limit: Number(opt("limit", 12)), allowSa: flags.has("allow-sa") }));
     }
     case "hits": {
       if (!pos[0]) die("Usage: umd hits <music>");

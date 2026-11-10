@@ -129,6 +129,7 @@ The plugin is enough to offer a small service. The simplest format to sell: a 20
 - Before starting, agree in writing on: script, supplied files, date, payment, number of revisions, where the client may use the video and whether you may show it in your portfolio.
 - During production: the three key frames to approve the direction, then the draft, then the final render. Feedback is given by moment ("at 7 s…"), which keeps the revision round clear.
 - `.motion/LEDGER.md` (each critique round, what changed, the measures) and the audit report show the care taken: attach them to the delivery if the client values it.
+- Another format that sells: a **series** with the same character and a short episode every day or week, sold monthly to an app or a brand (pilot of 3 to 5 episodes, then a subscription). The method is in the "A recurring animated series" reference: series bible, locked hero, episodes drawn from the product's reviews and releases, human approval before each post.
 - Remotion, if you use it, needs a paid licence above 3 people in the company: `umd capture` and HyperFrames have no such limit.
 
 ## What gives away an AI-made video

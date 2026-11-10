@@ -11,6 +11,8 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). Talk in the project
 
 **Cost:** medium. Read one recipe file at most; stills rounds use the `umd:critic` agent on small images.
 
+
+Naming a technique in the Motion column? `umd moves <words>` (no tokens) gives 120 named moves with one line each (match cut, whip pan, split-flap, cursor-led demo…); use their names so the critic and the user share the vocabulary.
 ## 0. Style (before any beat)
 
 If `project.json` has no `style` yet and the brief does not impose a strict brand system, start from a proven style rather than a blank page (`${CLAUDE_PLUGIN_ROOT}/references/styles.md`):

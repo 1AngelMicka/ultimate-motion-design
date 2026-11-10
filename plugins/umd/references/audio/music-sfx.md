@@ -18,7 +18,6 @@ Music beds, stingers, UI sounds and SFX with a licence you can prove, plus beat 
 | beat_this | MIT | `pip install beat-this` | Beats and downbeats |
 | librosa | ISC | `pip install librosa` | Tempo, onsets, fallback beat tracker |
 | soundcn | MIT registry | `npx shadcn add @soundcn/click-soft` | 700+ UI sounds as TS modules |
-| elevenlabs/skills | MIT skill, paid API | `npx skills add elevenlabs/skills` | Cloud music and SFX (`music`, `sound-effects` skills) |
 
 Only clearly commercial local music model: ACE-Step 1.5. The others are blocked by default:
 ⚠️ MusicGen/AudioGen (audiocraft, CC-BY-NC weights), ⚠️ YuE2 (CC BY-NC weights), ⚠️ MMAudio (CC-BY-NC checkpoints), ⚠️ HunyuanVideo-Foley (Tencent licence excludes EU/UK/South Korea), ⚠️ madmom models (CC BY-NC-SA, so do not use `beat_this --dbn` in a commercial build), Stable Audio Open weights (Stability community licence, read it first).

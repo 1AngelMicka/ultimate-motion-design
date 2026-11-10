@@ -12,6 +12,8 @@ The style index (`plugins/umd/references/styles/index.json`) lists names, one-li
 
 `references/craft/motion-grammar.md`, the critic's verification rounds and ledger, the near-still budget (LIF-05) and music back-timing are adapted from [echris6/motion-video-kit](https://github.com/echris6/motion-video-kit) (MIT); the shot-as-event method and frame-numbered brief follow ideas from beamnxw's article "Motion Engineering with Opus 5.5" (rewritten, not copied).
 
+`plugins/umd/references/moves/index.json` is derived from `apps/web/src/data/moves.json` of [motionvideohq/motionvideo.xyz](https://github.com/motionvideohq/motionvideo.xyz) (MIT License, Copyright (c) 2026 Aniket Pawar; summaries shortened). The seam check (TIM-06) follows the idea of edenfunf/reelmimic's seam ledger; `umd commons` and the narration rules follow Moh4696/cinematic-skill (MIT); the copy rules follow Leonxlnx/cinetic's copy check (MIT); `recipes/series.md` rewrites ideas from @bonsaixbt's article. No code was copied from these projects.
+
 The scoring mechanics, the compact command runner and the auditor pattern come from [quality-pack](https://github.com/1AngelMicka/quality-pack) (MIT, same author).
 
 Motion token defaults reproduce the duration and easing values published by IBM Carbon Design System (`@carbon/motion`, Apache-2.0).

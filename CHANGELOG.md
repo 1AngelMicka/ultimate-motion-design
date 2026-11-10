@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.0 — 2026-11-10
+
+- New check TIM-06 (60 checks, 29 automatic): cuts land on motion, never between two parked shots (`seams` in `umd analyze`); 0 of 28 cuts flagged in the 15 calibration films. Idea from edenfunf/reelmimic's seam ledger.
+- `umd moves <words>`: 120 named motion techniques (match cut, whip pan, split-flap, cursor-led demo…), searched locally, from motionvideo.xyz (MIT); `/umd:storyboard` uses their names.
+- `umd commons <words>` and `umd commons get "File:…"`: Wikimedia Commons media under public domain, CC0 or CC BY only (CC BY-SA on request), downloaded and recorded in `assets.lock.json` with author and licence. Idea from Moh4696/cinematic-skill.
+- References: `engines/effect-libraries.md` (60 effect, 3D, physics, sound and footage libraries with their licence and the determinism rule), `recipes/series.md` (a recurring animated series sold to an app), copy rules for on-screen text and narration, a shot-by-shot breakdown in `match-reference`.
+- Licence guard: anything2explainer (non-commercial), Trianglify and color-matcher (GPL), webgl-water (no licence), Essentia (AGPL), arc-art (CC BY-NC), and the paid or non-redistributable collections (transitions.dev, uberdesigner, sceneai, vibrant.design items).
+- Nothing paid or non-redistributable is recommended any more: removed from the galleries and companions (scrolltide, motionsites, Mobbin, Refero, Oversight, uberdesigner, sceneai, transitions.dev, ElevenLabs, Spline and others).
+- Companions: cinetic, reelmimic, cinematic-skill, creator-generalist, ffmpeg-skill, motionvideo MCP. Catalogue: 38 repositories added (1,113).
+- `SOURCES.md`: every link shared, tested or used since the start (315), with what was done with it and why some were set aside.
+
 ## 0.4.0 — 2026-11-10
 
 - Motion grammar of premium launch films (`references/craft/motion-grammar.md`): six rules, 16 reusable mechanisms, pacing for a 30 s film, the shot written as an event, layout for the longest copy, and the checks critics miss and clients catch. Adapted from echris6/motion-video-kit (MIT, 28 launch films studied) and beamnxw's "Motion Engineering with Opus 5.5".

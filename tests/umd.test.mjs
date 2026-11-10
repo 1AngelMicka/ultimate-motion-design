@@ -8,7 +8,9 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { loadReferential } from "../plugins/umd/scripts/lib/ref.mjs";
 import { compute } from "../plugins/umd/scripts/lib/score.mjs";
-import { countFlashes, deadAir, stillness } from "../plugins/umd/scripts/lib/analyze.mjs";
+import { countFlashes, deadAir, stillness, seams } from "../plugins/umd/scripts/lib/analyze.mjs";
+import { licenceClass } from "../plugins/umd/scripts/lib/commons.mjs";
+import { searchMoves } from "../plugins/umd/scripts/lib/moves.mjs";
 import { parseCues, onsets, syncCues } from "../plugins/umd/scripts/lib/sync.mjs";
 import { lint, parseStoryboard } from "../plugins/umd/scripts/lib/lint.mjs";
 import { installTargets, classify, checkLicenses } from "../plugins/umd/scripts/lib/licenses.mjs";
@@ -64,6 +66,23 @@ test("stillness: near-still buckets per 30 s, end card excluded", () => {
   assert.equal(s.longest_s, 1.5);
   assert.equal(s.longest_at, 1);
   assert.equal(s.per_30s, 7.5);
+});
+
+test("seams: a cut between two parked shots is flagged, a cut on motion is not", () => {
+  const frames = Array.from({ length: 120 }, (_, i) => ({ t: i / 30, ydif: i < 60 ? 0.05 : 3 }));
+  const s = seams(frames, [{ t: 1 }, { t: 3 }], { floor: 0.4 });
+  assert.deepEqual(s.rows.map((r) => r.parked), [true, false]);
+  assert.equal(s.parked, 1);
+});
+
+test("commons licences and the moves glossary", () => {
+  assert.equal(licenceClass("Public domain"), "ok");
+  assert.equal(licenceClass("CC BY 4.0"), "ok");
+  assert.equal(licenceClass("CC BY-SA 3.0"), "sa");
+  assert.equal(licenceClass("CC BY-NC 2.0"), "refused");
+  assert.equal(licenceClass("CC BY-ND 4.0"), "refused");
+  const m = searchMoves("whip pan");
+  assert.ok(m.results.length && /whip/i.test(m.results[0].name));
 });
 
 test("sound cues: storyboard parsing and onset detection", () => {

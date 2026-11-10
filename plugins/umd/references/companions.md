@@ -6,7 +6,7 @@ Optional official or well-maintained add-ons that deepen one route. umd works wi
 
 - **Skills** cost almost nothing until used: only their name and description sit in context; the body loads when invoked.
 - **MCP servers** add their tool definitions to every session where they are enabled, whether used or not. Install them only for the routes that need them, at project scope (`claude mcp add --scope project …`), and remove them when the project ends.
-- Third-party services (ElevenLabs API, Spline account) have their own terms and pricing.
+- Only free companions are listed: no paid API, no account-gated service.
 
 ## Skills and skill plugins
 
@@ -19,12 +19,15 @@ Optional official or well-maintained add-ons that deepen one route. umd works wi
 | kylezantos/design-motion-principles (MIT) | Build and audit modes; anti-AI-slop motion checklist; three designer lenses | UI motion, animated pages, audit of an existing codebase | `npx skills add kylezantos/design-motion-principles` |
 | blader/humanizer (MIT) | Rewrites scripts, captions and copy without the 26 AI-writing patterns | Any narrated or text-heavy piece | `/plugin marketplace add blader/humanizer` then `/plugin install humanizer@humanizer` (Claude Code ≥ 2.1.142); else `npx skills add blader/humanizer --global --agent claude-code` |
 | nextlevelbuilder/ui-ux-pro-max-skill (MIT) | Palettes, font pairings, UI style rules | No brand kit and the piece needs a visual system | `/plugin marketplace add nextlevelbuilder/ui-ux-pro-max-skill` then `/plugin install ui-ux-pro-max@ui-ux-pro-max-skill` |
-| elevenlabs/skills (MIT; paid API) | TTS, STT, sound effects, music, dubbing, voice isolation via ElevenLabs | User accepts a cloud voice service; needs `ELEVENLABS_API_KEY` | `npx skills add elevenlabs/skills` (the old `elevenlabs-mcp` is archived) |
 | rive-app/skills (MIT, official) | When and how to use Rive: state machines, runtimes | Interactive vector animation for apps and sites | `/plugin marketplace add rive-app/skills` then `/plugin install rive@rive` |
 | NiazMorshed2007/reanimate (MIT) | Records a reference (site, video, gif, Lottie, WebGL on a virtual clock), writes a motion spec, rebuilds it and verifies the copy frame by frame (timing ±80 ms, easing fit, pixel mismatch) | The brief has a reference to study or the user's own animation to port; see `recipes/match-reference.md`. Needs Bun; upstream tested on macOS/Linux only (Windows: WSL or the umd fallback) | `npx skills add NiazMorshed2007/reanimate -g -a claude-code`, then `bash <skill>/scripts/setup.sh` on first use |
 | echris6/motion-video-kit (MIT) | The source of `craft/motion-grammar.md`: notes on 28 launch films, critic prompts, product-hero realism for 3D devices, Three.js patterns, business offers and three worked case studies | Premium business commercials; read its case studies when a client pushes back after SHIP | `git clone https://github.com/echris6/motion-video-kit` then copy `business-motion-film` into `.claude/skills/` |
-| referodesign/refero_skill (MIT) | Research-first design via the Refero MCP: real app screens and flows, product styles as DESIGN.md | Animated pages and product demos that need real UI references; needs a Refero account | see its README (Claude Code plugin marketplace) |
-| splinetool/spline-skills (MIT, official) | Skill + hosted Spline MCP (`https://mcp.spline.design/mcp`); builds editable scenes in Spline's cloud editor | User wants an editable Spline 3D scene; requires a Spline account sign-in | `/plugin marketplace add splinetool/spline-skills` then `/plugin install spline@spline` |
+| Leonxlnx/cinetic (MIT) | Launch and update films in Remotion or HyperFrames: 34 prebuilt scenes, 7 film templates, a script check (the product named and explained by 3 s, 2 to 7 plain words a line), official integration logos with their source and trademark owner, music-led sound | You want a ready template (update video, UI walkthrough, social ad) rather than a film designed from scratch; needs Node 22, Python 3.11 and its `earshot` sound kit | `npx skills add Leonxlnx/cinetic` |
+| edenfunf/reelmimic (MIT; bundled HeyGen skills Apache-2.0) | Remakes a reference video's style from a brief, with a "seam ledger" that checks each cut keeps moving in the same direction and speed | Matching a video reference closely, on HyperFrames; Python and librosa | see its README |
+| kajisho5/ffmpeg-skill (MIT) | 42 FFmpeg recipes and a self-review of the cut | Heavy editing of existing footage | `npx skills add kajisho5/ffmpeg-skill` |
+| Moh4696/cinematic-skill (MIT) | Narrated documentaries drawn in code (Skia, Python): one camera over one board of photos, maps and cards, each visual hit on the narrator's word | Archive and history films; source of the Commons fetcher idea (`umd commons`) | see its README |
+| codepawl/creator-generalist (MIT) | 2D and 3D generalist skills (Blender rig, sculpt, edit, watch a video into a recipe) | Very young (2026-11); low priority | see its README |
+| motionvideo.xyz MCP (repo MIT) | Gallery of AI motion videos with prompts, 120 named moves (bundled as `umd moves`), templates; free MCP at `https://mcp.motionvideo.xyz/mcp` | Looking for a reference video with its prompt; use only the free MCP and the open data | `claude mcp add --transport http motionvideo https://mcp.motionvideo.xyz/mcp` |
 
 ## MCP servers
 
@@ -48,10 +51,9 @@ Notes:
 | R1 animated web page | gsap-skills or design-motion-principles; chrome-devtools-mcp while debugging performance |
 | R2 Blender | mcp-for-blender (project scope) |
 | R3 three.js single page | gsap-skills if GSAP drives the camera; chrome-devtools-mcp for frame drops |
-| R4 narrated, many scenes | humanizer; elevenlabs/skills only if cloud voice is accepted |
+| R4 narrated, many scenes | humanizer |
 | Interactive vector (apps) | rive-app/skills, LottieFiles/motion-design-skill |
 | Any route with a reference to match or an animation to port | reanimate |
-| Editable 3D for a designer | splinetool/spline-skills |
 
 ## Pitfalls
 
@@ -69,6 +71,6 @@ Notes:
 
 - https://github.com/remotion-dev/skills, https://github.com/greensock/gsap-skills, https://github.com/heygen-com/hyperframes
 - https://github.com/LottieFiles/motion-design-skill, https://github.com/kylezantos/design-motion-principles, https://github.com/blader/humanizer
-- https://github.com/nextlevelbuilder/ui-ux-pro-max-skill, https://github.com/elevenlabs/skills, https://github.com/rive-app/skills, https://github.com/splinetool/spline-skills
+- https://github.com/nextlevelbuilder/ui-ux-pro-max-skill, https://github.com/rive-app/skills
 - https://github.com/microsoft/playwright-mcp, https://github.com/ChromeDevTools/chrome-devtools-mcp, https://github.com/ahujasid/mcp-for-blender, https://github.com/magicuidesign/mcp
 - research_notes/Dépôts motion design pour agents/agent_skills_mcp.md

@@ -31,6 +31,8 @@ npx skills add NiazMorshed2007/reanimate -g -a claude-code
    - Keep the reference's timestamps in its own frame rate: a 0.5 s move is 15 frames at 30 fps and 30 at 60 fps. Note entrance, landing, readable hold and cut as source frame numbers, with the object's bounding box at start and landing.
    - Video reference without reanimate: `umd analyze ref.mp4` (probe, cuts), `umd frames ref.mp4 --every 0.5` for the overview, then `umd frames ref.mp4 --at …` on consecutive frames around the entrance and the landing.
    - Return the shot plan (layout, focal point, entrance, product response, reading hold, missing assets) before writing code.
+   - For a whole film, break it down shot by shot first: `umd analyze ref.mp4` gives the cuts (shot lengths and their rhythm; compare with the track's tempo if it has music), `seams` (does each cut happen on motion?) and `stillness`; one still per shot (`umd frames --at`) gives the palette and the composition type. Write that table before the motion spec (idea from edenfunf/reelmimic's reference analysis).
+   - Learn a technique's name with `umd moves <words>` (match cut, whip pan, split-flap…) so the storyboard and the critic share one vocabulary.
 4. **Convert the spec into umd files** (this is where umd takes over):
    - durations and curves → `.motion/motion-tokens.json` (DTCG `duration` and `cubicBezier`; name them by role, e.g. `entrance-reference`);
    - sequence and stagger → rows of `.motion/storyboard.md` (time, motion, intent);
