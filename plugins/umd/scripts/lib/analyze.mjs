@@ -184,7 +184,25 @@ export function confirmFreezes(file, freezes, { maxPsnr = 40 } = {}) {
   return { frozen: [...frozen, ...freezes.slice(12)], slow };
 }
 
-export function analyze(file, { outDir, thresholds = {}, sheet = true, cwd = process.cwd() } = {}) {
+// A loop must flow from its last frame into its first: the jump at the seam should look like one ordinary frame step.
+// Measures the mean luma difference between the last and the first frame against the film's own frame steps.
+export function loopSeam(file, frames) {
+  const r = ff(["-hide_banner", "-nostdin", "-i", file, "-sseof", "-0.25", "-i", file, "-filter_complex",
+    "[0:v]trim=end_frame=1,scale=320:-2,format=yuv420p,setpts=PTS-STARTPTS[a];[1:v]reverse,trim=end_frame=1,scale=320:-2,format=yuv420p,setpts=PTS-STARTPTS[b];[a][b]blend=all_mode=difference,signalstats,metadata=print:key=lavfi.signalstats.YAVG",
+    "-f", "null", "-"]);
+  const m = r.stderr.match(/lavfi\.signalstats\.YAVG=([\d.]+)/);
+  if (!m) return null;
+  const seam = Number(m[1]);
+  const steps = frames.slice(1).map((x) => x.ydif).filter((x) => x > 0).sort((a, b) => a - b);
+  const typical = steps.length ? steps[Math.floor(steps.length / 2)] : 0;
+  const p90 = steps.length ? steps[Math.floor(steps.length * 0.9)] : 0;
+  // a hard cut at the seam is a deliberate choice only if the film cuts like that elsewhere; otherwise it is a jump
+  const ok = seam <= Math.max(2 * typical, p90, 0.5);
+  return { seam_diff: round(seam), typical_step: round(typical), p90_step: round(p90), ok,
+    note: ok ? undefined : "The last frame does not flow into the first: match pose, velocity, camera and light, and render frames 0 to N-1 (never frame N)." };
+}
+
+export function analyze(file, { outDir, thresholds = {}, sheet = true, cwd = process.cwd(), loop = false } = {}) {
   const abs = resolve(cwd, file);
   const info = probe(abs);
   info.file = shown(cwd, abs);
@@ -204,6 +222,7 @@ export function analyze(file, { outDir, thresholds = {}, sheet = true, cwd = pro
     res.seams = seams(v.frames, v.scenes, { floor: thresholds.motion_floor ?? 0.4 });
     res.stillness = stillness(timeline, bucket, thresholds.motion_floor ?? 0.4, thresholds.end_card_s ?? 2);
     res.first_frame_black = v.black.some((b) => b.start <= 0.04);
+    if (loop) res.loop_seam = loopSeam(abs, v.frames);
   }
   if (info.audio) Object.assign(res, audioPass(abs, info));
   if (outDir) {

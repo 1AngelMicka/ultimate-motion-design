@@ -4,7 +4,7 @@
 
 Critères audités par `/umd:audit`. Méthode `auto` : décidé dans le code à partir des mesures ; `inspect` : jugé par un agent auditeur avec une preuve.
 
-**12 domaines · 64 critères · v0.8.0**
+**12 domaines · 64 critères · v0.9.0**
 
 ## Profils et poids des domaines
 
@@ -26,6 +26,7 @@ Critères audités par `/umd:audit`. Méthode `auto` : décidé dans le code à 
 | `loudness_tolerance_lu` | 1 |
 | `true_peak_dbtp` | -1 |
 | `freeze_s` | 1 |
+| `hero_min_px` | 170 |
 | `dead_air_s` | 3 |
 | `motion_floor` | 0.4 |
 | `flashes_per_s` | 3 |

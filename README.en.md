@@ -29,6 +29,7 @@ What it brings:
   - A critic agent scores every draft like a jury (7 = professional, 8 = agency, 9 = festival selection) and sends it back until it reaches the target. A fresh critic every round, which never sees the builder's reasoning and checks the previous round's fixes item by item.
   - Craft counts in the score: the idea and hero moment, typography, colour and sound design are judged against the project's target level (8 by default).
   - Sound is measured against picture: each effect lands on its event within ±45 ms (`umd sync`), and the music's real ending lands on the end card (`umd mix --backtime`).
+- **Measured, not just looked at.** The hero's size in every key still (`umd still --hero`), frames that do not depend on the render order (`--seek-check`), loops without a jump (`umd analyze --loop`), motion blur by sub-frames (`umd capture --subframes`) and one clock for every event and sound (`timing.json`).
 - **A real sound department.** Twelve effects made on the spot with no licence to manage (`umd sfx whoosh`, `riser`, `impact`…), free effects and music searched and credited automatically (`umd sounds`, CC0 and CC BY only), and a guide that says which sound goes on which picture event, per project type. Listen on the [Sound and music](https://1angelmicka.github.io/ultimate-motion-design/en/son.html) page.
   - Cuts happen on motion, never between two parked shots, and no more than one second of near-still picture per 30 s: two measured checks, calibrated with zero false alarm on 15 reference films scored 7 to 8 by an AI jury.
 - **The grammar of professional launch films.** Six rules and 16 mechanisms drawn from the analysis of 28 launch films: one persistent actor, every action producing a result, the foreground carrying the transition.
@@ -36,7 +37,7 @@ What it brings:
   - 1 323 styles, prompts and ready-made blocks, sorted by project type, mood, look and format, with a preview of the result in the [online library](https://1angelmicka.github.io/ultimate-motion-design/library/?lang=en). Your agent picks what fits your brief on its own (`umd styles match`), or offers you three options.
   - 120 named techniques, from match cut to split-flap, so you and the critic speak the same language (`umd moves`).
   - Free images from Wikimedia Commons, recorded automatically with their author and licence (`umd commons`).
-- **A real motion design skill, usable anywhere.** [`skills/motion-design`](skills/motion-design/SKILL.md) condenses the craft: the ten-step loop with three gates, twelve rules that separate craft from slop, the numbers that matter, type, colour, sound, camera, how to judge a piece. In Claude Code it triggers by itself as soon as you animate; it also installs in Codex, Cursor or any agent that reads skills, with its 54 guides.
+- **A real motion design skill, usable anywhere.** [`skills/motion-design`](skills/motion-design/SKILL.md) condenses the craft: the ten-step loop with three gates, twelve rules that separate craft from slop, the numbers that matter, type, colour, sound, camera, how to judge a piece. In Claude Code it triggers by itself as soon as you animate; it also installs in Codex, Cursor or any agent that reads skills, with its 55 guides.
 - **Token-frugal and transparent.**
   - About 270 tokens loaded at all times.
   - Measurable checks are done in code, without an agent.
@@ -192,7 +193,7 @@ All these commands rely on a zero-dependency CLI that you can also run yourself:
 - **analysis:** `analyze` (cuts, motion, dead air, flashes, loudness, contact sheet), `frames` (`--cuts`: 12 frames around each cut), `compare`, `vmaf`, `webperf`, `lint`, `licenses`;
 - **sound:** `mix` (ducking, loudness, `--backtime` to land the music's ending on the end card), `hits` (a track's final hits), `sync` (each sound against its picture), `normalize`, `loudness`, `captions`, `burn`;
 - **resources:** `styles` (1 323 styles, prompts and blocks; `styles match` picks from the brief), `moves` (120 named techniques), `commons` (free images from Wikimedia Commons), `sounds` (free effects and music), `sfx` (effects made on the spot);
-- **tracking:** `next`, `status`, `tokens`, `estimate` (render time from one test frame).
+- **tracking:** `next`, `status`, `tokens`, `estimate` (render time from one test frame), `adopt` (runs a video rendered by your own pipeline through analysis, audit and delivery).
 
 ## Routes and technologies
 
@@ -311,7 +312,7 @@ The plugin cuts tokens in three places:
 | Mechanism | Effect |
 | --- | --- |
 | **Almost nothing loaded at all times** | About 270 tokens loaded at all times: the description of the `motion` skill and those of the two agents. The eleven `/umd:*` commands cost nothing until you run them. In a umd project, the startup hook adds about 150 tokens of context. |
-| **References on demand** | 55 guides of 800 to 2,300 tokens each, read one at a time, only when needed: for example the project's route, then its engine's guide. |
+| **References on demand** | 56 guides of 800 to 2,300 tokens each, read one at a time, only when needed: for example the project's route, then its engine's guide. |
 | **Checks done in code** | 29 of the 64 checks are decided by the CLI from FFmpeg measures, lint, licences and browser tests. The auditors only look at what needs eyes. |
 | **Contact sheet** | Each render produces a 16-frame sheet: a single image to read. Claude then extracts only 2 to 6 targeted frames if a doubt remains. |
 | **Compact output** | Renders, encodes and analyses write their full output to disk and return only a summary. In our test, 3 commands went from about 3,700 tokens of output to about 700. |

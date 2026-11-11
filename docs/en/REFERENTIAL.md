@@ -4,7 +4,7 @@
 
 Criteria audited by `/umd:audit`. Method `auto`: decided in code from measurements; `inspect`: judged by an auditor agent with evidence.
 
-**12 domains · 64 criteria · v0.8.0**
+**12 domains · 64 criteria · v0.9.0**
 
 ## Profiles and domain weights
 
@@ -26,6 +26,7 @@ Criteria audited by `/umd:audit`. Method `auto`: decided in code from measuremen
 | `loudness_tolerance_lu` | 1 |
 | `true_peak_dbtp` | -1 |
 | `freeze_s` | 1 |
+| `hero_min_px` | 170 |
 | `dead_air_s` | 3 |
 | `motion_floor` | 0.4 |
 | `flashes_per_s` | 3 |

@@ -20,13 +20,15 @@ Run `umd next`. It returns `step`, `reason`, `needs_user`, `optional`, `cost` an
 - `$ARGUMENTS` describes something to make and a project already exists → `kickoff` (it asks whether to update this project or start a new one in another folder); never ignore the user's words.
 - Otherwise → the step from `umd next`.
 
-Tell the user in one line: the step, why (`reason`) and what it will cost (`cost.tokens`, `cost.level`, and "measured" when `cost.source` says so).
+Tell the user in one line: the step, why (`reason`), what it will cost (`cost.tokens`, `cost.level`, and "measured" when `cost.source` says so) and the effort that pays for it (`cost.effort`: suggest `/effort medium` for plans and stills, `/effort high` before a build or a fix).
 
 **Expensive steps.** When `cost.confirm` is true (a high-cost step, or the project's `token_budget` would be exceeded), stop before running it: give the estimate, the main drivers (`cost.drivers`) and the cheaper options (`cost.cheaper`), and ask whether to go ahead. A project can set `"cost_confirm": "medium"` (ask more often) or `"never"` in `.motion/project.json`.
 
 ## 3. Run it
 
 Read `${CLAUDE_PLUGIN_ROOT}/skills/<step>/SKILL.md` and follow it exactly, as if the user had typed `/umd:<step>`. Its `$ARGUMENTS` are the user's remaining words, or empty. Do not re-read a step file you have already followed in this conversation unless the step is new to you.
+
+**No parallel pipeline.** If the project renders with its own scripts, keep them, but route them through umd: `render.command` (so `umd render` runs and analyses them) or `umd adopt <video>` after each render. The gates stay: measured key stills, critic rounds, audit before anything is shown.
 
 **The look comes from the library.** Whatever step runs, a look (style, palette, type, motion) is never invented while `project.json` has no `style`: the storyboard step chooses it with `umd styles match` first.
 

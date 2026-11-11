@@ -6,16 +6,16 @@ Tous les liens partagés, testés ou utilisés pour construire Ultimate Motion D
 
 Dernière mise à jour : 2026-11-10.
 
-315 liens en tout, chacun listé une seule fois ci-dessous. Les liens propres à la recherche (dossiers research_notes/ et reports/, non publiés) et les 1 113 dépôts du catalogue ne sont pas répétés.
+323 liens en tout, chacun listé une seule fois ci-dessous. Les liens propres à la recherche (dossiers research_notes/ et reports/, non publiés) et les 1 113 dépôts du catalogue ne sont pas répétés.
 
 | Statut | Nombre |
 | --- | --- |
-| Lien de référence | 240 |
-| Écarté | 27 |
-| Compagnon | 20 |
+| Lien de référence | 241 |
+| Écarté | 28 |
+| Compagnon | 25 |
 | Intégré | 14 |
 | Examiné | 7 |
-| Adapté (crédité) | 6 |
+| Adapté (crédité) | 7 |
 | Données de calibrage | 1 |
 
 ## Posts X partagés
@@ -47,6 +47,8 @@ Dernière mise à jour : 2026-11-10.
 | 2026-11-10 | [@0xrivvian](https://x.com/0xrivvian/status/2119766132609446367) | 20 librairies animation, physique, 3D, son, livraison | Intégré |
 | 2026-11-10 | [@dyfwsammy](https://x.com/dyfwsammy/status/2119782029575254487) | 11 outils de montage de footage (scènes, stabilisation, étalonnage, upscale, stems) | Intégré |
 | 2026-11-10 | [@YassineZaanouni](https://x.com/YassineZaanouni/status/2119700637239894349) | 10 sites design (galeries, palettes, dégradés) | Lien de référence |
+| 2026-11-10 | [@flxrnc](https://x.com/flxrnc/status/2120207374250049675) | Article « The Fable 5.2 Motion Playbook » : 9 leçons tirées de 40 films (effort, chiffres, ressorts, contrôle du mouvement, « terminé », taille du héros, horloge unique, export X) | Adapté (crédité) : `references/craft/direction.md`, `umd still --hero/--seek-check`, `umd capture --subframes`, `umd analyze --loop`, `timing.json` |
+| 2026-11-10 | [@flxrnc](https://x.com/flxrnc/status/2120237588594217105) | 20 dépôts gratuits « pour un Pixar à une personne » : 17 déjà au catalogue | Lien de référence |
 | 2026-11-10 | [@bonsaixbt](https://x.com/bonsaixbt/status/2118711268475392443) | Article « Cartoon Retainer » : vendre une série animée récurrente à une app | Adapté (crédité) |
 
 ## Intégrés ou adaptés (crédités)
@@ -71,6 +73,11 @@ Dernière mise à jour : 2026-11-10.
 
 | Lien | Ce que c'est | Où dans le dépôt |
 | --- | --- | --- |
+| [lovisdotio/motion2code](https://github.com/lovisdotio/motion2code) | Reconstruit une animation de référence en SVG + GSAP, vérifiée image par image (MIT) | `plugins/umd/references/companions.md` |
+| [bradautomates/claude-video](https://github.com/bradautomates/claude-video) | `/watch` : images et transcription d'une vidéo pour l'agent (MIT) | `plugins/umd/references/companions.md` |
+| [EL4CTEO/blender-skills](https://github.com/EL4CTEO/blender-skills) | 28 skills Blender 5.2 (MIT) | `plugins/umd/references/companions.md` |
+| [AcademySoftwareFoundation/OpenRV](https://github.com/AcademySoftwareFoundation/OpenRV) | Lecteur de revue image par image (Apache-2.0) | `plugins/umd/references/companions.md` |
+| [breakfastquay/rubberband](https://github.com/breakfastquay/rubberband) | Étirement temporel audio (GPL-2.0, binaire appelé, jamais lié) | `plugins/umd/references/companions.md` |
 | [ahujasid/mcp-for-blender](https://github.com/ahujasid/mcp-for-blender) | Blender MCP server (MIT; ex blender-mcp) | `README.en.md`, `README.md`, `plugins/umd/references/companions.md` |
 | [blader/humanizer](https://github.com/blader/humanizer) | Removes AI-writing patterns from scripts and captions (MIT) | `README.en.md`, `README.md`, `plugins/umd/references/audio/voice.md` |
 | [ChromeDevTools/chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) | Chrome DevTools MCP: perf traces, console, network (Apache-2.0) | `README.en.md`, `README.md`, `plugins/umd/references/companions.md` |
@@ -118,6 +125,7 @@ Dernière mise à jour : 2026-11-10.
 
 | Lien | Ce que c'est | Raison |
 | --- | --- | --- |
+| [pencil2d/pencil](https://github.com/pencil2d/pencil) | Application de dessin animé image par image (GPL-2.0) | Un agent ne peut pas la piloter ; utile seulement à un humain qui dessine les poses clés |
 | [60fps.design](https://60fps.design) | Mobile UI animation Free (paid extras) | payant, freemium verrouillé ou licence floue |
 | [backgrounds.supply](https://backgrounds.supply) | Galerie ou bibliothèque de ressources | payant, freemium verrouillé ou licence floue |
 | [elevenlabs/skills](https://github.com/elevenlabs/skills) | Official ElevenLabs skills: TTS, SFX, music (MIT; paid API) | service payant ou compte requis |

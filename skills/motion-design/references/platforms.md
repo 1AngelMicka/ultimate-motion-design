@@ -46,6 +46,13 @@ ffmpeg -i master.mov -an -vf "scale=1920:-2" -c:v libvpx-vp9 -b:v 0 -crf 34 -row
 ffmpeg -i master.mov -an -vf "scale=1920:-2" -c:v libx264 -pix_fmt yuv420p -crf 26 -movflags +faststart hero.mp4
 ```
 
+## X (Twitter)
+
+- Video: H.264 High, yuv420p, up to 60 fps, AAC, `-movflags +faststart`. Loudness −14 LUFS integrated and true peak at or below −2 dBTP **measured on the final file after the AAC encode** (AAC raises the peak: a mix that passes before encoding can clip after it): `umd loudness film_x.mp4`.
+- GIF: up to 15 MB, 1280×1080, 350 frames and 300 million pixels in total (width × height × frames). A 6 s loop at 50 fps is 300 frames: it fits at 960×960, not at 1080×1080; at 60 fps it is 360 frames, over the cap.
+- Loops: render frames 0 to N-1, never frame N (umd capture does), and check the seam with `umd analyze --loop`.
+- Source: flxrnc, "The Fable 5.2 Motion Playbook", X, 2026-11-10 (export section); check X's media help before a campaign, limits change.
+
 ## GIF and email
 
 - Prefer a short MP4 where the destination supports it; GIF is 256 colours and large.

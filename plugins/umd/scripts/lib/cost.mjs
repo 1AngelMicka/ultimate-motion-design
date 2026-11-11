@@ -50,13 +50,17 @@ const CHEAPER = {
   fix: ["`/umd:fix blockers` only"],
 };
 
+// reasoning effort that pays for each step: iterate at medium (plans, stills, notes), build and fix at high
+const EFFORT = { doctor: "low", kickoff: "medium", storyboard: "medium", build: "high", render: "low", audit: "medium", fix: "high", deliver: "low" };
+
 // history: rows from tokenReport().by_command ({ command, total, runs })
 export function estimateCost(step, project = {}, state = {}, history = null) {
   const r = ranges(step, project, state);
   const row = history?.find?.((h) => h.command === `umd:${step}` && h.runs > 0);
   const measured = row ? Math.round(row.total / row.runs) : null;
   const lo = measured ? Math.round(measured * 0.7) : r.lo, hi = measured ? Math.round(measured * 1.3) : r.hi;
-  const out = { step, level: level(lo, hi), tokens: `${fmt(lo)}–${fmt(hi)}`, source: measured ? `measured: ${row.runs} earlier run(s) in this project` : "estimate", drivers: r.drivers };
+  const out = { step, level: level(lo, hi), tokens: `${fmt(lo)}–${fmt(hi)}`, source: measured ? `measured: ${row.runs} earlier run(s) in this project` : "estimate", drivers: r.drivers,
+    effort: EFFORT[step] || undefined };
   if (CHEAPER[step] && out.level !== "low") out.cheaper = CHEAPER[step];
   const budget = Number(project.token_budget || 0);
   if (budget && state.tokens_used != null) {

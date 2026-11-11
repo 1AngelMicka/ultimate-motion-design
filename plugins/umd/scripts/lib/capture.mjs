@@ -130,20 +130,24 @@ async function openPage(input, { cwd, width, height, transparent, seed, scale = 
   return { browser, page, errors };
 }
 
-function encodeArgs(format, { fps, out, draft, audio, transparent, enc, seconds }) {
-  const input = ["-f", "image2pipe", "-framerate", String(fps), "-i", "-"];
+function encodeArgs(format, { fps, out, draft, audio, transparent, enc, seconds, subframes = 1 }) {
+  const K = Math.max(1, subframes | 0);
+  const input = ["-f", "image2pipe", "-framerate", String(fps * K), "-i", "-"];
+  // motion blur: the K sub-frames of each frame are averaged, then one frame per group is kept at the real rate
+  const blur = K > 1 ? `tmix=frames=${K},select='not(mod(n+1,${K}))',setpts=N/(${fps}*TB)` : null;
+  const vf = (more) => (blur || more ? ["-vf", [blur, more].filter(Boolean).join(",")] : []);
   const aIn = audio ? ["-i", audio] : [];
   // the picture sets the length: a shorter soundtrack is padded with silence, a longer one is cut (never -shortest)
   const aMap = audio ? ["-map", "0:v", "-map", "1:a", "-af", "apad", "-t", String(seconds)] : [];
   switch (format) {
-    case "webm": return [...input, ...aIn, ...aMap, "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", draft ? "40" : "28", "-row-mt", "1", "-deadline", draft ? "realtime" : "good",
+    case "webm": return [...input, ...aIn, ...aMap, ...vf(), "-c:v", "libvpx-vp9", "-b:v", "0", "-crf", draft ? "40" : "28", "-row-mt", "1", "-deadline", draft ? "realtime" : "good",
       "-pix_fmt", transparent ? "yuva420p" : "yuv420p", ...(audio ? ["-c:a", "libopus", "-b:a", "160k"] : []), out];
-    case "mov": return [...input, ...aIn, ...aMap, "-c:v", "prores_ks", "-profile:v", transparent ? "4444" : "3", "-pix_fmt", transparent ? "yuva444p10le" : "yuv422p10le",
+    case "mov": return [...input, ...aIn, ...aMap, ...vf(), "-c:v", "prores_ks", "-profile:v", transparent ? "4444" : "3", "-pix_fmt", transparent ? "yuva444p10le" : "yuv422p10le",
       ...(audio ? ["-c:a", "pcm_s16le"] : []), out];
-    case "gif": return [...input, "-vf", "split[s0][s1];[s0]palettegen=stats_mode=diff[p];[s1][p]paletteuse=dither=sierra2_4a", "-loop", "0", out];
+    case "gif": return [...input, "-vf", `${blur ? `${blur},` : ""}split[s0][s1];[s0]palettegen=stats_mode=diff[p];[s1][p]paletteuse=dither=sierra2_4a`, "-loop", "0", out];
     default: {
       const x264 = enc.has("libx264");
-      return [...input, ...aIn, ...aMap, ...(x264 ? ["-c:v", "libx264", "-preset", draft ? "veryfast" : "slow", "-crf", draft ? "24" : "16", "-profile:v", "high"] : ["-c:v", "mpeg4", "-q:v", "2"]),
+      return [...input, ...aIn, ...aMap, ...vf(), ...(x264 ? ["-c:v", "libx264", "-preset", draft ? "veryfast" : "slow", "-crf", draft ? "24" : "16", "-profile:v", "high"] : ["-c:v", "mpeg4", "-q:v", "2"]),
         "-pix_fmt", "yuv420p", "-r", String(fps), "-movflags", "+faststart", ...(audio ? ["-c:a", "aac", "-b:a", "192k", "-ar", "48000"] : []), out];
     }
   }
@@ -159,6 +163,10 @@ export async function capture(input, opts = {}) {
   const out = resolve(cwd, opts.out || "out.mp4");
   const format = (opts.format || extname(out).slice(1) || "mp4").toLowerCase();
   const transparent = !!opts.transparent;
+  // motion blur: sub-frames spread over the shutter (0.5 = 180 degrees), none in drafts
+  const subframes = draft ? 1 : Math.max(1, Math.min(64, Number(opts.subframes || 1) | 0));
+  const shutter = Math.min(1, Math.max(0.05, Number(opts.shutter ?? 0.5)));
+  if (subframes > 1 && format === "png") throw new Error("--subframes needs a video format (the sub-frames are averaged by FFmpeg).");
   if (transparent && format === "mp4") throw new Error("MP4/H.264 has no alpha: use --format webm or mov with --transparent.");
   mkdirSync(dirname(out), { recursive: true });
   const started = Date.now();
@@ -173,18 +181,21 @@ export async function capture(input, opts = {}) {
     const shot = { type: transparent ? "png" : (draft ? "jpeg" : "png"), ...(draft && !transparent ? { quality: 85 } : {}), omitBackground: transparent, animations: "allow", caret: "hide" };
     let ff;
     if (format === "png") mkdirSync(out, { recursive: true });
-    else ff = ffPipe(encodeArgs(format, { fps, out, draft, audio: opts.audio ? resolve(cwd, opts.audio) : null, transparent, enc: encoders(), seconds: total / fps }), { cwd });
+    else ff = ffPipe(encodeArgs(format, { fps, out, draft, audio: opts.audio ? resolve(cwd, opts.audio) : null, transparent, enc: encoders(), seconds: total / fps, subframes }), { cwd });
+    // frames 0 to N-1: frame N is frame 0 of a loop again, rendering it would show as a stutter at the seam
     for (let i = 0; i < total; i++) {
-      const t = from + i / fps;
-      await page.evaluate((x) => window.__umd.seek(x), t);
-      const buf = await page.screenshot(shot);
-      if (format === "png") writeFileSync(join(out, `frame-${String(i).padStart(5, "0")}.png`), buf);
-      else await writeFrame(ff.stdin, buf);
+      for (let j = 0; j < subframes; j++) {
+        const t = from + i / fps + (subframes > 1 ? (j / subframes) * (shutter / fps) : 0);
+        await page.evaluate((x) => window.__umd.seek(x), t);
+        const buf = await page.screenshot(shot);
+        if (format === "png") writeFileSync(join(out, `frame-${String(i).padStart(5, "0")}.png`), buf);
+        else await writeFrame(ff.stdin, buf);
+      }
       if (opts.onProgress && i % 30 === 0) opts.onProgress(i, total);
     }
     if (ff) { ff.stdin.end(); await ff.done; }
     const warnings = await page.evaluate(() => window.__umd.warnings());
-    return { out: shown(cwd, out), format, width, height, fps, duration, frames: total, draft, transparent,
+    return { out: shown(cwd, out), format, width, height, fps, duration, frames: total, draft, transparent, motion_blur: subframes > 1 ? { subframes, shutter } : undefined,
       seconds: Math.round((Date.now() - started) / 100) / 10, page_errors: [...new Set([...warnings, ...errors])].slice(0, 10) };
   } finally {
     await browser.close();
@@ -200,17 +211,50 @@ export async function stills(input, opts = {}) {
   const { browser, page, errors } = await openPage(input, { cwd, width, height, transparent: false, seed: Number(opts.seed ?? 42) });
   const prefix = opts.prefix || "still";
   const files = [];
+  // the hero's minimum width, scaled from a 1080-line reference to this frame's height
+  const heroMin = opts.heroMin != null ? Math.round(Number(opts.heroMin) * (Math.min(width, height) / 1080)) : null;
+  const shotOpts = { type: "png", animations: "allow", caret: "hide" };
   try {
     for (const t of times) {
       await page.evaluate((x) => window.__umd.seek(x), t);
       const f = join(outDir, `${prefix}-${String(t.toFixed(2)).replace(".", "_")}s.png`);
-      await page.screenshot({ path: f, type: "png", animations: "allow", caret: "hide" });
-      files.push({ t, file: shown(cwd, f) });
+      await page.screenshot({ path: f, ...shotOpts });
+      const row = { t, file: shown(cwd, f) };
+      // the hero: an element (--hero "#tv") or, for canvas/WebGL, window.umdHero(t) returning its box in CSS pixels
+      const box = await page.evaluate(async ({ sel, t }) => {
+        const pick = (r) => (r && r.width > 0 ? { x: Math.round(r.x), y: Math.round(r.y), width: Math.round(r.width), height: Math.round(r.height) } : null);
+        if (sel) { const el = document.querySelector(sel); return el ? pick(el.getBoundingClientRect()) : "missing"; }
+        if (typeof window.umdHero === "function") return pick(await window.umdHero(t));
+        return null;
+      }, { sel: opts.hero || null, t });
+      if (box === "missing") row.hero = { error: `no element matches ${opts.hero}` };
+      else if (box) row.hero = { ...box, min_width: heroMin ?? undefined, ok: heroMin == null ? undefined : box.width >= heroMin };
+      files.push(row);
     }
   } finally {
     await browser.close();
   }
-  return { input, width, height, stills: files, page_errors: [...new Set(errors)].slice(0, 10) };
+  // seek check: draw each time cold, in a fresh page, and compare with the frame drawn in sequence above
+  let seek = null;
+  if (opts.seekCheck) {
+    const { createHash } = await import("node:crypto");
+    const { readFileSync } = await import("node:fs");
+    const hash = (b) => createHash("sha256").update(b).digest("hex");
+    seek = [];
+    for (const row of files) {
+      const fresh = await openPage(input, { cwd, width, height, transparent: false, seed: Number(opts.seed ?? 42) });
+      try {
+        await fresh.page.evaluate((x) => window.__umd.seek(x), row.t);
+        const cold = await fresh.page.screenshot(shotOpts);
+        seek.push({ t: row.t, same: hash(cold) === hash(readFileSync(resolve(cwd, row.file))) });
+      } finally { await fresh.browser.close(); }
+    }
+  }
+  const heroes = files.filter((r) => r.hero && r.hero.ok === false).map((r) => r.t);
+  return { input, width, height, stills: files,
+    hero_too_small_at: heroMin != null && files.some((r) => r.hero) ? heroes : undefined,
+    seek_check: seek ? { ok: seek.every((x) => x.same), differs_at: seek.filter((x) => !x.same).map((x) => x.t) } : undefined,
+    page_errors: [...new Set(errors)].slice(0, 10) };
 }
 
 export { virtualTime, toUrl };

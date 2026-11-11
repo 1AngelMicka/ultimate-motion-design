@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.9.0 — 2026-11-11
+
+A real project made with only part of the plugin (its own render scripts, no key-still gate, no audit) came out with small unreadable screens, empty 3D sets and frozen seconds. This version closes that door and adds what a creator's notes on 40 films showed was missing.
+
+- **No more half use.** `umd adopt <video>` makes a video rendered by the project's own pipeline the latest render, so analysis, the audit and `deliver` apply to it. AGENTS.md, the `motion` skill and `/umd:go` now say it plainly: keep your scripts, route them through `render.command` or `umd adopt`, and never show a result before the measured stills, the critic and the audit.
+- **The hero, measured.** `umd still --hero "<selector>"` (or `window.umdHero(t)` for canvas and WebGL) reports the hero's width in each still against a minimum (170 px at 1080p, `thresholds.hero_min_px`, scaled to the frame); the storyboard's key stills use it. "The hero is a dot" was the most common fix in those films.
+- **Frames that do not depend on the order they are drawn.** `umd still --seek-check` draws each time cold in a fresh page and compares it with the frame drawn in sequence.
+- **Loops without a jump.** `umd analyze --loop` (or `"loop": true` in project.json) checks that the last frame flows into the first, against the film's own frame steps. Capture already renders frames 0 to N-1.
+- **Motion blur.** `umd capture --subframes 16 --shutter 0.5` (or `render.capture.subframes`) renders that many sub-frames inside the shutter and averages them; drafts stay sharp and fast. Checked on a fast-moving bar: the frame count stays exact and the bar smears over the shutter.
+- **One clock.** `.motion/timing.json` (template in `templates/`) lists every event in frames with its sound; the scene reads it and `umd sync` measures it, each sound 1 frame after its picture.
+- **Directing by numbers.** A new guide, `craft/direction.md`: adjectives turned into numbers, the ten-line brief, the camera block, damping ratios (1.0 UI, 0.8 products, 0.5 characters) with a closed-form spring, designing collisions out, measuring instead of looking, and how to direct the agent (iterate at medium effort, build at high, a "finishing work" definition, approvals, limits as numbers). `/umd:go` states the suggested effort with each step's cost; the build skill carries the finishing-work rule.
+- **X export.** `platforms.md`: video and GIF limits (15 MB, 350 frames, 300 million pixels), true peak −2 dBTP measured after the AAC encode.
+- **Companions**, licences checked: motion2code, claude-video, blender-skills (MIT), OpenRV (Apache-2.0), Rubber Band (GPL-2.0, called as a binary).
+
 ## 0.8.0 — 2026-11-10
 
 - **Sound, from picture events to a finished soundtrack.**

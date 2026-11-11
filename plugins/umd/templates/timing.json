@@ -1,0 +1,11 @@
+{
+  "$description": "The master clock of the film. Every move, cut, camera event and sound hit is read from this file; nothing is timed by hand in the scene code. Events are in frames (or seconds with \"t\"). A sound plays 1 frame after its picture event unless \"sound_offset_frames\" says otherwise. umd sync measures every event that has a sound.",
+  "fps": 30,
+  "bpm": 120,
+  "sound_offset_frames": 1,
+  "events": [
+    { "name": "logo lands", "frame": 60, "sound": "impact" },
+    { "name": "cursor press", "frame": 195, "sound": "click" },
+    { "name": "cut to the result", "frame": 240 }
+  ]
+}

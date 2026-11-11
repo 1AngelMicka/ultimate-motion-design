@@ -15,9 +15,13 @@
 //   moves <words> [--family transitions|camera|type|...]   120 named motion techniques (match cut, whip pan, split-flap…)
 //   commons <words> [--allow-sa] [--limit 12]         Wikimedia Commons media under PD, CC0 or CC BY (BY-SA on request)
 //   commons get "File:Name.jpg" [--dir assets/commons] [--width 1920]   Download it and record it in assets.lock.json
-//   still <html|url> --at 0,1.5 [--out dir] [--width W --height H]      Key stills on virtual time
+//   still <html|url> --at 0,1.5 [--out dir] [--width W --height H] [--hero "#tv"] [--hero-min 170] [--seek-check]
+//         Key stills on virtual time; measures the hero's width (an element, or window.umdHero(t) for canvas/WebGL) and
+//         checks that each frame drawn cold equals the same frame drawn in sequence
 //   capture <html|url> --out f.mp4 [--fps 30] [--duration s] [--width 1920 --height 1080] [--from s]
-//           [--draft] [--transparent] [--format mp4|webm|mov|gif|png] [--audio f] [--seed n]   Deterministic HTML → video
+//           [--draft] [--transparent] [--format mp4|webm|mov|gif|png] [--audio f] [--seed n] [--subframes 16 --shutter 0.5]
+//           Deterministic HTML → video; --subframes averages that many sub-frames per frame over the shutter (motion blur)
+//   adopt <video> [--draft]                         Make a video rendered by your own pipeline the latest render (analysis, audit, deliver apply)
 //   render [--draft] [--twice] [--no-analyze] [--engine eevee|cycles]  Render the project (project.json "render"), then analyze; --engine reaches a
 //           Blender command as UMD_ENGINE (default: render.engine)
 //   mix --voice v.wav --music m.wav [--sfx a.wav@1.2 ...] --out mix.wav [--duck 9] [--lufs -14] [--length s]  (length defaults to duration_s)
@@ -30,9 +34,10 @@
 //   captions <words.json> --out subs.ass|srt|vtt [--style karaoke|pop|line] [--max-chars 32] [--width --height --font --color --highlight]
 //   burn <video> <subs.ass> --out f.mp4             Burn captions in (libass)
 // Check
-//   analyze <video> [--out dir]                     Probe, cuts, freezes, dead air, black, flashes, loudness, contact sheet
+//   analyze <video> [--out dir] [--loop]            Probe, cuts, freezes, dead air, black, flashes, loudness, contact sheet; --loop checks the seam
 //   frames <video> --at 1,2.5 | --every 2 | --cuts | --sheet [--out dir] [--width 960]   (--cuts: 12 frames around each cut)
-//   sync <video> [--cues storyboard.md] [--tolerance-ms 45]   Do the sound hits land on their visual events? (storyboard "## Sound cues")
+//   sync <video> [--timing timing.json | --cues storyboard.md] [--tolerance-ms 45]   Do the sound hits land on their visual events?
+//        (.motion/timing.json, the master clock, when it exists; else the storyboard's "## Sound cues")
 //   compare <a> <b>                                 Frame-hash equality + SSIM       vmaf <encode> <master>
 //   lint [dir]   licenses   webperf <url>   captions-check <subs> <words.json>
 //   evidence [--date D]                             All automatic checks for the audit + statuses of auto criteria
@@ -64,7 +69,7 @@ const flags = new Set();
 const opts = {};
 const pos = [];
 // boolean flags never take a value, so `umd capture --draft page.html` keeps page.html as the input
-const BOOL = new Set(["allow-sa", "backtime", "blender", "cc0", "cuts", "music", "draft", "fix", "force", "incremental", "json", "no-analyze", "sheet", "transparent", "twice"]);
+const BOOL = new Set(["allow-sa", "backtime", "blender", "cc0", "cuts", "loop", "seek-check", "music", "draft", "fix", "force", "incremental", "json", "no-analyze", "sheet", "transparent", "twice"]);
 for (let i = 0; i < argv.length; i++) {
   const a = argv[i];
   if (a.startsWith("--")) {
@@ -120,7 +125,7 @@ function analysisSummary(a) {
     file: a.file, duration: a.probe?.duration, size: a.probe?.width ? `${a.probe.width}x${a.probe.height}@${a.probe.fps}` : null,
     scenes: a.scenes?.count, dead_air: a.dead_air, freezes: (a.freezes || []).filter((x) => x.duration >= 1), slow_moves: a.slow_moves?.length ? a.slow_moves : undefined, black: a.black,
     flashes_max_per_s: a.flashes?.max_per_s, stillness: a.stillness ? `${a.stillness.per_30s}s per 30 s, longest ${a.stillness.longest_s}s` : null, loudness: a.loudness ? { lufs: a.loudness.integrated, true_peak: a.loudness.true_peak, lra: a.loudness.lra } : null,
-    abrupt_end: a.audio_end?.abrupt, motion_mean: a.motion?.mean, sheet: a.sheet ? `${a.sheet.file} (${a.sheet.layout}, times ${a.sheet.times.join(" ")})` : null,
+    abrupt_end: a.audio_end?.abrupt, loop_seam: a.loop_seam || undefined, motion_mean: a.motion?.mean, sheet: a.sheet ? `${a.sheet.file} (${a.sheet.layout}, times ${a.sheet.times.join(" ")})` : null,
   };
 }
 
@@ -373,7 +378,7 @@ async function render() {
       const format = c.format || "mp4";
       const file = join(dir, `video${suffix}.${format === "png" ? "frames" : format}`);
       const res = await capture(c.entry || "index.html", { cwd, out: file, fps: c.fps || fmt.fps || 30, duration: c.duration || project.duration_s, width: c.width || fmt.width, height: c.height || fmt.height,
-        draft, transparent: !!c.transparent, format, audio: r.audio || c.audio || null, seed: c.seed ?? 42 });
+        draft, transparent: !!c.transparent, format, audio: r.audio || c.audio || null, seed: c.seed ?? 42, subframes: opt("subframes", c.subframes), shutter: opt("shutter", c.shutter) });
       return { output: res.out, capture: res };
     }
     if (r.command) {
@@ -413,7 +418,7 @@ async function render() {
   let analysis = null;
   if (!flags.has("no-analyze") && !/\.frames$/.test(a.output)) {
     const { analyze } = await import("./lib/analyze.mjs");
-    analysis = analyze(a.output, { cwd, outDir: dir, thresholds: thresholds(project, ref) });
+    analysis = analyze(a.output, { cwd, outDir: dir, thresholds: thresholds(project, ref), loop: !!(project.loop || project.format?.loop) });
     info.probe = analysis.probe;
   }
   info.finished_at = new Date().toISOString();
@@ -423,6 +428,28 @@ async function render() {
   writeFileSync(join(md, "renders", "latest.json"), JSON.stringify({ id, dir: posix(rel(dir)), output: posix(a.output), draft, engine: engineName || undefined, probe: info.probe || null }, null, 2));
   out({ id, ok: true, output: a.output, engine: engineName || undefined, seconds: info.seconds, page_errors: a.capture?.page_errors?.length ? a.capture.page_errors : undefined,
     determinism: determinism ? { identical: determinism.identical, ssim: determinism.ssim } : undefined, analysis: analysisSummary(analysis) });
+}
+
+// A film rendered outside umd (the project's own scripts, Blender, After Effects…) becomes the project's latest render,
+// so analyze, the audit and deliver judge it like any other. It never replaces the checks: it lets them run.
+async function adopt(file) {
+  if (!file || !existsSync(resolve(cwd, file))) die("Usage: umd adopt <video> [--draft]   (a video rendered by your own pipeline)");
+  if (!existsSync(join(md, "project.json"))) die("No .motion/project.json: run umd init (or /umd:kickoff) first, then umd adopt <video>.");
+  const project = loadProject(cwd);
+  const draft = flags.has("draft");
+  const id = `${stamp()}-adopted${draft ? "-draft" : ""}`;
+  const dir = join(md, "renders", id);
+  mkdirSync(dir, { recursive: true });
+  const keep = join(dir, `video${extname(file) || ".mp4"}`);
+  copyFileSync(resolve(cwd, file), keep);
+  const { analyze } = await import("./lib/analyze.mjs");
+  const analysis = analyze(keep, { cwd, outDir: dir, thresholds: thresholds(project, ref), loop: !!(project.loop || project.format?.loop) });
+  const posix = (x) => String(x).split("\\").join("/");
+  const info = { id, draft, adopted_from: posix(rel(resolve(cwd, file))), output: posix(rel(keep)), sha256: sha256(keep), probe: analysis.probe, adopted_at: new Date().toISOString() };
+  writeFileSync(join(dir, "render.json"), JSON.stringify(info, null, 2));
+  writeFileSync(join(md, "renders", "latest.json"), JSON.stringify({ id, dir: posix(rel(dir)), output: info.output, draft, adopted: true, probe: analysis.probe || null }, null, 2));
+  out({ id, ok: true, output: info.output, adopted_from: info.adopted_from, analysis: analysisSummary(analysis),
+    next: "Now the checks apply: umd evidence, then /umd:audit (or /umd:audit quick), then umd deliver. Re-adopt after every new render." });
 }
 
 function initProject() {
@@ -506,22 +533,28 @@ async function main() {
       if (!pos[0]) die("Usage: umd still <html|url> --at 0,1.5 [--out dir]");
       const { stills } = await import("./lib/capture.mjs");
       const p = loadProject(cwd);
-      return out(await stills(pos[0], { cwd, at: list("at").map(Number), out: opt("out", ".motion/stills"), width: opt("width", p?.format?.width), height: opt("height", p?.format?.height), prefix: opt("prefix", "still") }));
+      const hero = opt("hero", p?.hero || null);
+      // the minimum applies to any hero measured (an element, or window.umdHero in the page); project.json "hero" sets the selector
+      const heroMin = Number(opt("hero-min") ?? thresholds(p, ref).hero_min_px ?? 170);
+      return out(await stills(pos[0], { cwd, at: list("at").map(Number), out: opt("out", ".motion/stills"), width: opt("width", p?.format?.width), height: opt("height", p?.format?.height), prefix: opt("prefix", "still"),
+        hero, heroMin, seekCheck: flags.has("seek-check") }));
     }
     case "capture": {
       if (!pos[0]) die("Usage: umd capture <html|url> --out f.mp4 [--fps 30] [--duration s]");
       const { capture } = await import("./lib/capture.mjs");
       const p = loadProject(cwd);
       return out(await capture(pos[0], { cwd, out: opt("out", "out.mp4"), fps: opt("fps", p?.format?.fps), duration: opt("duration"), width: opt("width", p?.format?.width), height: opt("height", p?.format?.height),
-        from: opt("from"), draft: flags.has("draft"), transparent: flags.has("transparent"), format: opt("format"), audio: opt("audio"), seed: opt("seed") }));
+        from: opt("from"), draft: flags.has("draft"), transparent: flags.has("transparent"), format: opt("format"), audio: opt("audio"), seed: opt("seed"),
+        subframes: opt("subframes", p?.render?.capture?.subframes), shutter: opt("shutter", p?.render?.capture?.shutter) }));
     }
     case "render": return render();
+    case "adopt": return adopt(pos[0]);
     case "analyze": {
       if (!pos[0]) die("Usage: umd analyze <video> [--out dir]");
       const { analyze } = await import("./lib/analyze.mjs");
       const p = loadProject(cwd);
       const dir = opt("out") ? resolve(cwd, opt("out")) : join(existsSync(md) ? join(md, "analysis") : join(cwd, "umd-analysis"), basename(pos[0]).replace(/\W+/g, "-"));
-      const a = analyze(pos[0], { cwd, outDir: dir, thresholds: thresholds(p, ref) });
+      const a = analyze(pos[0], { cwd, outDir: dir, thresholds: thresholds(p, ref), loop: flags.has("loop") || !!(p?.loop || p?.format?.loop) });
       return compact("analysis-full", a, { ...analysisSummary(a), motion: motionSummary(a.motion, thresholds(p, ref)), full: rel(join(dir, "analysis.json")) }, null);
     }
     case "frames": {
@@ -538,8 +571,15 @@ async function main() {
     }
     case "sync": {
       if (!pos[0]) die("Usage: umd sync <video|audio> [--cues .motion/storyboard.md] [--tolerance-ms 45]");
-      const { parseCues, syncCues } = await import("./lib/sync.mjs");
+      const { parseCues, syncCues, timingCues } = await import("./lib/sync.mjs");
       const p = loadProject(cwd);
+      // the master clock wins when it exists: .motion/timing.json (or --timing file)
+      const tf = resolve(cwd, opt("timing", join(".motion", "timing.json")));
+      if (!opt("cues") && existsSync(tf)) {
+        const tc = timingCues(readFileSync(tf, "utf8"));
+        if (!tc.length) die(`No event with a "sound" in ${rel(tf)}.`);
+        return out({ cues_from: rel(tf), ...syncCues(pos[0], tc, { cwd, fps: p?.format?.fps, toleranceMs: Number(opt("tolerance-ms", thresholds(p, ref).sync_tolerance_ms ?? 45)) }) });
+      }
       const sbf = resolve(cwd, opt("cues", join(".motion", "storyboard.md")));
       if (!existsSync(sbf)) die(`No ${rel(sbf)}: list the cues under "## Sound cues" (one per line: "6.5s click: cursor press" or "f195 click").`);
       const cues = parseCues(readFileSync(sbf, "utf8"), p?.format?.fps || 30);

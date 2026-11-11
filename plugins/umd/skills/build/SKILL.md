@@ -14,6 +14,8 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). References: `${CLAU
 ## 0. Before
 
 - Read `.motion/project.json`, `.motion/storyboard.md`, the token file. If the storyboard has no `Stills validated` line, say so and offer `/umd:storyboard` first (the audit blocks without it).
+- **Finishing work.** The build is done only when the full-length draft renders, every check passes with its number (stills measured, `umd analyze` flags explained or fixed, `umd sync` on the cues) and `.motion/LEDGER.md` lists what changed. A failed render, a timeout, a missing font or a locked file is an ordinary obstacle: fix it and continue. Stop only for a blocker only the user can lift, and say exactly what is needed. Approved without asking: rendering drafts, writing check scripts, changing camera, light and timing inside the brief; ask before changing story beats or length.
+- Motion is a closed-form function of `t` (springs by damping ratio, `references/craft/direction.md`); events and sounds come from `.motion/timing.json` when it exists. The final HTML render can add motion blur: `render.capture.subframes` (8 to 32) and `shutter` (0.45 to 0.5).
 - Read `routes/<route>.md` and `engines/<engine>.md`. Follow the `motion` skill rules (load it if not loaded).
 - Blender route: before the first draft of the whole film, run the engine A/B on 2 or 3 key frames (EEVEE against Cycles, side by side, `references/engines/blender.md`), write the verdict in `BRIEF.md` and set `render.engine`. EEVEE unless the images show it cannot carry glass, caustics, bounce-lit interiors or dense volumes.
 - `umd rules` prints this project's build rules per domain.

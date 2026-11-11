@@ -12,7 +12,8 @@ import { countFlashes, deadAir, stillness, seams } from "../plugins/umd/scripts/
 import { licenceClass } from "../plugins/umd/scripts/lib/commons.mjs";
 import { searchMoves } from "../plugins/umd/scripts/lib/moves.mjs";
 import { tagText, projectTypes, PROJECTS } from "../plugins/umd/scripts/lib/facets.mjs";
-import { parseCues, onsets, syncCues } from "../plugins/umd/scripts/lib/sync.mjs";
+import { parseCues, onsets, syncCues, timingCues } from "../plugins/umd/scripts/lib/sync.mjs";
+import { estimateCost } from "../plugins/umd/scripts/lib/cost.mjs";
 import { lint, parseStoryboard } from "../plugins/umd/scripts/lib/lint.mjs";
 import { installTargets, classify, checkLicenses } from "../plugins/umd/scripts/lib/licenses.mjs";
 import { groupCues, toAss, toSrt } from "../plugins/umd/scripts/lib/captions.mjs";
@@ -318,6 +319,60 @@ test("style search puts entries holding every word first, with French synonyms",
   assert.ok(!s1.results.some((r) => r.id === "mg:01-flat-vector"));
   const s2 = JSON.parse(umd(["styles", "argile", "maquette", "--limit", "5"], tmp()).stdout);
   assert.ok(s2.matches > 0 && s2.results.some((r) => /diorama|miniature|tilt/.test(r.id + r.name.toLowerCase())));
+});
+
+test("timing.json is a clock: sounds land one frame after their events", () => {
+  const c = timingCues({ fps: 30, events: [{ name: "press", frame: 60, sound: "click" }, { name: "cut", frame: 90 }, { name: "hit", t: 4, sound: "impact" }] });
+  assert.deepEqual(c.map((x) => x.t), [2.033, 4.033]);
+  assert.match(c[0].label, /click: press/);
+  assert.equal(timingCues({ fps: 60, sound_offset_frames: 0, events: [{ frame: 120, sound: "x" }] })[0].t, 2);
+});
+
+test("cost estimates suggest an effort: medium to iterate, high to build", () => {
+  assert.equal(estimateCost("storyboard", {}, {}).effort, "medium");
+  assert.equal(estimateCost("build", {}, {}).effort, "high");
+});
+
+test("analyze --loop: a loop flows into its first frame, a fade does not", { skip: !hasFfmpeg() && "ffmpeg not installed" }, () => {
+  const d = tmp();
+  const make = (name, src) => spawnSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", "-f", "lavfi", "-i", src, "-pix_fmt", "yuv420p", join(d, name)]);
+  make("loop.mp4", "color=c=0x334455:s=320x180:r=30:d=2");
+  make("fade.mp4", "color=c=white:s=320x180:r=30:d=2,fade=t=in:st=0:d=2");
+  const loop = JSON.parse(umd(["analyze", "loop.mp4", "--loop", "--out", "a1"], d).stdout);
+  const fade = JSON.parse(umd(["analyze", "fade.mp4", "--loop", "--out", "a2"], d).stdout);
+  assert.equal(loop.loop_seam.ok, true, JSON.stringify(loop.loop_seam));
+  assert.equal(fade.loop_seam.ok, false, JSON.stringify(fade.loop_seam));
+});
+
+test("umd adopt makes an outside render the latest one, so the checks apply", { skip: !hasFfmpeg() && "ffmpeg not installed" }, () => {
+  const d = tmp();
+  spawnSync("ffmpeg", ["-hide_banner", "-loglevel", "error", "-y", "-f", "lavfi", "-i", "testsrc2=size=320x180:rate=30:duration=2", "-pix_fmt", "yuv420p", join(d, "mine.mp4")]);
+  assert.notEqual(umd(["adopt", "mine.mp4"], d).status, 0, "needs a project first");
+  umd(["init"], d);
+  const a = JSON.parse(umd(["adopt", "mine.mp4"], d).stdout);
+  assert.equal(a.ok, true);
+  assert.equal(a.adopted_from, "mine.mp4");
+  const latest = JSON.parse(readFileSync(join(d, ".motion", "renders", "latest.json"), "utf8"));
+  assert.equal(latest.adopted, true);
+  assert.equal(umd(["evidence"], d).status, 0);
+});
+
+test("stills measure the hero and prove frames are pure; capture blurs with sub-frames", { skip: (!hasFfmpeg() || !resolvePlaywright(process.cwd())) && "ffmpeg or Playwright missing (umd doctor --fix)" }, () => {
+  const d = tmp();
+  writeFileSync(join(d, "p.html"), `<!doctype html><style>html,body{margin:0;background:#111;overflow:hidden}#h{position:absolute;top:100px;height:80px;background:#fc0}#b{position:absolute;top:400px;width:60px;height:30px;background:#e44}</style><div id=h></div><div id=b></div><script>
+window.umdDuration=1;const h=document.getElementById('h'),b=document.getElementById('b');
+window.umdRender=(t)=>{h.style.width=(60+400*t)+'px';b.style.left=(t*1200)+'px';};</script>`);
+  const st = JSON.parse(umd(["still", "p.html", "--at", "0,0.5", "--hero", "#h", "--seek-check", "--width", "640", "--height", "360", "--out", "s"], d).stdout);
+  assert.equal(st.stills[0].hero.width, 60);
+  assert.equal(st.stills[0].hero.min_width, 57);          // 170 px at 1080p, scaled to 360p
+  assert.equal(st.stills[0].hero.ok, true);
+  assert.equal(st.seek_check.ok, true);
+  const small = JSON.parse(umd(["still", "p.html", "--at", "0", "--hero", "#h", "--hero-min", "300", "--out", "s2"], d).stdout);
+  assert.deepEqual(small.hero_too_small_at, [0]);
+  const blur = JSON.parse(umd(["capture", "p.html", "--out", "blur.mp4", "--fps", "15", "--duration", "1", "--width", "640", "--height", "360", "--subframes", "4"], d).stdout);
+  assert.deepEqual(blur.motion_blur, { subframes: 4, shutter: 0.5 });
+  const n = spawnSync("ffprobe", ["-v", "error", "-count_frames", "-show_entries", "stream=nb_read_frames", "-of", "csv=p=0", join(d, "blur.mp4")], { encoding: "utf8" }).stdout.trim();
+  assert.equal(Number(n), 15);
 });
 
 test("umd sync measures cues on a synthetic clip", { skip: !hasFfmpeg() && "ffmpeg not installed" }, () => {

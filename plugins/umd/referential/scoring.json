@@ -48,6 +48,7 @@
     "loudness_tolerance_lu": 1,
     "true_peak_dbtp": -1,
     "freeze_s": 1,
+    "hero_min_px": 170,
     "dead_air_s": 3,
     "motion_floor": 0.4,
     "flashes_per_s": 3,

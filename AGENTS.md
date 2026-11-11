@@ -51,7 +51,7 @@ Do not run `claude plugin …` from inside a running Claude Code session: nested
 
 ## Use without Claude Code (other agents)
 
-**The skill alone:** `skills/motion-design/` is a standalone skill (SKILL.md plus 54 reference guides, generated from the plugin by `tools/build.mjs`). Copy it into the agent's skills folder, or `npx skills add 1AngelMicka/ultimate-motion-design` and pick `motion-design`. It carries the method and the craft; the CLI below adds rendering, measures and the audit.
+**The skill alone:** `skills/motion-design/` is a standalone skill (SKILL.md plus 55 reference guides, generated from the plugin by `tools/build.mjs`). Copy it into the agent's skills folder, or `npx skills add 1AngelMicka/ultimate-motion-design` and pick `motion-design`. It carries the method and the craft; the CLI below adds rendering, measures and the audit.
 
 The engine is a zero-dependency Node CLI usable by any agent:
 
@@ -67,6 +67,7 @@ The method lives in plain Markdown: `plugins/umd/skills/*/SKILL.md` (the steps; 
 
 ## Rules to respect when helping
 
+- Use the whole method even when the project has its own pipeline: put its render command in `render.command` (so `umd render` runs it) or run `umd adopt <video>` after each render, and never show a result before the key stills were measured (`umd still --hero … --seek-check`), critiqued, and the render analysed and audited. Writing a parallel renderer that skips these gates is the failure seen on a real project.
 - Before deciding a look, run `umd styles match` (it ranks the style library against BRIEF.md and project.json) and start from one of its picks; never invent a look from a blank page.
 - Never mark a check as passed without evidence (a frame at a time, a measure, a file and line).
 - Never add a licence exception (`license_policy.allow`) or lower a threshold on your own: it is the user's decision.

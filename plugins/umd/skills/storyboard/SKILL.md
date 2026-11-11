@@ -47,6 +47,8 @@ If `BRIEF.md` has no `## Concept` and the brief does not fix one (a storyboard, 
 
 ## 2. Key stills (the look, before any animation)
 
+Measure before judging: `umd still <entry> --at <key times> --hero "<the hero's selector>" --seek-check` (for canvas or WebGL, expose `window.umdHero(t)` returning the hero's box in CSS pixels). Every main shot keeps the hero over the minimum (170 px wide at 1080p; a screen that is the subject at least a third of the frame height), and every frame drawn cold matches the same frame drawn in sequence. First stills always come out too wide: fix framing here, not after a render. When the timing matters (music, a voice, many hits), write `.motion/timing.json` from `${CLAUDE_PLUGIN_ROOT}/templates/timing.json` before the build: it becomes the clock the scene reads and `umd sync` measures (`references/craft/direction.md`).
+
 1. Build only the static layout of the key beats (up to 8), in the route's engine, using the tokens and brand assets. Record each asset in `.motion/assets.lock.json` as it arrives.
 2. Render them: HTML routes `umd still <entry> --at <t1>,<t2>,… --out .motion/stills`; other engines with their still command (see the route file) into `.motion/stills/`.
 3. Review round: launch the `umd:critic` agent with the project path, `.motion/stills/`, the round number and the CLI path. Apply its fixes, re-render the stills.

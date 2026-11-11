@@ -65,6 +65,18 @@ export function parseCues(md, fps = 30) {
   return cues;
 }
 
+// Cues from .motion/timing.json, the film's master clock: every event that has a sound, placed sound_offset_frames
+// (default 1) after its picture event. Events are { name, frame } or { name, t } (seconds).
+export function timingCues(json) {
+  const j = typeof json === "string" ? JSON.parse(json) : json;
+  const fps = Number(j.fps) || 30;
+  const offset = Number(j.sound_offset_frames ?? 1) / fps;
+  return (j.events || []).filter((e) => e.sound).map((e) => {
+    const t = e.t != null ? Number(e.t) : Number(e.frame) / fps;
+    return { t: round(t + offset, 3), label: `${e.sound}: ${e.name || "event"}` };
+  }).filter((c) => Number.isFinite(c.t)).sort((a, b) => a.t - b.t);
+}
+
 // For each cue, the nearest onset within `window` s; offset > 0 means the sound comes after the picture
 export function syncCues(file, cues, { cwd = process.cwd(), toleranceMs = 45, window = 0.25, fps = null } = {}) {
   const info = probe(resolve(cwd, file));

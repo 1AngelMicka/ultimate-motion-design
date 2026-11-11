@@ -11,14 +11,14 @@ This skill works on its own in any coding agent. For deterministic HTML-to-video
 
 ## The loop: ten steps, three gates
 
-Never skip a gate. Each step names what "done" means.
+Never skip a gate. Each step names what "done" means. **The loop applies to every pipeline**: a project that renders with its own scripts (Blender, a custom headless browser, any editor) still goes through the key stills, the critic rounds, the measures and the audit; with the plugin, its command goes in `render.command`, or each output is registered with `umd adopt <video>`. A parallel renderer that skips the gates is how a real project ended with small unreadable screens, empty sets and frozen seconds.
 
 | # | Step | Done when |
 | --- | --- | --- |
 | 1 | **Brief** | Goal, audience, platform and format, duration, the one thing to remember, the look described in words, licence context (commercial? region?). References are described, never "copy this video". |
 | 2 | **Style** | One proven style chosen and summed up in a 200-word style card (signature materials, colour logic, type, motion rules, sound). Every later step reads the card, not the source prompt. |
 | 3 | **Storyboard** | One row per beat (time, shot, on-screen text, motion, sound, one intent), product actions written as events in global frames, layout limits checked with the longest copy, sound cues listed, a palette per sequence. |
-| 4 | **Key stills** — *gate 1* | The look is built static first: 4 to 8 key frames rendered, critiqued (up to 3 rounds), **approved by the user**. Animating an unapproved look is the most expensive mistake there is. |
+| 4 | **Key stills** — *gate 1* | The look is built static first: 4 to 8 key frames rendered, critiqued (up to 3 rounds), the hero measured (at least 170 px wide at 1080p; a screen that is the subject at least a third of the frame height), **approved by the user**. Animating an unapproved look is the most expensive mistake there is. |
 | 5 | **Build** | Beat by beat, durations and curves from tokens, every beat a named seekable unit, assets recorded with their licence as they arrive, voice and music mixed. |
 | 6 | **Draft rounds** — *gate 2* | Half-size drafts, each reviewed by a **fresh** critic that never sees your reasoning; then a verification of the previous round's fixes. Stop when every jury dimension reaches the target (8 by default) or after 3 rounds, then the user decides. |
 | 7 | **Final render** | Rendered twice from the frame clock: byte-identical frames, or the render is not reproducible. |
@@ -54,6 +54,11 @@ Never skip a gate. Each step names what "done" means.
 | Captions | ≤ 17 characters per second, ≤ 2 lines, within 100 ms of the words |
 | Flashes | fewer than 3 per second (WCAG 2.3.1) |
 | Loudness | −14 LUFS integrated, true peak ≤ −1 dBTP (check the platform) |
+| Hero size | at least 170 px wide at 1080p in every main shot, measured per shot |
+| Springs (damping ratio) | 1.0 UI and text · 0.8 products and logos · 0.5 characters; closed-form in t |
+| Squash and stretch | crouch 1.2 × 0.75, takeoff 0.85 × 1.28, landing 1.25 × 0.75, volume kept; arms lag 4 frames, tails 6 |
+| Beat grid | frames per beat = fps × 60 ÷ BPM; sounds 1 frame after their picture |
+| Motion blur | 8 to 32 sub-frames per frame over a 0.45 to 0.5 shutter (finals only) |
 | Jury scale | 5 student · 6 template · 7 professional · 8 agency · 9 festival selection |
 
 ## Craft by discipline
@@ -125,6 +130,7 @@ Record every asset the moment it enters the project (path, source, URL, licence,
 | An engine's API, patterns and determinism rules | `references/engines/` (hyperframes, remotion, revideo, gsap, motion, css-waapi, scroll, threejs, shaders, lottie, rive, svg, canvas-2d, manim, blender, diagrams-code, effect-libraries) |
 | Voice, music and effects, mix, captions; which sound on which picture event | `references/audio/` (start with `sound-design.md`) |
 | Images, icons, fonts; platform specs; licence traps | `references/assets.md`, `references/platforms.md`, `references/licenses.md` |
+| Turning adjectives into numbers, one timing clock, springs, directing the agent (effort, "finished") | `references/craft/direction.md` |
 | A proven style to start from | `references/styles.md` (with the plugin, `umd styles match` picks from 1 323 styles, prompts and blocks for the brief) |
 
 ## Cost
