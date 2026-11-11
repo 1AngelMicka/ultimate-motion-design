@@ -17,9 +17,10 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (written `umd` below). Refer
 
 1. `umd detect` → existing engines, web framework, HTML entry, suggested route and engine.
 2. If `.motion/project.json` exists, read it and ask whether to update it or start over; never overwrite silently.
-3. Read any brief, script or brand file the user points to (only those).
+3. Read any brief, script or brand file the user points to. If they point to none, look for one in this folder and its parent (`LISEZMOI*`, `README*`, `BRIEF*`, `*brief*`, `*script*`, `CLAUDE.md`, a `marque/`, `brand/` or `references/` folder): name what you found in one line and use it. A written brief answers most questions below; never ask what it already says.
+4. **"I have no precise idea" / "décide pour moi" / "just a good video".** The user is not expected to write a brief. Take the decide-for-me path: infer the profile, format and length from the files and the product (a presentation video of 45 to 90 s in 16:9, plus 9:16 for social, when nothing says otherwise), set `style_choice: "auto"` and `quality_target: 8`, prefer a concept without characters drawn in code, and ask **only** what cannot be inferred and costs money or rights: commercial use, and whether a voice-over or music is wanted. Say in three lines what you decided and that every choice can be changed later. The concepts step (storyboard 0a) then shows three ideas with a recommendation: that is where the user's taste comes in, by picking, not by writing.
 
-## 2. Ask (one AskUserQuestion call, up to 4 questions, skip what `$ARGUMENTS` or the files already answer)
+## 2. Ask (one AskUserQuestion call, up to 4 questions, skip what `$ARGUMENTS` or the files already answer; on the decide-for-me path, only the questions named in step 1.4)
 
 - **What**: promo / product launch · presentation video · explainer · social short (9:16) · narrative animated short · logo animation · animated web page. → `profile`: promo, presentation, explainer, social, film, logo, web.
 - **Format and length**: platform(s), aspect (16:9, 9:16, 1:1, 4:5), target duration, sound on or off by default, and the **frame rate**, with its cost: HTML pieces render cheaply at 60 fps (fast UI and type stay crisp); rendered 3D (Blender, a heavy three.js scene) at 24 or 30 fps with motion blur, since 60 → 30 fps halves the render time. Decide it now: changing it later costs hours of rendering. → `format.fps`.
@@ -35,7 +36,7 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (written `umd` below). Refer
 | --- | --- | --- |
 | Flat, graphic, UI, typography, promo, presentation, social, logo | `html-video` (R1) | `umd-capture` (HTML/CSS/GSAP/canvas, licence-free). HyperFrames if installed; Remotion if the user already uses React video and the licence fits |
 | One character or object in a small 3D world | `threejs-film` (R3) | three.js in one HTML file + umd capture |
-| Real materials, rigged characters, product renders | `blender` (R2) | Blender + Blender MCP |
+| Real materials, rigged characters, product renders | `blender` (R2) | Blender by script (EEVEE by default; the Blender MCP is optional) |
 | Narrated story, many scenes, generated images/voices | `director` (R4) | other models orchestrated, strict licence registry |
 | Maths, diagrams, code, terminal | `explainer` | Manim / Mermaid / Code Hike / VHS |
 | Website or UI | `web-page` | the project's framework + GSAP/Motion/CSS |

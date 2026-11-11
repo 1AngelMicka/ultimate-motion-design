@@ -2,6 +2,8 @@
 
 ## 0.9.0 — 2026-11-11
 
+- **No brief needed.** Kickoff finds the briefs already in the folder (LISEZMOI, README, BRIEF, a brand folder) and has a decide-for-me path: `/umd:go une vidéo de qualité` infers profile, format and length, picks the style itself and asks only about commercial use, voice and music; the user's taste comes in by picking among three concepts.
+
 A real project made with only part of the plugin (its own render scripts, no key-still gate, no audit) came out with small unreadable screens, empty 3D sets and frozen seconds. This version closes that door and adds what a creator's notes on 40 films showed was missing.
 
 - **No more half use.** `umd adopt <video>` makes a video rendered by the project's own pipeline the latest render, so analysis, the audit and `deliver` apply to it. AGENTS.md, the `motion` skill and `/umd:go` now say it plainly: keep your scripts, route them through `render.command` or `umd adopt`, and never show a result before the measured stills, the critic and the audit.

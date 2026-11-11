@@ -16,7 +16,7 @@ Run `umd next`. It returns `step`, `reason`, `needs_user`, `optional`, `cost` an
 ## 2. Which step?
 
 - `$ARGUMENTS` names a step, in any language (`audit`, `vérifier`, `corriger`/`fix`, `rendu`/`render`, `livrer`/`deliver`, `tokens`, `storyboard`, `build`/`construire`, `kickoff`/`démarrer`) → run that step, then stop.
-- `$ARGUMENTS` describes something to make ("une vidéo de lancement de 30 s…") and there is no project yet → `kickoff`, with these words as the brief.
+- `$ARGUMENTS` describes something to make ("une vidéo de lancement de 30 s…") and there is no project yet → `kickoff`, with these words as the brief. Vague words ("une vidéo de qualité", "décide pour moi", "je n'ai pas d'idée") are a valid start: kickoff takes its decide-for-me path and reads the briefs already in the folder.
 - `$ARGUMENTS` describes something to make and a project already exists → `kickoff` (it asks whether to update this project or start a new one in another folder); never ignore the user's words.
 - Otherwise → the step from `umd next`.
 
