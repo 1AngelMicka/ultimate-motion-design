@@ -45,7 +45,7 @@ With `style_choice: "ask"`, show the user 3 candidates with their preview or pag
 
 `blender -b --factory-startup -P ${CLAUDE_PLUGIN_ROOT}/templates/blender/character.py -- profile <file> [--out .motion/characters/<id>.json]`
 
-The profile maps the bones to canonical names (hips, spine, chest, neck, head, eyes, jaw, arms, legs), recognises the family (Mixamo, MotionBuilder and CMU BVH, 100STYLE, VRoid, Unity humanoid, Unreal, MPFB and Mesh2Motion, KayKit, Rigify, Blender metarig, else by meaning), finds blink and mouth shape keys (visemes, VRM vowels, ARKit) and lists the actions the file carries. Its `can` and `cannot` lists are binding. **Never write a gesture the rig cannot do.** A painted face cannot speak: give it a body gesture or a cut instead.
+The profile also names the rig's eye target when it has one (`eye_target`). It maps the bones to canonical names (hips, spine, chest, neck, head, eyes, jaw, arms, legs), recognises the family (Mixamo, MotionBuilder and CMU BVH, 100STYLE, VRoid, Unity humanoid, Unreal, MPFB and Mesh2Motion, KayKit, Rigify, Blender metarig, else by meaning), finds blink and mouth shape keys (visemes, VRM vowels, ARKit) and lists the actions the file carries. Its `can` and `cannot` lists are binding. **Never write a gesture the rig cannot do.** A painted face cannot speak: give it a body gesture or a cut instead.
 
 ## 4. Character test shot (a gate, before the storyboard stills)
 
@@ -73,7 +73,7 @@ src = ch.load("assets/characters/cmu/02_01.bvh"); ch.retarget(src, rig, 2, 400, 
 - **BVH**: CMU runs at 120 fps and 100STYLE at 60, so pass `step = fps_source / fps_film`. The first frame of a CMU conversion is a T-pose; start at the second.
 - **Mesh2Motion clips** are meshopt-compressed GLB: three.js reads them (MeshoptDecoder); Blender 5.1's glTF importer does not. In Blender, use their rig `.glb` (not compressed) and take motion from BVH or another rig.
 - **FBX** from Unity or Mixamo: `load` applies the 0.01 scale and repairs materials that arrive with Alpha 0 (invisible). It prints `MISSING TEXTURES` when the FBX does not carry them: 100Avatars keeps its textures in the VRM, so prefer the VRM (it needs the VRM add-on).
-- **Film rigs (Blender Studio, CloudRig)**: render EEVEE with ray tracing on (the `character.py` test does it): their corneas refract, and without it the eyes render as dark holes. In a close-up, keep a look within about 30 degrees of the nose: past 40 degrees the eye shows mostly white. Once the head turns, Rain's eyes follow the rig's own EyeDot system: check the eyes on the test shot before planning a gaze.
+- **Film rigs (Blender Studio, CloudRig)**: render EEVEE with ray tracing on (the `character.py` test does it): their corneas refract, and without it the eyes render as dark holes. In a close-up, keep a look within about 30 degrees of the nose: past 40 degrees the eye shows mostly white. When a rig has an eye target (CloudRig `TGT-Eyes`, a bone the eyeballs aim at), the profile names it in `eye_target` and `look_at` moves that target onto the object: rotating the eye controls instead would move the pupils without the iris.
 - Speech: `umd lipsync voice.wav --text script.txt` writes `.motion/lipsync/<name>.json` (Rhubarb, MIT; the phonetic recogniser for any language other than English). Mouth shapes switch on Rhubarb's cues. A shape the rig lacks borrows a near one at a lower weight, and a rig with only a jaw bone opens it by the shape's amount.
 
 ## 6. Animate (HTML, 2D)

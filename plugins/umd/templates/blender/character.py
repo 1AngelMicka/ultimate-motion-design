@@ -183,12 +183,14 @@ def profile(rig, out=None):
     p = {"armature": rig.name, "family": fam, "bones": mp, "missing": [c for c in CANON if c not in mp],
          "head_forward": _forward_axis(rig, mp["head"]) if "head" in mp else None,
          "eye_forward": _forward_axis(rig, mp["eye.L"]) if "eye.L" in mp else None,
+         "eye_target": _eye_target(rig),
          "height_m": round(top - lowest, 3) if top is not None else (round((head.z - lowest) * 1.12, 3) if head else round(rig.dimensions.z, 3)),
          "face": {"blink": blink, "mouth": mouth, "mouth_kind": "shape keys" if len(mouth) >= 4 else ("jaw bone" if jaw else ("partial" if mouth else "none"))},
          "actions": actions}
     can = []
     if "head" in mp: can.append("look_at (head)")
-    if "eye.L" in mp and "eye.R" in mp: can.append("look_at (eyes lead)")
+    if (("eye.L" in mp and "eye.R" in mp) or p["eye_target"]):
+        can.append("look_at (eyes lead" + (f", through {p['eye_target']})" if p["eye_target"] else ")"))
     if blink: can.append("blink")
     if p["face"]["mouth_kind"] != "none": can.append(f"speak ({p['face']['mouth_kind']})")
     if any(c in mp for c in ("chest", "spine")): can.append("breathe")
@@ -301,10 +303,45 @@ def _bone_target(rig, bone, target, axis, f0, f1, ease_frames, name, amount=1.0)
         c.keyframe_insert("influence", frame=f1 + ease_frames)
     return c
 
+def _eye_target(rig):
+    """The bone the eyes aim at, when the rig has one (CloudRig TGT-Eyes, Rigify "eyes", many film rigs): the eyeballs
+    follow it through their own aim constraints, so moving it is the only way the iris and the pupil stay together."""
+    found = None
+    for pb in rig.pose.bones:
+        if "eye" not in pb.name.lower():
+            continue
+        for c in pb.constraints:
+            st = getattr(c, "subtarget", "")
+            # only a bone named as a target (TGT-Eye.L, eye_target, Look): eyelids also track helper bones
+            if c.type in ("DAMPED_TRACK", "TRACK_TO", "LOCKED_TRACK", "IK") and st and getattr(c, "target", None) == rig \
+                    and re.search(r"(tgt|target|look)", st, re.I):
+                top = rig.pose.bones.get(st)
+                # climb to the shared target (both eyes) while the parent is still an eye target
+                while top and top.parent and re.search(r"(tgt|target|look)", top.parent.name, re.I) and "eye" in top.parent.name.lower():
+                    top = top.parent
+                if top:
+                    found = top.name
+    return found
+
 def look_at(rig, p, target, f0, f1=None, head_amount=0.8, lead=8, ease=10):
     """Eyes first, then the head (6 to 10 frames later), never the whole body at once."""
     b = p["bones"]
-    if "eye.L" in b and "eye.R" in b and p.get("eye_forward"):
+    if p.get("eye_target"):
+        # move the rig's own eye target onto the object: the rig aims both eyeballs (iris and pupil together)
+        pb = rig.pose.bones[p["eye_target"]]
+        c = pb.constraints.get("umd_look") or pb.constraints.new("COPY_LOCATION")
+        c.name, c.target = "umd_look", target
+        c.target_space = c.owner_space = "WORLD"
+        e = max(3, ease // 3)
+        c.influence = 0.0
+        c.keyframe_insert("influence", frame=f0)
+        c.influence = 1.0
+        c.keyframe_insert("influence", frame=f0 + e)
+        if f1 is not None:
+            c.keyframe_insert("influence", frame=f1)
+            c.influence = 0.0
+            c.keyframe_insert("influence", frame=f1 + e)
+    elif "eye.L" in b and "eye.R" in b and p.get("eye_forward"):
         for e in ("eye.L", "eye.R"):
             _bone_target(rig, b[e], target, p["eye_forward"], f0, f1, max(3, ease // 3), "umd_look")
     # the neck takes part of the turn, the head the rest: a turn that starts lower reads as a person, not a turret

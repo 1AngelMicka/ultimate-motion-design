@@ -17,7 +17,7 @@
       "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
       "credit": "Rain Rig (CC) Blender Foundation | studio.blender.org", "redistribute": "with-credit",
       "get": { "zip": "https://studio.blender.org/download-source/files/ee/a7/eea73e55dba1cea31c09848df6a794b2-4.zip", "size_mb": 64.4, "page": "https://studio.blender.org/characters/rain/v3/" },
-      "blender": "4.1 and later (page). Tested on 5.1.2 with scripts disabled (2026-11-11): opens and renders with its textures, profile complete (CloudRig family, nothing missing), head turn, blink, jaw speech and breathing work; its 752 drivers are simple expressions and run without scripts. Eye aim is exact with the head still; with the head turned, the iris follows the rig's own EyeDot system and is not solved yet: check the eyes in the test shot",
+      "blender": "4.1 and later (page). Tested on 5.1.2 with scripts disabled (2026-11-11): opens and renders with its textures, profile complete (CloudRig family, nothing missing), head turn, blink, jaw speech and breathing work; its 752 drivers are simple expressions and run without scripts. gaze goes through the rig's eye target (TGT-Eyes), measured within 3 degrees of the object with the head turned; the EyeDot bones are stylised highlights that stay with the head",
       "use": "Hero close-ups and acting: eye, eyelid, mouth and brow controls, corrective shapes.",
       "caution": "Do not name the character or its film in an advert; logos of the Blender Foundation are excluded from the licence."
     },
