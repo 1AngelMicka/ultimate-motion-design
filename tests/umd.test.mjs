@@ -437,6 +437,14 @@ test("CLI: a boolean flag before the input does not swallow it", () => {
   assert.doesNotMatch(r.stderr + r.stdout, /Usage: umd capture/);
 });
 
+test("CLI: umd mix --music takes a file (it is a switch only for umd sounds)", { skip: !hasFfmpeg() && "ffmpeg not installed" }, () => {
+  const d = tmp();
+  assert.equal(umd(["sfx", "roomtone", "--dur", "2", "--out", "bed.wav"], d).status, 0);
+  const r = umd(["mix", "--music", "bed.wav", "--out", "mix.wav", "--length", "2"], d);
+  assert.doesNotMatch(r.stderr, /needs --voice and\/or --music/);
+  assert.equal(JSON.parse(r.stdout).music, "bed.wav");
+});
+
 test("licence guard: version specifiers, git URLs, python -m pip, npx", () => {
   assert.deepEqual(installTargets("pip install 'audiocraft>=1'"), ["audiocraft"]);
   assert.deepEqual(installTargets("pip install git+https://github.com/facebookresearch/audiocraft"), ["facebookresearch/audiocraft"]);

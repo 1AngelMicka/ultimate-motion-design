@@ -73,7 +73,9 @@ const flags = new Set();
 const opts = {};
 const pos = [];
 // boolean flags never take a value, so `umd capture --draft page.html` keeps page.html as the input
-const BOOL = new Set(["allow-sa", "backtime", "blender", "rhubarb", "no-live", "cc0", "cuts", "loop", "seek-check", "music", "draft", "fix", "force", "incremental", "json", "no-analyze", "sheet", "transparent", "twice"]);
+// "music" is a switch only for `umd sounds --music`; `umd mix --music file.wav` takes a file
+const BOOL = new Set(["allow-sa", "backtime", "blender", "rhubarb", "no-live", "cc0", "cuts", "loop", "seek-check", "draft", "fix", "force", "incremental", "json", "no-analyze", "sheet", "transparent", "twice",
+  ...(cmd === "sounds" ? ["music"] : [])]);
 for (let i = 0; i < argv.length; i++) {
   const a = argv[i];
   if (a.startsWith("--")) {
