@@ -26,7 +26,12 @@ jobs:
       - name: FFmpeg (Linux)
         if: runner.os == 'Linux'
         timeout-minutes: 10
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+        # a static full build from GitHub releases: no dependency on the Ubuntu mirrors (they stalled apt on 2026-11-11)
+        run: |
+          curl -fsSL --retry 3 -o /tmp/ffmpeg.tar.xz https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz
+          mkdir -p "$HOME/ffmpeg" && tar -xf /tmp/ffmpeg.tar.xz -C "$HOME/ffmpeg" --strip-components=1
+          echo "$HOME/ffmpeg/bin" >> "$GITHUB_PATH"
+          "$HOME/ffmpeg/bin/ffmpeg" -hide_banner -version | head -1
       - name: FFmpeg (macOS)
         if: runner.os == 'macOS'
         timeout-minutes: 15
