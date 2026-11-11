@@ -69,7 +69,7 @@ function cyclesDevices(bin) {
   return m ? m[1].trim() : null;
 }
 
-export async function doctor({ cwd = process.cwd(), project = null, fix = false, blender = false } = {}) {
+export async function doctor({ cwd = process.cwd(), project = null, fix = false, blender = false, rhubarb = false } = {}) {
   const checks = [];
   const fixed = [];
   const add = (c) => checks.push(c);
@@ -146,6 +146,16 @@ export async function doctor({ cwd = process.cwd(), project = null, fix = false,
     add({ name: "blender", ok: !!version, optional: true, version, path: bin && bin !== "blender" ? bin : undefined,
       note: version ? `Cycles sees: ${gpu === "none" ? "no GPU, renders on the CPU" : gpu || "unknown (probe failed)"}. Call setup_gpu() in your script: references/engines/blender.md` : t.note,
       fix: version ? null : `${t.fix[OS] || t.fix.linux}   (or set UMD_BLENDER to blender's path)` });
+  }
+  // lip sync: asked with --rhubarb, or when the project has characters that speak
+  const wantRhubarb = rhubarb || ((project?.flags || []).includes("has_characters") && (project?.flags || []).includes("has_voice"));
+  if (wantRhubarb) {
+    const { findRhubarb, rhubarbVersion, installRhubarb } = await import("./lipsync.mjs");
+    let bin = findRhubarb();
+    if (!bin && fix) { const r = await installRhubarb(); fixed.push(r); bin = findRhubarb(); }
+    add({ name: "rhubarb", ok: !!bin, optional: true, version: bin ? rhubarbVersion(bin) : null, path: bin || undefined,
+      note: "Lip sync from a voice recording (MIT): umd lipsync voice.wav --text script.txt",
+      fix: bin ? null : "node umd.mjs doctor --fix --rhubarb   (official GitHub release, about 85 MB, in ~/.umd/runtime/rhubarb; or set UMD_RHUBARB)" });
   }
   const required = checks.filter((c) => !c.optional);
   return { ok: required.every((c) => c.ok), os: OS, checks, fixed, runtime_dir: RUNTIME_DIR };

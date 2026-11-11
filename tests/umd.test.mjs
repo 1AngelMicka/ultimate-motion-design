@@ -520,3 +520,55 @@ test("run: a timeout kills the whole process tree, not only the shell", async ()
   assert.equal(ok.timed_out, false);
   assert.ok(ok.last_lines.includes("hello"));
 });
+
+test("characters: the catalogue answers French words, filters, and lists what is excluded", async () => {
+  const { searchCharacters, loadCatalog } = await import("../plugins/umd/scripts/lib/characters.mjs");
+  const cat = loadCatalog();
+  assert.ok(cat.entries.length >= 35);
+  for (const e of cat.entries) assert.ok(e.id && e.licence && e.get && e.kind, `incomplete entry ${e.id}`);
+  assert.ok(!cat.entries.some((e) => /CC[- ]BY[- ]NC|^non.?commercial/i.test(e.licence)), "no non-commercial source");
+  const kid = await searchCharacters("enfant qui parle", { live: false });
+  assert.equal(kid.results[0].id, "blender-studio-spring");
+  const flat = await searchCharacters("", { live: false, dims: "2d", limit: 50 });
+  assert.ok(flat.results.length > 5 && flat.results.every((r) => r.dims === "2d"));
+  const all = await searchCharacters("", { live: false });
+  assert.ok(all.excluded.some((x) => /Mixamo/.test(x)));
+});
+
+test("characters add: licences refused for client work, CC BY needs its author, folders cover their files", async () => {
+  const { addCharacter } = await import("../plugins/umd/scripts/lib/characters.mjs");
+  const d = tmp();
+  mkdirSync(join(d, "assets", "characters", "hero", "textures"), { recursive: true });
+  writeFileSync(join(d, "assets", "characters", "hero", "hero.glb"), "x");
+  writeFileSync(join(d, "assets", "characters", "hero", "textures", "skin.png"), "x");
+  await assert.rejects(addCharacter("assets/characters/hero", { cwd: d, licence: "CC-BY-NC-4.0" }), /refused/);
+  await assert.rejects(addCharacter("assets/characters/hero", { cwd: d, id: "sketchfab-cc" }), /own licence/);
+  const r = await addCharacter("assets/characters/hero", { cwd: d, id: "sketchfab-cc", licence: "CC-BY-4.0", author: "Ana" });
+  assert.equal(r.recorded, "assets/characters/hero/");
+  assert.match(r.credit, /Ana/);
+  const lic = checkLicenses(d, { ref, project: { license_policy: { commercial: true } } });
+  assert.equal(lic.unlisted_assets, 0, "the folder entry covers the model and its textures");
+  assert.equal(lic.violations.length, 0);
+  assert.equal(lic.attribution_required.length, 1);
+});
+
+test("lip sync: Rhubarb cues become one mouth shape per frame", async () => {
+  const { cuesToFrames, SHAPES } = await import("../plugins/umd/scripts/lib/lipsync.mjs");
+  const f = cuesToFrames([{ start: 0, end: 0.1, value: "X" }, { start: 0.1, end: 0.2, value: "D" }, { start: 0.2, end: 0.3, value: "A" }], 30);
+  assert.deepEqual(f, ["X", "X", "X", "D", "D", "D", "A", "A", "A"]);
+  assert.deepEqual(Object.keys(SHAPES).sort(), ["A", "B", "C", "D", "E", "F", "G", "H", "X"]);
+});
+
+test("2D puppet: pure in t, the hero measured", { skip: !resolvePlaywright(process.cwd()) && "Playwright missing (umd doctor --fix)" }, () => {
+  const d = tmp();
+  const st = JSON.parse(umd(["still", join(ROOT, "plugins", "umd", "templates", "html", "puppet.html"), "--at", "0,1.4,3", "--hero", "#puppet", "--seek-check", "--width", "640", "--height", "360", "--out", "s"], d).stdout);
+  assert.equal(st.seek_check.ok, true);
+  assert.ok(st.stills.every((s) => s.hero?.ok));
+});
+
+test("character.py compiles (Python syntax)", { skip: spawnSync("python3", ["--version"]).status !== 0 && spawnSync("python", ["--version"]).status !== 0 && "python not installed" }, () => {
+  const py = spawnSync("python3", ["--version"]).status === 0 ? "python3" : "python";
+  const src = join(ROOT, "plugins", "umd", "templates", "blender", "character.py");
+  const r = spawnSync(py, ["-c", "import ast,sys; ast.parse(open(sys.argv[1], encoding='utf-8').read())", src], { encoding: "utf8" });
+  assert.equal(r.status, 0, r.stderr);
+});

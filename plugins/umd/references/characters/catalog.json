@@ -1,0 +1,415 @@
+{
+  "version": 1,
+  "checked": "2026-11-11",
+  "note": "Free sources only, usable in commercial work. quality is a judgement (1-5) from published models and features, not from test renders. live: the list is read from the source at search time (umd characters). Licences are recorded per downloaded file in .motion/assets.lock.json.",
+  "facets": {
+    "dims": ["3d", "2d"],
+    "styles": ["realistic", "film", "cartoon", "anime", "chibi", "low-poly", "voxel", "blocky", "flat", "hand-drawn", "pixel", "creature", "robot", "fantasy", "abstract"],
+    "ages": ["baby", "child", "teen", "adult", "senior"],
+    "face": ["none", "painted", "blink", "expressions", "visemes", "full"],
+    "kinds": ["pack", "avatars", "generator", "rig", "motion", "kit2d", "code", "tool"]
+  },
+  "entries": [
+    {
+      "id": "blender-studio-rain", "name": "Rain v3 (Blender Studio)", "kind": "rig", "dims": "3d",
+      "styles": ["film", "cartoon"], "ages": ["adult"], "face": "full", "rigged": true, "skeleton": "custom (Blender Studio)",
+      "animations": "none; pose library and rig UI included", "formats": ["blend"], "routes": ["blender"], "quality": 5,
+      "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "credit": "Rain Rig (CC) Blender Foundation | studio.blender.org", "redistribute": "with-credit",
+      "get": { "zip": "https://studio.blender.org/download-source/files/ee/a7/eea73e55dba1cea31c09848df6a794b2-4.zip", "size_mb": 64.4, "page": "https://studio.blender.org/characters/rain/v3/" },
+      "blender": "4.1 and later (page); open the file with scripts allowed for the rig UI",
+      "use": "Hero close-ups and acting: eye, eyelid, mouth and brow controls, corrective shapes.",
+      "caution": "Do not name the character or its film in an advert; logos of the Blender Foundation are excluded from the licence."
+    },
+    {
+      "id": "blender-studio-snow", "name": "Snow v4 (Blender Studio)", "kind": "rig", "dims": "3d",
+      "styles": ["film", "cartoon"], "ages": ["adult"], "face": "full", "rigged": true, "skeleton": "custom (Blender Studio)",
+      "animations": "none", "formats": ["blend"], "routes": ["blender"], "quality": 5,
+      "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "credit": "Snow Rig (CC) Blender Foundation | studio.blender.org", "redistribute": "with-credit",
+      "get": { "zip": "https://studio.blender.org/download-source/files/ba/0f/ba0fe6d810333b1d73c1c359e4dc03cb-6.zip", "size_mb": 106.4, "page": "https://studio.blender.org/characters/snow/v4/" },
+      "blender": "4.1 and later (page)",
+      "use": "Second hero for dialogue between two characters.",
+      "caution": "Same as Rain."
+    },
+    {
+      "id": "blender-studio-spring", "name": "Spring (Blender Studio)", "kind": "rig", "dims": "3d",
+      "styles": ["film", "cartoon", "fantasy"], "ages": ["child", "teen"], "face": "full", "rigged": true, "skeleton": "BlenRig",
+      "animations": "none", "formats": ["blend"], "routes": ["blender"], "quality": 5,
+      "licence": "CC BY 4.0", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "credit": "(CC) Blender Foundation | studio.blender.org", "redistribute": "with-credit",
+      "get": { "page": "https://studio.blender.org/characters/spring/v1/" },
+      "blender": "2.8 to 3.6 announced: test under your version before planning a shot",
+      "use": "The only film-grade free child character found.",
+      "caution": "Old rig: may break on Blender 4.x and 5.x."
+    },
+    {
+      "id": "blender-studio-library", "name": "Blender Studio character library", "kind": "rig", "dims": "3d",
+      "styles": ["film", "cartoon", "creature", "fantasy"], "ages": ["child", "adult", "senior"], "face": "full", "rigged": true, "skeleton": "per character",
+      "animations": "some pose libraries", "formats": ["blend"], "routes": ["blender"], "quality": 5,
+      "licence": "CC BY 4.0 (check each page)", "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+      "credit": "(CC) Blender Foundation | studio.blender.org", "redistribute": "with-credit",
+      "get": { "page": "https://studio.blender.org/characters/" },
+      "blender": "per character (Sprite: 3.3 to 3.6)",
+      "use": "More film characters and creatures; each has its own rig and Blender version.",
+      "caution": "Some downloads need a Blender Studio subscription: then it is not free, skip it."
+    },
+    {
+      "id": "mpfb2", "name": "MPFB2 (MakeHuman for Blender)", "kind": "generator", "dims": "3d",
+      "styles": ["realistic", "cartoon"], "ages": ["baby", "child", "teen", "adult", "senior"], "face": "visemes", "rigged": true, "skeleton": "default, game_engine or Rigify",
+      "animations": "none; pair with motion entries", "formats": ["blend", "fbx", "glb"], "routes": ["blender"], "quality": 3,
+      "licence": "code GPL-3.0; core assets CC0; extra packs CC0 or CC BY (check each)", "licence_url": "https://static.makehumancommunity.org/about/license.html",
+      "credit": null, "redistribute": "yes (characters made of core assets only)",
+      "get": { "install": "Blender > Edit > Preferences > Get Extensions > search MPFB", "page": "https://extensions.blender.org/add-ons/mpfb/" },
+      "blender": "4.2 LTS and later",
+      "use": "Families and casts: age, weight, muscle, proportions by script (HumanService.create_human), batch variations for a crowd or a family; visemes02 pack gives 15 mouth shapes.",
+      "caution": "Game-like realism; hair as cards. Packs from third parties carry their own licence."
+    },
+    {
+      "id": "mpfb-mcp", "name": "MPFB MCP server", "kind": "tool", "dims": "3d",
+      "styles": ["realistic"], "ages": ["baby", "child", "teen", "adult", "senior"], "face": "visemes", "rigged": true, "skeleton": "as MPFB",
+      "animations": "n/a", "formats": [], "routes": ["blender"], "quality": 3,
+      "licence": "GPL-3.0", "licence_url": "https://github.com/makehumancommunity/mpfb-mcp",
+      "credit": null, "redistribute": "yes",
+      "get": { "page": "https://github.com/makehumancommunity/mpfb-mcp" },
+      "blender": "5.0 and later",
+      "use": "Optional, for exploring a character live in an open Blender (42 tools, beta). Batch renders use MPFB from Python instead.",
+      "caution": "Beta."
+    },
+    {
+      "id": "kaykit-adventurers", "name": "KayKit Adventurers", "kind": "pack", "dims": "3d",
+      "styles": ["chibi", "low-poly", "fantasy", "cartoon"], "ages": ["adult"], "face": "painted", "rigged": true, "skeleton": "KayKit humanoid",
+      "animations": "75 announced, embedded in the files", "formats": ["glb", "fbx"], "routes": ["blender", "threejs"], "quality": 3,
+      "licence": "CC0 1.0", "licence_url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/blob/main/LICENSE.txt",
+      "credit": "optional: Kay Lousberg", "redistribute": "yes",
+      "get": { "live": "kaykit", "repo": "KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0", "dir": "addons/kaykit_character_pack_adventures/Characters/gltf/" },
+      "use": "Barbarian, Knight, Mage, Rogue: animated from the first minute, for a demo or a playful spot.",
+      "caution": "Painted faces: no lip sync."
+    },
+    {
+      "id": "kaykit-skeletons", "name": "KayKit Skeletons", "kind": "pack", "dims": "3d",
+      "styles": ["chibi", "low-poly", "fantasy", "creature"], "ages": ["adult"], "face": "painted", "rigged": true, "skeleton": "KayKit humanoid",
+      "animations": "embedded", "formats": ["glb", "fbx"], "routes": ["blender", "threejs"], "quality": 3,
+      "licence": "CC0 1.0", "licence_url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0/blob/main/LICENSE.txt",
+      "credit": "optional: Kay Lousberg", "redistribute": "yes",
+      "get": { "live": "kaykit", "repo": "KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0", "dir": "addons/kaykit_character_pack_skeletons/Characters/gltf/" },
+      "use": "Mage, Minion, Rogue, Warrior skeletons: Halloween, games, humour.",
+      "caution": null
+    },
+    {
+      "id": "mesh2motion", "name": "Mesh2Motion rigs (human and animals)", "kind": "pack", "dims": "3d",
+      "styles": ["low-poly", "creature", "cartoon"], "ages": ["adult"], "face": "none", "rigged": true, "skeleton": "Mesh2Motion per species",
+      "animations": "about 330 clips (human 234, fox 21, horse 14, dragon 12, spider 11, kaiju 10, bird 9, snake 8, shark 7)", "formats": ["glb", "blend"], "routes": ["blender", "threejs"], "quality": 3,
+      "licence": "CC0 1.0 (assets); code MIT", "licence_url": "https://github.com/Mesh2Motion/mesh2motion-app",
+      "credit": null, "redistribute": "yes",
+      "get": { "live": "m2m" },
+      "use": "Animals and creatures with their own animations; a large human clip library to retarget on any humanoid.",
+      "caution": "Some human clips are tagged quaternius: their source licence is recorded as given."
+    },
+    {
+      "id": "100avatars", "name": "100Avatars R1 to R3 (Polygonal Mind)", "kind": "avatars", "dims": "3d",
+      "styles": ["low-poly", "cartoon", "voxel", "creature", "robot", "abstract"], "ages": ["child", "teen", "adult", "senior"], "face": "visemes", "rigged": true, "skeleton": "VRM humanoid / Mixamo",
+      "animations": "none; humanoid, so any humanoid clip retargets", "formats": ["vrm", "fbx"], "routes": ["blender", "threejs"], "quality": 3,
+      "licence": "CC0 1.0 (Open Source Avatars registry)", "licence_url": "https://github.com/ToxSam/open-source-avatars/blob/main/data/projects.json",
+      "credit": "optional: Polygonal Mind", "redistribute": "yes",
+      "get": { "live": "osa" },
+      "use": "300 varied characters (people, animals, objects with faces, robots), each with a voxel twin, visemes for speech; enough for a crowd or a cast.",
+      "caution": "The authors ask not to sell the avatars themselves without major changes: using them in a video is fine."
+    },
+    {
+      "id": "osa-collections", "name": "Open Source Avatars collections", "kind": "avatars", "dims": "3d",
+      "styles": ["anime", "chibi", "cartoon", "fantasy"], "ages": ["teen", "adult"], "face": "expressions", "rigged": true, "skeleton": "VRM humanoid",
+      "animations": "none", "formats": ["vrm"], "routes": ["blender", "threejs"], "quality": 3,
+      "licence": "CC0 or CC BY per collection", "licence_url": "https://github.com/ToxSam/open-source-avatars/blob/main/data/projects.json",
+      "credit": "per collection", "redistribute": "per collection",
+      "get": { "live": "osa" },
+      "use": "Thousands of VRM avatars (chibis, Halloween, heroes) with a licence stated per collection.",
+      "caution": "Files are served from IPFS or Arweave: a download can be slow."
+    },
+    {
+      "id": "vroid-samples", "name": "VRoid Studio sample models D to G", "kind": "pack", "dims": "3d",
+      "styles": ["anime"], "ages": ["teen", "adult"], "face": "expressions", "rigged": true, "skeleton": "VRM humanoid",
+      "animations": "none", "formats": ["vrm"], "routes": ["blender", "threejs"], "quality": 4,
+      "licence": "CC0 for samples D to G; A to C have their own terms", "licence_url": "https://vroid.pixiv.help/hc/en-us/articles/4402614652569",
+      "credit": null, "redistribute": "yes (D to G)",
+      "get": { "page": "https://vroid.pixiv.help/hc/en-us/articles/4402614652569", "how": "Download in VRoid Studio or VRoid Hub, export as VRM, then umd characters add <file> --id vroid-samples" },
+      "use": "Anime characters with face expressions and mouth shapes (A I U E O).",
+      "caution": "Import needs the VRM add-on for Blender."
+    },
+    {
+      "id": "vroid-studio", "name": "VRoid Studio (make your own anime character)", "kind": "generator", "dims": "3d",
+      "styles": ["anime", "chibi"], "ages": ["child", "teen", "adult"], "face": "expressions", "rigged": true, "skeleton": "VRM humanoid",
+      "animations": "none", "formats": ["vrm"], "routes": ["blender", "threejs"], "quality": 4,
+      "licence": "free software; presets are not CC0 but may be used commercially, videos that earn money included", "licence_url": "https://vroid.com/en/studio/guidelines",
+      "credit": null, "redistribute": "with the model's VRM permissions",
+      "get": { "page": "https://vroid.com/en/studio", "how": "Make the character in VRoid Studio (no API), export VRM, then umd characters add" },
+      "use": "A custom anime mascot designed by the user in minutes, sliders only.",
+      "caution": "Pixiv forbids building an app that generates avatars from its assets: the plugin imports finished characters, never generates them."
+    },
+    {
+      "id": "quaternius-characters", "name": "Quaternius characters (Universal Base Characters and other packs)", "kind": "pack", "dims": "3d",
+      "styles": ["low-poly", "cartoon", "creature", "robot", "fantasy"], "ages": ["teen", "adult"], "face": "none", "rigged": true, "skeleton": "Quaternius humanoid (retargets with UAL)",
+      "animations": "UAL 1 and 2 (separate entries)", "formats": ["fbx", "glb", "obj"], "routes": ["blender", "threejs"], "quality": 3,
+      "licence": "QAL v1.0 since 2026-08-28 (use, modify and sell products; no resale of the assets themselves); earlier downloads stay CC0", "licence_url": "https://quaternius.com/license.html",
+      "credit": null, "redistribute": "no (assets themselves); renders yes",
+      "get": { "page": "https://quaternius.com/packs/universalbasecharacters.html", "how": "Download the free Standard pack, then umd characters add <file> --id quaternius-characters" },
+      "use": "Six body types (Regular, Superhero, Teen), 20 haircuts; many more packs: animals, monsters, robots, modular people.",
+      "caution": "Keep the asset files out of public repositories."
+    },
+    {
+      "id": "kenney-characters", "name": "Kenney animated characters (Protagonists, Retro, Mini, Blocky)", "kind": "pack", "dims": "3d",
+      "styles": ["low-poly", "blocky", "chibi", "cartoon"], "ages": ["child", "adult"], "face": "painted", "rigged": true, "skeleton": "Kenney humanoid",
+      "animations": "basic set in the animated packs", "formats": ["fbx", "glb", "obj"], "routes": ["blender", "threejs"], "quality": 2,
+      "licence": "CC0 1.0", "licence_url": "https://kenney.nl/assets/animated-characters-protagonists",
+      "credit": "optional: Kenney", "redistribute": "yes",
+      "get": { "page": "https://kenney.nl/assets/mini-characters", "how": "Download the zip from the page (also: animated-characters-protagonists, animated-characters-retro, blocky-characters), then umd characters add" },
+      "use": "Toy-like casts, game looks, quick prototypes.",
+      "caution": null
+    },
+    {
+      "id": "charmorph", "name": "CharMorph (Vitruvian CC0, Antonia CC BY)", "kind": "generator", "dims": "3d",
+      "styles": ["realistic"], "ages": ["adult"], "face": "full", "rigged": true, "skeleton": "Rigify (face included)",
+      "animations": "none", "formats": ["blend"], "routes": ["blender"], "quality": 3,
+      "licence": "add-on GPL-3.0; Vitruvian base CC0; Antonia and Reom CC BY; MB-Lab bases AGPL (excluded)", "licence_url": "https://charmorph-docs.readthedocs.io/en/main/Introduction.html",
+      "credit": "Antonia or Reom: their authors (CC BY)", "redistribute": "Vitruvian yes; Antonia and Reom with credit",
+      "get": { "page": "https://github.com/Upliner/CharMorph", "how": "Install the add-on, pick the Vitruvian, Antonia or Reom base, never the MB-Lab ones" },
+      "blender": "last release about March 2025: test on your version",
+      "use": "Realistic adults with a full Rigify face rig.",
+      "caution": "Bases from MB-Lab are AGPL: refused for client work."
+    },
+    {
+      "id": "human-base-meshes", "name": "Blender Human Base Meshes", "kind": "rig", "dims": "3d",
+      "styles": ["realistic", "cartoon"], "ages": ["adult"], "face": "none", "rigged": false, "skeleton": "none (rig with Rigify)",
+      "animations": "none", "formats": ["blend"], "routes": ["blender"], "quality": 2,
+      "licence": "CC0 according to the research notes; check the bundle's own licence file", "licence_url": "https://developer.blender.org/docs/features/asset_system/asset_bundles/human_base_meshes/",
+      "credit": null, "redistribute": "check the bundle",
+      "get": { "page": "https://www.blender.org/download/demo-files/", "how": "Download the Human Base Meshes bundle, sculpt, then rig with the Rigify human metarig" },
+      "blender": "4.2 and later",
+      "use": "The start for a custom stylised character (a mascot of the brand), sculpted then rigged.",
+      "caution": "Not rigged, no textures: a modelling job, not a ready character."
+    },
+    {
+      "id": "rigify-metarig", "name": "Rigify human metarig on your own mesh", "kind": "tool", "dims": "3d",
+      "styles": ["realistic", "cartoon", "film"], "ages": ["child", "teen", "adult", "senior"], "face": "full", "rigged": true, "skeleton": "Rigify",
+      "animations": "none", "formats": ["blend"], "routes": ["blender"], "quality": 4,
+      "licence": "GPL (ships with Blender); the rig you generate is yours", "licence_url": "https://docs.blender.org/manual/en/latest/addons/rigify/index.html",
+      "credit": null, "redistribute": "yes",
+      "get": { "install": "Built into Blender 4.2 and later: enable Rigify in Preferences > Add-ons" },
+      "use": "Rig any humanoid mesh (Human Base Meshes, a sculpt, a CC0 model without bones) with body and face controls.",
+      "caution": null
+    },
+    {
+      "id": "anny", "name": "Anny (NAVER LABS) parametric body", "kind": "generator", "dims": "3d",
+      "styles": ["realistic"], "ages": ["baby", "child", "teen", "adult", "senior"], "face": "expressions", "rigged": true, "skeleton": "104 or 163 bones",
+      "animations": "none", "formats": ["obj", "glb"], "routes": ["blender"], "quality": 2,
+      "licence": "Apache-2.0; data CC0 (except the optional SMPL-X topology, non-commercial)", "licence_url": "https://github.com/naver/anny",
+      "credit": null, "redistribute": "yes (without the SMPL-X extra)",
+      "get": { "install": "pip install anny (PyTorch)", "page": "https://github.com/naver/anny" },
+      "use": "Advanced: body shapes from infant to senior generated in Python, exported to Blender.",
+      "caution": "No Blender integration; never enable the SMPL-X option."
+    },
+    {
+      "id": "sketchfab-cc", "name": "Sketchfab downloadable models (CC0 and CC BY only)", "kind": "pack", "dims": "3d",
+      "styles": ["realistic", "cartoon", "low-poly", "creature", "robot", "fantasy", "anime"], "ages": ["child", "teen", "adult", "senior"], "face": "expressions", "rigged": "some", "skeleton": "per model",
+      "animations": "some", "formats": ["glb", "fbx", "blend"], "routes": ["blender", "threejs"], "quality": 3,
+      "licence": "per model: keep only CC0 and CC BY; refuse NC, ND, SA and Editorial", "licence_url": "https://sketchfab.com/licenses",
+      "credit": "per model (CC BY)", "redistribute": "per model",
+      "get": { "page": "https://sketchfab.com/search?features=downloadable&licenses=7c23a1ba438d4306920229c12afcb5f9&licenses=322a749bcfa841b29dff1e8a1bb74b0b&type=models&q=rigged+character", "how": "The user downloads (free account), then umd characters add <file> --id sketchfab-cc --licence \"CC BY 4.0\" --author name --url page" },
+      "use": "The widest choice: thousands of rigged characters; filter on CC0 and CC BY (link above).",
+      "caution": "Quality and rig vary widely: check the rig before planning. Never models of real people or brands."
+    },
+    {
+      "id": "poly-pizza", "name": "Poly Pizza (low-poly models, CC0 and CC BY)", "kind": "pack", "dims": "3d",
+      "styles": ["low-poly", "cartoon", "creature"], "ages": ["adult"], "face": "none", "rigged": "some", "skeleton": "per model",
+      "animations": "some", "formats": ["glb", "fbx", "obj"], "routes": ["blender", "threejs"], "quality": 2,
+      "licence": "per model (Creative Commons licence at download time)", "licence_url": "https://poly.pizza/docs/tos",
+      "credit": "per model (CC BY)", "redistribute": "per model",
+      "get": { "page": "https://poly.pizza/search/character", "how": "Download by hand (the terms forbid automated downloads), then umd characters add" },
+      "use": "Props and simple characters to fill a low-poly world.",
+      "caution": "No scripted downloads."
+    },
+    {
+      "id": "opengameart-3d", "name": "OpenGameArt 3D characters (CC0 and CC BY only)", "kind": "pack", "dims": "3d",
+      "styles": ["low-poly", "cartoon", "fantasy", "creature", "pixel"], "ages": ["adult"], "face": "none", "rigged": "some", "skeleton": "per model",
+      "animations": "some", "formats": ["blend", "fbx", "glb"], "routes": ["blender", "threejs"], "quality": 2,
+      "licence": "per asset: keep CC0 and CC BY; refuse GPL art, CC BY-SA and OGA-BY for client work unless the user accepts", "licence_url": "https://opengameart.org/",
+      "credit": "per asset", "redistribute": "per asset",
+      "get": { "page": "https://opengameart.org/art-search-advanced?field_art_type_tid%5B%5D=10&field_art_licenses_tid%5B%5D=4", "how": "Download by hand, then umd characters add" },
+      "use": "Game characters, monsters, retro looks.",
+      "caution": null
+    },
+    {
+      "id": "mesh2motion-clips", "name": "Mesh2Motion animation clips", "kind": "motion", "dims": "3d",
+      "styles": ["realistic", "cartoon", "creature"], "ages": ["adult"], "face": "none", "rigged": true, "skeleton": "Mesh2Motion",
+      "animations": "about 330 clips, one GLB each (walk, run, idle, emotes, attacks, sit, dance…)", "formats": ["glb"], "routes": ["blender", "threejs"], "quality": 3,
+      "licence": "CC0 1.0", "licence_url": "https://github.com/Mesh2Motion/mesh2motion-app",
+      "credit": null, "redistribute": "yes",
+      "get": { "live": "m2m" },
+      "use": "Body motion for any humanoid through the canonical bone map (character.py retarget).",
+      "caution": null
+    },
+    {
+      "id": "quaternius-ual", "name": "Quaternius Universal Animation Library 1 and 2", "kind": "motion", "dims": "3d",
+      "styles": ["cartoon", "realistic"], "ages": ["adult"], "face": "none", "rigged": true, "skeleton": "Quaternius humanoid",
+      "animations": "120+ (UAL 1) and 130+ (UAL 2) clips", "formats": ["fbx", "glb"], "routes": ["blender", "threejs"], "quality": 3,
+      "licence": "QAL v1.0 for new downloads (use in products allowed, no resale of the files)", "licence_url": "https://quaternius.com/license.html",
+      "credit": null, "redistribute": "no (files themselves)",
+      "get": { "page": "https://quaternius.com/packs/universalanimationlibrary.html", "how": "Download UAL 1 or 2 (also universalanimationlibrary2.html), then umd characters add" },
+      "use": "Named actions for stylised humanoids.",
+      "caution": null
+    },
+    {
+      "id": "cmu-mocap", "name": "CMU motion capture (BVH conversion)", "kind": "motion", "dims": "3d",
+      "styles": ["realistic"], "ages": ["adult"], "face": "none", "rigged": true, "skeleton": "MotionBuilder-style BVH",
+      "animations": "about 2,500 captures: walks, sports, dances, gestures, interactions", "formats": ["bvh"], "routes": ["blender"], "quality": 4,
+      "licence": "free for research and commercial projects; do not resell the data itself; acknowledgement asked", "licence_url": "https://github.com/una-dinosauria/cmu-mocap",
+      "credit": "The data used in this project was obtained from mocap.cs.cmu.edu.", "redistribute": "yes, not for sale",
+      "get": { "page": "https://github.com/una-dinosauria/cmu-mocap", "how": "Pick a clip from the index, download the .bvh, then umd characters add <file> --id cmu-mocap" },
+      "use": "Real human motion; retarget with character.py.",
+      "caution": "120 fps with a T-pose at frame 0; fingers carry no data."
+    },
+    {
+      "id": "100style", "name": "100STYLE locomotion dataset", "kind": "motion", "dims": "3d",
+      "styles": ["realistic", "cartoon"], "ages": ["adult"], "face": "none", "rigged": true, "skeleton": "28-bone BVH (root Hips)",
+      "animations": "100 walking styles (proud, sneaky, old, robot, zombie…), 60 fps", "formats": ["bvh"], "routes": ["blender"], "quality": 4,
+      "licence": "CC BY 4.0", "licence_url": "https://www.ianxmason.com/100style/",
+      "credit": "The 100STYLE Dataset - Ian Mason", "redistribute": "with-credit",
+      "get": { "zip": "https://zenodo.org/records/8127870/files/100STYLE.zip?download=1", "size_mb": 1500, "page": "https://www.ianxmason.com/100style/" },
+      "use": "A walk with character: 100 named styles.",
+      "caution": "1.5 GB archive; clips start and end in T-pose (trim with Frame_Cuts.csv)."
+    },
+    {
+      "id": "open-peeps", "name": "Open Peeps (Pablo Stanley)", "kind": "kit2d", "dims": "2d",
+      "styles": ["hand-drawn", "flat"], "ages": ["child", "teen", "adult", "senior"], "face": "expressions", "rigged": false, "skeleton": "parts (head, face, body, pose)",
+      "animations": "none; animate parts in the 2D puppet", "formats": ["svg", "png"], "routes": ["html", "blender"], "quality": 4,
+      "licence": "CC0 1.0", "licence_url": "https://www.openpeeps.com/",
+      "credit": null, "redistribute": "yes",
+      "get": { "page": "https://www.openpeeps.com/", "how": "Download the library (free) or single SVGs, then umd characters add" },
+      "use": "Hand-drawn people for explainers: mix faces, hair, bodies; split into puppet parts.",
+      "caution": null
+    },
+    {
+      "id": "humaaans", "name": "Humaaans (Pablo Stanley)", "kind": "kit2d", "dims": "2d",
+      "styles": ["flat"], "ages": ["teen", "adult", "senior"], "face": "none", "rigged": false, "skeleton": "parts (head, top, bottom, pose)",
+      "animations": "none", "formats": ["svg"], "routes": ["html"], "quality": 3,
+      "licence": "CC0 1.0", "licence_url": "https://www.humaaans.com/",
+      "credit": null, "redistribute": "yes",
+      "get": { "page": "https://www.humaaans.com/", "how": "Download the library, then umd characters add" },
+      "use": "Flat corporate people for product and SaaS videos.",
+      "caution": "Seen everywhere: add your own palette to avoid the generic look."
+    },
+    {
+      "id": "dicebear", "name": "DiceBear avatar styles (generated from a seed)", "kind": "code", "dims": "2d",
+      "styles": ["flat", "cartoon", "pixel", "hand-drawn", "robot", "abstract", "voxel"], "ages": ["child", "teen", "adult"], "face": "expressions", "rigged": false, "skeleton": "none",
+      "animations": "none", "formats": ["svg"], "routes": ["html"], "quality": 3,
+      "licence": "library MIT; styles: 42 CC0 (lorelei, notionists, open-peeps, thumbs, pixel-art…), 14 CC BY 4.0 (adventurer, micah, personas, big-smile…), avataaars and bottts free for commercial use", "licence_url": "https://www.dicebear.com/licenses/",
+      "credit": "CC BY styles: their artist (see the licence page)", "redistribute": "yes (per style)",
+      "get": { "install": "npm install @dicebear/core @dicebear/styles in the project, then new Avatar(style, { seed }).toString()", "page": "https://www.dicebear.com/styles/" },
+      "use": "Dozens of consistent faces from seeds: a crowd, a user list, a leaderboard, quiz players.",
+      "caution": "The public HTTP API is for non-commercial use only: generate locally for client work."
+    },
+    {
+      "id": "kenney-2d", "name": "Kenney 2D characters (Toon Characters and others)", "kind": "kit2d", "dims": "2d",
+      "styles": ["cartoon", "flat", "pixel"], "ages": ["child", "adult"], "face": "expressions", "rigged": false, "skeleton": "parts and poses",
+      "animations": "frames in some packs", "formats": ["png", "svg"], "routes": ["html", "blender"], "quality": 2,
+      "licence": "CC0 1.0", "licence_url": "https://kenney.nl/assets/toon-characters-1",
+      "credit": "optional: Kenney", "redistribute": "yes",
+      "get": { "page": "https://kenney.nl/assets/toon-characters-1", "how": "Download the zip, then umd characters add" },
+      "use": "Game-style 2D characters with poses (270 files in Toon Characters 1).",
+      "caution": null
+    },
+    {
+      "id": "lottie-community", "name": "LottieFiles free animations (Lottie Simple License)", "kind": "kit2d", "dims": "2d",
+      "styles": ["flat", "cartoon"], "ages": ["child", "adult"], "face": "expressions", "rigged": true, "skeleton": "vector layers",
+      "animations": "each file is an animation", "formats": ["json", "lottie"], "routes": ["html"], "quality": 3,
+      "licence": "Lottie Simple License: commercial use and changes allowed, no attribution needed; redistribution keeps the same terms", "licence_url": "https://lottiefiles.com/page/license",
+      "credit": "optional", "redistribute": "same terms",
+      "get": { "page": "https://lottiefiles.com/free-animations/character", "how": "Download the Lottie JSON, then umd characters add <file> --id lottie-community --author name --url page" },
+      "use": "Ready animated characters for UI, explainers and stickers.",
+      "caution": "Check that the file is listed as free; never compile files to rebuild a similar service."
+    },
+    {
+      "id": "rive-community", "name": "Rive community files (CC BY)", "kind": "kit2d", "dims": "2d",
+      "styles": ["flat", "cartoon"], "ages": ["child", "adult"], "face": "expressions", "rigged": true, "skeleton": "Rive bones and state machines",
+      "animations": "state machines", "formats": ["riv"], "routes": ["html"], "quality": 4,
+      "licence": "per file (many CC BY); runtimes MIT", "licence_url": "https://rive.app/community/",
+      "credit": "per file", "redistribute": "per file",
+      "get": { "page": "https://rive.app/community/files/", "how": "Download a remixable CC BY file, then umd characters add" },
+      "use": "Interactive mascots with bones and facial states, rendered by the MIT web runtime.",
+      "caution": "The Rive editor's video export is paid: render through the web runtime and umd capture instead."
+    },
+    {
+      "id": "grease-pencil", "name": "Grease Pencil v3 (2D drawn rig in Blender)", "kind": "tool", "dims": "2d",
+      "styles": ["hand-drawn", "flat", "cartoon"], "ages": ["child", "teen", "adult", "senior"], "face": "expressions", "rigged": true, "skeleton": "armature on strokes",
+      "animations": "drawn or rigged", "formats": ["blend"], "routes": ["blender"], "quality": 4,
+      "licence": "part of Blender (GPL); drawings are yours", "licence_url": "https://docs.blender.org/manual/en/latest/grease_pencil/index.html",
+      "credit": null, "redistribute": "yes",
+      "get": { "install": "Built into Blender 4.3 and later" },
+      "use": "2D characters in a 3D scene, scriptable (drawing.add_strokes, Armature modifier), rendered by EEVEE.",
+      "caution": "Importing SVG into Grease Pencil under 5.x is not verified."
+    },
+    {
+      "id": "coa-tools2", "name": "COA Tools 2 (cut-out sprites in Blender)", "kind": "tool", "dims": "2d",
+      "styles": ["flat", "cartoon", "hand-drawn"], "ages": ["child", "teen", "adult", "senior"], "face": "expressions", "rigged": true, "skeleton": "2D bones",
+      "animations": "keyframed", "formats": ["blend", "psd"], "routes": ["blender"], "quality": 3,
+      "licence": "GPL-3.0", "licence_url": "https://github.com/Aodaruma/coa_tools2",
+      "credit": null, "redistribute": "yes",
+      "get": { "page": "https://github.com/Aodaruma/coa_tools2", "how": "Install the add-on, import a layered PSD, Krita or GIMP drawing" },
+      "use": "A drawn character split in layers, animated with bones like Spine, for free.",
+      "caution": null
+    },
+    {
+      "id": "svg-puppet", "name": "UMD 2D puppet (code)", "kind": "code", "dims": "2d",
+      "styles": ["flat", "cartoon", "hand-drawn", "abstract"], "ages": ["child", "teen", "adult", "senior"], "face": "visemes", "rigged": true, "skeleton": "SVG groups with pivots",
+      "animations": "blink, look, breathe, gestures, mouth shapes from umd lipsync", "formats": ["html", "svg"], "routes": ["html"], "quality": 3,
+      "licence": "MIT (this plugin)", "licence_url": "https://github.com/1AngelMicka/ultimate-motion-design/blob/main/LICENSE",
+      "credit": null, "redistribute": "yes",
+      "get": { "template": "templates/html/puppet.html" },
+      "use": "A cut-out character driven on the virtual clock: works with your own drawing, Open Peeps parts or DiceBear faces.",
+      "caution": "Quality depends on the drawing; give each part its own pivot."
+    },
+    {
+      "id": "rhubarb", "name": "Rhubarb Lip Sync", "kind": "tool", "dims": "3d",
+      "styles": [], "ages": [], "face": "visemes", "rigged": false, "skeleton": "n/a",
+      "animations": "mouth cues from a voice recording (A to H, X)", "formats": ["wav", "ogg"], "routes": ["blender", "threejs", "html"], "quality": 4,
+      "licence": "MIT; the lip-sync data belongs to you", "licence_url": "https://github.com/DanielSWolf/rhubarb-lip-sync",
+      "credit": null, "redistribute": "yes",
+      "get": { "install": "umd doctor --fix --rhubarb (official release, about 85 MB) or set UMD_RHUBARB to the executable", "page": "https://github.com/DanielSWolf/rhubarb-lip-sync/releases" },
+      "use": "umd lipsync voice.wav --text script.txt: mouth shapes per frame for character.py and the 2D puppet.",
+      "caution": "The default recogniser is English only; for French, use the phonetic recogniser (automatic when the project language is not English)."
+    },
+    {
+      "id": "vrm-addon", "name": "VRM Add-on for Blender", "kind": "tool", "dims": "3d",
+      "styles": ["anime"], "ages": [], "face": "expressions", "rigged": true, "skeleton": "VRM humanoid",
+      "animations": "n/a", "formats": ["vrm"], "routes": ["blender"], "quality": 4,
+      "licence": "MIT and GPL-3.0", "licence_url": "https://github.com/saturday06/VRM-Addon-for-Blender",
+      "credit": null, "redistribute": "yes",
+      "get": { "install": "Blender > Get Extensions > VRM format", "page": "https://vrm-addon-for-blender.info/" },
+      "blender": "2.93 to 5.2",
+      "use": "Imports .vrm (100Avatars, VRoid, Open Source Avatars) by script: bpy.ops.import_scene.vrm(filepath=...).",
+      "caution": null
+    },
+    {
+      "id": "threejs-code-character", "name": "Character built from primitives (three.js or Blender, code)", "kind": "code", "dims": "3d",
+      "styles": ["cartoon", "abstract", "robot", "chibi"], "ages": ["child", "adult"], "face": "blink", "rigged": true, "skeleton": "hierarchy of groups",
+      "animations": "procedural", "formats": ["html", "py"], "routes": ["threejs", "blender"], "quality": 2,
+      "licence": "yours", "licence_url": null,
+      "credit": null, "redistribute": "yes",
+      "get": { "template": "references/routes/threejs-film.md" },
+      "use": "Robots, blobs, objects with eyes: shapes that do not need human acting.",
+      "caution": "Human faces and hands made in code look stiff: prefer an entry above for people."
+    }
+  ],
+  "excluded": [
+    { "name": "Mixamo characters and animations", "why": "raw files may not be redistributed, even for free" },
+    { "name": "Ready Player Me", "why": "closed on 2026-01-31" },
+    { "name": "MB-Lab and CharMorph MB-Lab bases", "why": "AGPL assets" },
+    { "name": "SMPL and SMPL-X", "why": "non-commercial" },
+    { "name": "Bandai Namco Research motion dataset, LAFAN1, SFU mocap", "why": "non-commercial (CC BY-NC, CC BY-NC-ND)" },
+    { "name": "Liberated Pixel Cup sprites", "why": "CC BY-SA and GPL art: share-alike" },
+    { "name": "Character Creator, Human Generator, Daz, Renderpeople, Synty, Auto-Rig Pro, Faceit, Spine, Live2D PRO", "why": "paid, and their content may not be redistributed" },
+    { "name": "MetaHuman", "why": "Epic licence: files may not be redistributed; use only if the user already works with it" },
+    { "name": "DiceBear HTTP API", "why": "non-commercial use only (generate locally instead)" },
+    { "name": "Meshy, Tripo, Rodin, Hunyuan3D and other generated 3D", "why": "generated meshes and textures; only through the director route with the user's consent (Hunyuan3D excludes the EU)" }
+  ]
+}

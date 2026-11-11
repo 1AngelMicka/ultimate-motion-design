@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.10.0 — 2026-11-11
+
+Characters drawn in code were the weakest part of the films (the Blind'N'Quiz figurines were turned down). This version gives the agent real characters and one way to animate any of them.
+
+- **`umd characters`**: a catalogue of about 40 free sources usable in advertising (film rigs from Blender Studio, the MPFB generator from baby to senior, VRoid and anime, KayKit, Kenney and Quaternius, CharMorph, Open Peeps, Humaaans, DiceBear, Rive and Lottie files, Grease Pencil, mocap from CMU and 100STYLE), plus three lists read live: Mesh2Motion (9 rigs including animals and creatures, about 330 CC0 clips), KayKit packs and Open Source Avatars (about 4,000 VRM, 300 of them CC0 with visemes). French words work. `get` downloads and records licence, author, credit and date in the assets lock; `add` records a manual download and refuses NC, ND, SA and AGPL. What is excluded is listed with the reason (Mixamo, non-commercial mocap, paid tools, generated 3D).
+- **One animation layer**, `templates/blender/character.py`: maps any humanoid rig to canonical bones (Mixamo, CMU and MotionBuilder BVH, 100STYLE, VRoid, Unity, Unreal, MPFB, Mesh2Motion, KayKit, Rigify, else by meaning), finds blink and mouth shape keys, and says what the rig can and cannot do. Gestures: look at (eyes lead the head by 8 frames), blink, breathe, mouth from lip sync (visemes, VRM vowels, ARKit, else the jaw; a missing shape borrows a near one), play an action, retarget a motion relative to each rest pose. A test shot (`-- test`) is the gate before the stills. Checked on Blender 5.1.2: KayKit knight with its own idle, a CMU walk retargeted on the Mesh2Motion mannequin, a 100Avatars FBX speaking on its visemes.
+- **`umd lipsync <voice.wav> [--text script]`**: mouth shapes A to H and X per frame with Rhubarb (MIT, phonetic recogniser for French), installed by `umd doctor --fix --rhubarb` from its official release.
+- **2D puppet**, `templates/html/puppet.html`: a cut-out character on the virtual clock that breathes, blinks, looks, gestures and speaks from the same lip-sync file; passes `umd still --seek-check`.
+- **The method uses them**: kickoff presents the catalogue when characters are wanted, the storyboard has a characters step (search, licence, profile, test shot, `## Characters` in BRIEF.md), the build uses the layer. New guide `references/characters.md`.
+- **Licence guard**: a folder entry in the assets lock covers the files inside it (an extracted character with its textures); `.fbx`, `.vrm`, `.bvh` and `.obj` count as media; "CC BY 4.0" and "CC-BY-4.0" are read as the same licence.
+
 ## 0.9.0 — 2026-11-11
 
 - **No brief needed.** Kickoff finds the briefs already in the folder (LISEZMOI, README, BRIEF, a brand folder) and has a decide-for-me path: `/umd:go une vidéo de qualité` infers profile, format and length, picks the style itself and asks only about commercial use, voice and music; the user's taste comes in by picking among three concepts.

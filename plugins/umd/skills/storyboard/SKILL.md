@@ -29,6 +29,16 @@ If `BRIEF.md` has no `## Concept` and the brief does not fix one (a storyboard, 
 3. On the choice: `umd styles get <id>` (its output gives `approx_tokens`: style prompts weigh 1 to 8 k tokens), read `.motion/styles/<id>.md` **once**, set `"style": "<id>"` in project.json, and write a `## Style card` in BRIEF.md: at most 200 words with the signature features you keep (materials, colour logic, type, motion rules, sound), what you adapt (story, product, copy, brand colours inside the style's colour logic) and the credit line. From then on every step and every critic reads the card, never the full prompt again.
 4. Web pages: also pick 2 or 3 references from the galleries listed in `references/styles.md` and say what you take from each.
 
+## 0b. Characters (when `flags.has_characters`)
+
+Follow `${CLAUDE_PLUGIN_ROOT}/references/characters.md`: never draw a person in code when the catalogue has one that fits.
+
+1. `umd characters <kind, age, look from the style card>` (no tokens). With `style_choice: "ask"`, show 3 candidates with their page or preview; with `"auto"`, take the first that fits and say why.
+2. `umd characters get <id>` (or `add` after a manual download): the licence and credit land in `assets.lock.json`.
+3. Profile it (`character.py -- profile`, Blender routes) and keep its `can` / `cannot` lists: the beats below use only gestures it can do.
+4. Character test shot (`character.py -- test`, or `templates/html/puppet.html` for 2D): show the frames to the user before the stills. If it does not hold up, change the character.
+5. Write `## Characters` in BRIEF.md: one line per character with its id, licence, credit, what it can do and its signature idle.
+
 ## 1. Beats
 
 1. Read `BRIEF.md` and `.motion/project.json`. If missing, stop and suggest `/umd:kickoff`.

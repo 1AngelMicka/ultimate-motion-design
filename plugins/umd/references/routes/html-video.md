@@ -7,6 +7,7 @@ Every frame is HTML/CSS/SVG/Canvas computed from time, then captured to MP4. The
 | Use when | Avoid when (pick instead) |
 | --- | --- |
 | Flat, graphic, UI-based, typographic or 2.5D look | Real materials, photoreal objects, rigged characters → [blender.md](blender.md) |
+| 2D characters that talk and gesture: `templates/html/puppet.html` ([../characters.md](../characters.md)) | 3D acting in close-up → [blender.md](blender.md) |
 | Promo, launch, product demo, explainer, social short, logo sting | One character living in a small 3D world → [threejs-film.md](threejs-film.md) |
 | Fast iteration: a draft render in seconds to minutes | Many illustrated scenes with narration and generated imagery → [director.md](director.md) |
 | Brand fonts, real UI, real numbers must stay exact | Pure maths or algorithm explainer → [explainer.md](explainer.md) (Manim) |

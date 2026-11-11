@@ -9,6 +9,7 @@ A 30–120 s animated short where a character wants something small, tries, meet
 
 ## Setup
 
+- Character from the catalogue, not drawn in code: `umd characters`, then its profile and a test shot ([../characters.md](../characters.md)).
 - Character bible before any frame: silhouette, 3 expressions (neutral, effort, surprise), colours, scale against the set, one signature idle (ear twitch, antenna sway).
 - Story script with **one emotion per beat written at the end of the line**.
 - Sound design plan from the start ([../audio/music-sfx.md](../audio/music-sfx.md)); no voice needed — sound and acting tell it.

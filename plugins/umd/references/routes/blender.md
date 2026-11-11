@@ -28,7 +28,7 @@ Claude scripts the scene in `bpy` as files, Blender renders frames headless, FFm
 
 **1. Direct like a junior 3D artist.** One instruction per step, with numbers: "50 mm lens, camera at 1.6 m, 15° down", "key light 45° left, 3× rim". After each step render one still (`-f N`, or a viewport screenshot through the MCP) and compare it to the reference image. Never "make it look good".
 
-**2. Search the library once before building.** One BlenderKit / Poly Haven search for the hero object and materials; model from scratch only what is missing.
+**2. Search the library once before building.** One BlenderKit / Poly Haven search for the hero object and materials; model from scratch only what is missing. Characters: `umd characters` and `templates/blender/character.py` (profile, look, blink, speech, retarget), never a person modelled from primitives ([../characters.md](../characters.md)).
 
 **3. The scene lives in an idempotent script.** `scene/build.py` clears what it created, rebuilds, sets frame range, fps and output, and saves. The MCP, when used, is for exploring; the script is what renders:
 

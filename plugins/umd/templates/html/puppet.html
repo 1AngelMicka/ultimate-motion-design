@@ -1,0 +1,157 @@
+<!doctype html>
+<!--
+  UMD 2D puppet: a cut-out character on the virtual clock. Everything on screen is a pure function of t
+  (window.umdRender), so any frame drawn cold equals the same frame drawn in sequence (umd still --seek-check).
+
+  Make it yours:
+  - Replace the parts inside <g id="puppet"> with your own drawing (Open Peeps, Humaaans, Kenney 2D, DiceBear
+    faces: umd characters <words> --dims 2d). Keep one <g> per part and set its pivot with data-pivot="x y"
+    (the joint, in the SVG's units): shoulder for an arm, neck for the head, hip for the body.
+  - Mouth: one <g class="mouth" data-shape="A".."H","X"> per shape (A closed P/B/M, B teeth K/S/T/EE,
+    C open EH, D wide AA, E rounded AO, F puckered OO/W, G F/V, H L, X rest). A missing shape falls back to a near one.
+  - Speech: paste the JSON written by `umd lipsync voice.wav --text script.txt` into <script id="lipsync">,
+    set SPEECH_AT to the second the voice starts, and mix the same WAV with `umd mix --voice`.
+  - Acting: edit BEATS (look, gestures). Eyes lead the head by about 8 frames; nothing is ever frozen
+    (breathing and blinks run underneath).
+  Capture: umd capture puppet.html --out out/puppet.mp4 --fps 30   ·   stills: umd still puppet.html --at 0,2,4 --hero "#puppet" --seek-check
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Puppet</title>
+<style>
+  :root { --bg: #f3ece1; --ink: #2b2420; --skin: #e9b48f; --shirt: #d4583c; --pants: #2f4a63; --accent: #f2c14e; }
+  html, body { margin: 0; height: 100%; background: var(--bg); }
+  svg { width: 100vw; height: 100vh; display: block; }
+  .mouth { display: none; }
+  .mouth.on { display: inline; }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg" aria-label="Animated character">
+  <rect width="1920" height="1080" fill="var(--bg)"/>
+  <ellipse cx="860" cy="930" rx="230" ry="26" fill="#000" opacity=".08"/>
+  <!-- the product the character looks at -->
+  <g id="product" transform="translate(1340 560)">
+    <rect x="-90" y="-120" width="180" height="240" rx="28" fill="var(--ink)"/>
+    <rect x="-74" y="-100" width="148" height="190" rx="14" fill="var(--accent)"/>
+  </g>
+  <g id="puppet" transform="translate(860 520)">
+    <g id="body" data-pivot="0 300">
+      <rect x="-70" y="200" width="56" height="210" rx="26" fill="var(--pants)"/>
+      <rect x="14" y="200" width="56" height="210" rx="26" fill="var(--pants)"/>
+      <rect x="-110" y="-20" width="220" height="250" rx="70" fill="var(--shirt)"/>
+      <g id="armL" data-pivot="-95 20">
+        <rect x="-130" y="10" width="48" height="190" rx="24" fill="var(--shirt)"/>
+        <circle cx="-106" cy="205" r="26" fill="var(--skin)"/>
+      </g>
+      <g id="armR" data-pivot="95 20">
+        <rect x="82" y="10" width="48" height="190" rx="24" fill="var(--shirt)"/>
+        <circle cx="106" cy="205" r="26" fill="var(--skin)"/>
+      </g>
+      <g id="head" data-pivot="0 -10">
+        <rect x="-18" y="-40" width="36" height="40" fill="var(--skin)"/>
+        <circle cx="0" cy="-130" r="105" fill="var(--skin)"/>
+        <path d="M-105 -150 Q-90 -250 0 -245 Q95 -250 108 -150 Q60 -195 -10 -190 Q-70 -190 -105 -150Z" fill="var(--ink)"/>
+        <g id="eyes">
+          <g class="eye" data-pivot="-38 -135"><ellipse class="white" cx="-38" cy="-135" rx="17" ry="20" fill="#fff"/><circle class="pupil" cx="-38" cy="-133" r="9" fill="var(--ink)"/></g>
+          <g class="eye" data-pivot="38 -135"><ellipse class="white" cx="38" cy="-135" rx="17" ry="20" fill="#fff"/><circle class="pupil" cx="38" cy="-133" r="9" fill="var(--ink)"/></g>
+          <g id="lids" opacity="0"><rect x="-58" y="-158" width="40" height="44" rx="18" fill="var(--skin)"/><rect x="18" y="-158" width="40" height="44" rx="18" fill="var(--skin)"/>
+            <path d="M-56 -134 h36 M20 -134 h36" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/></g>
+        </g>
+        <path id="browL" d="M-58 -170 q20 -10 40 0" stroke="var(--ink)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <path id="browR" d="M18 -170 q20 -10 40 0" stroke="var(--ink)" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <g transform="translate(0 -72)">
+          <g class="mouth" data-shape="X"><path d="M-22 0 q22 8 44 0" stroke="var(--ink)" stroke-width="6" fill="none" stroke-linecap="round"/></g>
+          <g class="mouth" data-shape="A"><path d="M-20 0 h40" stroke="var(--ink)" stroke-width="7" stroke-linecap="round"/></g>
+          <g class="mouth" data-shape="B"><rect x="-24" y="-8" width="48" height="16" rx="7" fill="var(--ink)"/><rect x="-18" y="-6" width="36" height="6" fill="#fff"/></g>
+          <g class="mouth" data-shape="C"><ellipse cx="0" cy="2" rx="24" ry="14" fill="var(--ink)"/></g>
+          <g class="mouth" data-shape="D"><ellipse cx="0" cy="6" rx="26" ry="24" fill="var(--ink)"/><ellipse cx="0" cy="18" rx="14" ry="7" fill="#d9706a"/></g>
+          <g class="mouth" data-shape="E"><ellipse cx="0" cy="3" rx="17" ry="17" fill="var(--ink)"/></g>
+          <g class="mouth" data-shape="F"><ellipse cx="0" cy="2" rx="10" ry="12" fill="var(--ink)"/></g>
+          <g class="mouth" data-shape="G"><rect x="-20" y="-6" width="40" height="12" rx="6" fill="var(--ink)"/><rect x="-14" y="-6" width="28" height="5" fill="#fff"/></g>
+          <g class="mouth" data-shape="H"><ellipse cx="0" cy="3" rx="20" ry="12" fill="var(--ink)"/><ellipse cx="0" cy="-2" rx="8" ry="4" fill="#d9706a"/></g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
+<!-- `umd lipsync voice.wav` writes { fps, cues: [{ start, end, value }] }; paste it here. Empty: the demo babbles. -->
+<script type="application/json" id="lipsync">{"cues": []}</script>
+<script>
+const DURATION = 6;          // seconds
+const SPEECH_AT = 1.2;       // when the voice starts
+// acting, in seconds: where the character looks (an element id or "camera") and what the arms do
+const BEATS = [
+  { t: 0.0, look: "camera" },
+  { t: 1.6, look: "product" },
+  { t: 2.4, armR: -55 },      // raises the right arm toward the product (degrees)
+  { t: 3.6, armR: 0 },
+  { t: 4.2, look: "camera" },
+];
+
+// ---- pure helpers: the same t always gives the same picture
+const ease = (x) => (x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x));
+const lerp = (a, b, k) => a + (b - a) * k;
+function rand(i) { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+const $ = (s) => document.querySelector(s);
+const pivot = (el) => (el.dataset.pivot || "0 0").split(" ").map(Number);
+function rotate(el, deg, dx = 0, dy = 0) { const [x, y] = pivot(el); el.setAttribute("transform", `translate(${dx} ${dy}) rotate(${deg} ${x} ${y})`); }
+
+// a value that eases from beat to beat (each change takes `dur` seconds)
+function track(key, t, dur, fallback) {
+  let v = fallback, from = fallback, at = -1;
+  for (const b of BEATS) if (b[key] !== undefined) { if (b.t <= t) { from = v; v = b[key]; at = b.t; } }
+  return at < 0 ? v : lerp(from, v, ease((t - at) / dur));
+}
+function lookTarget(t, lag) {
+  let target = "camera", prev = "camera", at = -1;
+  for (const b of BEATS) if (b.look && b.t <= t - lag) { prev = target; target = b.look; at = b.t + lag; }
+  const pos = (name) => name === "camera" ? { x: 0, y: 0 } : (() => { const r = $("#" + name).getBBox(); const m = $("#" + name).transform.baseVal.consolidate()?.matrix; return { x: Math.max(-1, Math.min(1, ((m ? m.e : 0) + r.x + r.width / 2 - 860) / 500)), y: Math.max(-1, Math.min(1, ((m ? m.f : 0) + r.y + r.height / 2 - 380) / 400)) }; })();
+  const a = pos(prev), b = pos(target), k = at < 0 ? 1 : ease((t - at) / 0.35);
+  return { x: lerp(a.x, b.x, k), y: lerp(a.y, b.y, k) };
+}
+
+const LIP = JSON.parse($("#lipsync").textContent || "{}");
+const NEAR = { C: "D", B: "C", E: "F", G: "A", H: "C", F: "E", D: "C" };
+function mouthAt(t) {
+  const s = t - SPEECH_AT;
+  if (s < 0) return "X";
+  if (LIP.cues && LIP.cues.length) { const c = LIP.cues.find((c) => s >= c.start && s < c.end); return c ? c.value : "X"; }
+  // demo babble for 2.2 s: a new shape every 90 ms
+  if (s > 2.2) return "X";
+  return "ABCDEFCBDA"[Math.floor(rand(Math.floor(s / 0.09)) * 10)];
+}
+function showMouth(shape) {
+  const all = [...document.querySelectorAll(".mouth")];
+  const have = new Set(all.map((m) => m.dataset.shape));
+  let s = shape; for (let i = 0; i < 3 && !have.has(s); i++) s = NEAR[s] || "X";
+  for (const m of all) m.classList.toggle("on", m.dataset.shape === s);
+}
+
+window.umdDuration = DURATION;
+window.umdRender = (t) => {
+  // eyes first, head about 8 frames later (0.27 s at 30 fps)
+  const eye = lookTarget(t, 0), head = lookTarget(t, 0.27);
+  for (const p of document.querySelectorAll(".pupil")) { p.setAttribute("transform", `translate(${eye.x * 7} ${eye.y * 6})`); }
+  const breath = Math.sin((t / 3.2) * Math.PI * 2);   // about 19 breaths a minute
+  rotate($("#head"), head.x * 9 + breath * 0.6, head.x * 10, breath * 1.5);
+  rotate($("#body"), breath * 0.4, 0, breath * 2);
+  rotate($("#armL"), 4 + breath * 1.2);
+  rotate($("#armR"), track("armR", t, 0.45, 0) - 4 - breath * 1.2);
+  // blinks every 2.5 to 5 s, 120 ms closed, deterministic
+  let blink = 0;
+  for (let i = 0, at = 0.8; at < DURATION; i++, at += 2.5 + rand(i) * 2.5) if (t >= at && t < at + 0.12) blink = 1;
+  $("#lids").setAttribute("opacity", blink);
+  // brows lift while the character looks at something new
+  const lift = Math.abs(head.x - eye.x) * 8;
+  $("#browL").setAttribute("transform", `translate(0 ${-lift})`); $("#browR").setAttribute("transform", `translate(0 ${-lift})`);
+  showMouth(mouthAt(t));
+};
+window.umdHero = () => { const r = $("#puppet").getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height }; };
+// in a normal browser, play in real time; under umd capture the clock is virtual and umdRender is called per frame
+if (!window.__umd) { const t0 = performance.now(); const loop = () => { window.umdRender(((performance.now() - t0) / 1000) % DURATION); requestAnimationFrame(loop); }; loop(); }
+else window.umdRender(0);
+</script>
+</body>
+</html>

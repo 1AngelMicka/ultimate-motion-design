@@ -40,6 +40,7 @@ Optional official or well-maintained add-ons that deepen one route. umd works wi
 | --- | --- | --- | --- |
 | microsoft/playwright-mcp (Apache-2.0) | Browser driving, screenshots, page snapshots | Interactive checks of animated pages beyond `umd webperf`; umd already bundles Playwright for capture | `claude mcp add playwright npx @playwright/mcp@latest` |
 | ChromeDevTools/chrome-devtools-mcp (Apache-2.0) | Performance traces, console, network, Lighthouse-style debugging, plus skills | Debugging dropped frames, long tasks, CLS on animated pages | `/plugin marketplace add ChromeDevTools/chrome-devtools-mcp` then `/plugin install chrome-devtools-mcp@chrome-devtools-plugins` |
+| makehumancommunity/mpfb-mcp (GPL-3.0, beta) | 42 tools to create and shape MPFB characters in a live Blender 5.0+ | Exploring a cast interactively; batch work uses MPFB from Python (`umd characters info mpfb2`) | see its INSTALL.md (Blender 5.0 or later, MPFB installed) |
 | ahujasid/mcp-for-blender (MIT; was blender-mcp) | Drives a live Blender: scene, materials, Python execution | Route R2 (Blender) only | install `uv` (official installer, not `pip install uv`), then `claude mcp add blender uvx mcp-for-blender` and `uvx mcp-for-blender install-addon`; enable "Interface: MCP for Blender" in Blender |
 | magicuidesign/mcp (MIT) | Magic UI component registry lookup | React/Tailwind animated pages using Magic UI | `npx @magicuidesign/cli@latest install claude` |
 

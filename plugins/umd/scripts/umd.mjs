@@ -3,7 +3,7 @@
 //
 // Setup
 //   next                                The next step for this project (what /umd:go runs), from local files only
-//   doctor [--fix] [--blender]         Check FFmpeg, Playwright, Chromium and the route's tools (--blender: Blender and the GPU Cycles sees); --fix installs what it safely can
+//   doctor [--fix] [--blender] [--rhubarb]         Check FFmpeg, Playwright, Chromium and the route's tools (--blender: Blender and the GPU Cycles sees); --fix installs what it safely can
 //   detect                              Guess engine, route and profile from the current folder
 //   init [--force]                      Create .motion/ (project.json, storyboard, tokens, assets lock) and BRIEF.md from templates
 //   rules [domain|group...]             Build rules of the domains that apply to this project (compact)
@@ -29,6 +29,10 @@
 //   hits <music>                                    Strong attacks near the end of a track (candidates for its final hit)
 //   sounds <words> [--music] [--max 8] [--cc0]      Free sound effects (Freesound, Wikimedia) or music (Jamendo) via Openverse: CC0, CC BY, public domain only
 //   sounds get <id> [--dir assets/audio]            Download as 48 kHz WAV, record author, licence and credit line in assets.lock.json
+//   characters [words] [--dims 3d|2d] [--style anime|film|low-poly|flat…] [--age child|senior…] [--face visemes|full] [--kind pack|avatars|generator|rig|motion|kit2d|code|tool] [--route blender|threejs|html]
+//              Free characters, rigs, animation clips and 2D kits for commercial work (catalogue + live lists: Mesh2Motion, KayKit, Open Source Avatars)
+//   characters get <id> | info <id> | add <file> --id <entry> [--licence --author --url]   Download (or record a manual download) with its licence in assets.lock.json
+//   lipsync <voice.wav> [--text script.txt] [--fps 30]   Mouth shapes A–H, X per frame (Rhubarb, MIT) for character.py and the 2D puppet
 //   sfx [<kind>] [--dur s] [--seed n] [--gain dB]   Synthesise an effect (whoosh, swipe, riser, impact, subdrop, click, tick, pop, chime, shimmer, glitch, roomtone)
 //   normalize <in> <out> [--lufs -14] [--tp -1]      loudness <file>
 //   captions <words.json> --out subs.ass|srt|vtt [--style karaoke|pop|line] [--max-chars 32] [--width --height --font --color --highlight]
@@ -69,7 +73,7 @@ const flags = new Set();
 const opts = {};
 const pos = [];
 // boolean flags never take a value, so `umd capture --draft page.html` keeps page.html as the input
-const BOOL = new Set(["allow-sa", "backtime", "blender", "cc0", "cuts", "loop", "seek-check", "music", "draft", "fix", "force", "incremental", "json", "no-analyze", "sheet", "transparent", "twice"]);
+const BOOL = new Set(["allow-sa", "backtime", "blender", "rhubarb", "no-live", "cc0", "cuts", "loop", "seek-check", "music", "draft", "fix", "force", "incremental", "json", "no-analyze", "sheet", "transparent", "twice"]);
 for (let i = 0; i < argv.length; i++) {
   const a = argv[i];
   if (a.startsWith("--")) {
@@ -519,7 +523,7 @@ async function main() {
   switch (cmd) {
     case "doctor": {
       const { doctor } = await import("./lib/doctor.mjs");
-      const r = await doctor({ cwd, project: loadProject(cwd), fix: flags.has("fix"), blender: flags.has("blender") });
+      const r = await doctor({ cwd, project: loadProject(cwd), fix: flags.has("fix"), blender: flags.has("blender"), rhubarb: flags.has("rhubarb") });
       if (flags.has("json")) return out(r);
       return out({ ok: r.ok, os: r.os, ready: r.checks.filter((c) => c.ok).map((c) => c.name),
         missing: r.checks.filter((c) => !c.ok).map(({ name, optional, note, fix }) => ({ name, optional: !!optional, note: note || undefined, fix })),
@@ -608,6 +612,26 @@ async function main() {
       if (!pos.length) die("Usage: umd sounds <words> [--music] [--max 8] [--min 1] [--cc0] [--limit 10]   |   umd sounds get <id>");
       return out(await so.searchSounds(pos.join(" "), { music: flags.has("music"), limit: Number(opt("limit", 10)), maxSeconds: opt("max") ? Number(opt("max")) : null,
         minSeconds: opt("min") ? Number(opt("min")) : null, cc0: flags.has("cc0") }));
+    }
+    case "characters": {
+      const ch = await import("./lib/characters.mjs");
+      if (pos[0] === "get") {
+        if (!pos[1]) die("Usage: umd characters get <id> [--dir assets/characters] [--format fbx|voxel_vrm]");
+        return out(await ch.getCharacter(pos[1], { cwd, dir: opt("dir", "assets/characters"), format: opt("format") }));
+      }
+      if (pos[0] === "info") { if (!pos[1]) die("Usage: umd characters info <id>"); return out(await ch.infoCharacter(pos[1])); }
+      if (pos[0] === "add") {
+        if (!pos[1]) die("Usage: umd characters add <file|folder> --id <catalogue id> [--licence CC0-1.0|CC-BY-4.0] [--author name] [--url page] [--credit line]");
+        return out(await ch.addCharacter(pos[1], { cwd, id: opt("id"), licence: opt("licence", opt("license")), author: opt("author"), url: opt("url"), credit: opt("credit") }));
+      }
+      return out(await ch.searchCharacters(pos.join(" "), { dims: opt("dims"), style: opt("style"), age: opt("age"), face: opt("face"), kind: opt("kind"), route: opt("route"),
+        limit: Number(opt("limit", 12)), live: !flags.has("no-live") }));
+    }
+    case "lipsync": {
+      if (!pos[0]) die("Usage: umd lipsync <voice.wav> [--text script.txt] [--fps 30] [--out .motion/lipsync/x.json] [--recognizer phonetic|pocketSphinx]");
+      const { lipsync } = await import("./lib/lipsync.mjs");
+      const p = loadProject(cwd);
+      return out(lipsync(pos[0], { cwd, text: opt("text"), fps: Number(opt("fps", p?.format?.fps || 30)), out: opt("out"), language: p?.language || "fr", recognizer: opt("recognizer") }));
     }
     case "sfx": {
       const { KINDS, makeSfx } = await import("./lib/sfx.mjs");

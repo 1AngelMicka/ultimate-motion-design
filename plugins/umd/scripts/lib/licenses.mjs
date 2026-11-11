@@ -2,7 +2,7 @@
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, relative, extname } from "node:path";
 
-const MEDIA = new Set([".png", ".jpg", ".jpeg", ".webp", ".avif", ".gif", ".svg", ".mp4", ".webm", ".mov", ".mp3", ".wav", ".ogg", ".m4a", ".flac", ".aac", ".woff", ".woff2", ".ttf", ".otf", ".lottie", ".riv", ".glb", ".gltf", ".hdr", ".exr", ".blend"]);
+const MEDIA = new Set([".png", ".jpg", ".jpeg", ".webp", ".avif", ".gif", ".svg", ".mp4", ".webm", ".mov", ".mp3", ".wav", ".ogg", ".m4a", ".flac", ".aac", ".woff", ".woff2", ".ttf", ".otf", ".lottie", ".riv", ".glb", ".gltf", ".fbx", ".vrm", ".bvh", ".obj", ".hdr", ".exr", ".blend"]);
 const ASSET_DIRS = ["public", "assets", "static", "src/assets", "media/assets", "audio", "fonts", ".motion/assets"];
 
 function deps(root) {
@@ -101,7 +101,7 @@ export function checkLicenses(root, { ref, project, flags = new Set() } = {}) {
   const incomplete = [];
   const attribution = [];
   for (const a of lock) {
-    const lic = norm(a.license);
+    const lic = norm(a.license).replace(/s+/g, "-"); // "CC BY 4.0" and "CC-BY-4.0" are the same licence
     if (!a.source || !a.license) incomplete.push(a.path || "(no path)");
     if (a.commercial_ok === false && pol.commercial) violations.push({ name: a.path, kind: "asset", class: "nc", note: `declared commercial_ok: false (${a.license || "?"})` });
     else if (al.nc.includes(lic) && pol.commercial && !allow.has(norm(a.path))) violations.push({ name: a.path, kind: "asset", class: "nc", note: a.license });
@@ -110,7 +110,9 @@ export function checkLicenses(root, { ref, project, flags = new Set() } = {}) {
     if (a.model) consider(a.model, "model", `assets.lock.json (${a.path})`);
   }
   const listed = new Set(lock.map((a) => String(a.path || "").replace(/\\/g, "/")));
-  const unlisted = listMedia(root).filter((f) => !listed.has(f));
+  // a folder entry (path ending with /) covers every file inside it: an extracted character with its textures
+  const folders = [...listed].filter((p) => p.endsWith("/"));
+  const unlisted = listMedia(root).filter((f) => !listed.has(f) && !folders.some((d) => f.startsWith(d)));
   return { policy: pol, dependencies_checked: ds.length, assets_listed: lock.length, violations, warnings, remotion,
     unlisted_assets: unlisted.length, unlisted_sample: unlisted.slice(0, 10), incomplete_assets: incomplete.slice(0, 10), incomplete_count: incomplete.length,
     attribution_required: attribution };

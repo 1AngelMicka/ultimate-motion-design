@@ -28,6 +28,7 @@ CLI: `node "${CLAUDE_PLUGIN_ROOT}/scripts/umd.mjs"` (`umd`). References: `${CLAU
 - Lay out text with the longest copy first; render its landing frame with `umd still` and check lines, margins and the actual font before animating the entrance.
 - Durations and easings from the tokens; stagger groups; one focal motion at a time; keep something alive in every hold.
 - Assets: local files only (Fontsource for fonts, downloaded images), each recorded in `.motion/assets.lock.json` with its licence the moment it is added. The licence guard blocks forbidden installs.
+- Characters (`flags.has_characters`): `references/characters.md`. Blender: `templates/blender/character.py` as a module (load, profile, play, breathe, look_at, blink, mouth_from_lipsync, retarget). HTML 2D: `templates/html/puppet.html`. Speech: `umd lipsync <voice.wav> --text <script>` after the voice-over, then the mouth from that file; idle layer and blinks in every hold.
 - Audio (when flags say so), with the matching `audio/*.md`:
   1. voice-over from the script (commercial-safe TTS, `audio/voice.md`);
   2. word timestamps (forced alignment when the script is known), then `umd captions words.json --out .motion/captions.ass`, then `umd captions-check`; set `captions.file` and `captions.words` in project.json;

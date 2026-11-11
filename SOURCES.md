@@ -4,16 +4,16 @@ Tous les liens partagés, testés ou utilisés pour construire Ultimate Motion D
 
 **Règle :** rien de payant ni de non redistribuable n'est recommandé dans le plugin. Ces ressources apparaissent seulement dans « Écartés », avec la raison, et le garde-fou de licences (`plugins/umd/referential/licenses.json`) bloque leur usage. Le catalogue des dépôts (`catalogue_motion_design_claude_codex_2026.md`) n'est pas répété ici.
 
-Dernière mise à jour : 2026-11-10.
+Dernière mise à jour : 2026-11-11.
 
-323 liens en tout, chacun listé une seule fois ci-dessous. Les liens propres à la recherche (dossiers research_notes/ et reports/, non publiés) et les 1 113 dépôts du catalogue ne sont pas répétés.
+385 liens en tout, chacun listé une seule fois ci-dessous. Les liens propres à la recherche (dossiers research_notes/ et reports/, non publiés) et les 1 113 dépôts du catalogue ne sont pas répétés.
 
 | Statut | Nombre |
 | --- | --- |
-| Lien de référence | 241 |
-| Écarté | 28 |
-| Compagnon | 25 |
-| Intégré | 14 |
+| Lien de référence | 276 |
+| Écarté | 48 |
+| Compagnon | 27 |
+| Intégré | 19 |
 | Examiné | 7 |
 | Adapté (crédité) | 7 |
 | Données de calibrage | 1 |
@@ -121,10 +121,79 @@ Dernière mise à jour : 2026-11-10.
 | [vibrant.design](https://vibrant.design/) | Flux d'inspiration (sites, sections, vidéos de lancement), gratuit |  |
 | [vincentwei1021.github.io](https://vincentwei1021.github.io/) | mg-styles-15 gallery page | `plugins/umd/references/styles/index.json`, `site/content/en/tips.md`, `site/content/fr/tips.md` |
 
+## Personnages (0.10.0)
+
+Sources du catalogue `plugins/umd/references/characters/catalog.json` (`umd characters`), vérifiées le 2026-11-11 d'après les deux études du dossier `Amelioration/` (non versionné). Toutes sont gratuites et utilisables dans un travail commercial. Les sources écartées figurent dans le tableau suivant.
+
+| Lien | Ce que c'est | Statut |
+| --- | --- | --- |
+| [Mesh2Motion/mesh2motion-app](https://github.com/Mesh2Motion/mesh2motion-app) | 9 rigs (humain, animaux, créatures) et environ 330 clips, CC0 ; liste lue en direct | Intégré |
+| [ToxSam/open-source-avatars](https://github.com/ToxSam/open-source-avatars) | Registre de VRM avec licence par collection (CC0, CC BY) ; liste lue en direct | Intégré |
+| [KayKit Adventurers](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0) | Personnages chibi riggés, 76 actions, CC0 ; liste lue en direct | Intégré |
+| [KayKit Skeletons](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0) | Squelettes chibi riggés, CC0 ; liste lue en direct | Intégré |
+| [DanielSWolf/rhubarb-lip-sync](https://github.com/DanielSWolf/rhubarb-lip-sync) | Synchronisation labiale (MIT), installée par `umd doctor --fix --rhubarb` | Intégré |
+| [PolygonalMind/100Avatars](https://github.com/PolygonalMind/100Avatars) | 300 avatars avec visèmes, CC0 via le registre ci-dessus | Lien de référence |
+| [Rain v3](https://studio.blender.org/characters/rain/v3/) | Rig de film, visage complet, CC BY 4.0 | Lien de référence |
+| [Snow v4](https://studio.blender.org/characters/snow/v4/) | Rig de film, CC BY 4.0 | Lien de référence |
+| [Spring](https://studio.blender.org/characters/spring/v1/) | Enfant de film, CC BY 4.0, ancien Blender | Lien de référence |
+| [Blender Studio, personnages](https://studio.blender.org/characters/) | Catalogue de rigs de film | Lien de référence |
+| [MPFB (Blender Extensions)](https://extensions.blender.org/add-ons/mpfb/) | Générateur de personnages du bébé au senior, assets de base CC0 | Lien de référence |
+| [Licence MakeHuman](https://static.makehumancommunity.org/about/license.html) | Code GPL, assets de base CC0 | Lien de référence |
+| [makehumancommunity/mpfb-mcp](https://github.com/makehumancommunity/mpfb-mcp) | Serveur MCP pour MPFB (GPL-3.0, bêta) | Compagnon |
+| [Échantillons VRoid](https://vroid.pixiv.help/hc/en-us/articles/4402614652569) | Modèles D à G en CC0 | Lien de référence |
+| [Règles VRoid Studio](https://vroid.com/en/studio/guidelines) | Usage commercial des presets, clause « générateur » | Lien de référence |
+| [saturday06/VRM-Addon-for-Blender](https://github.com/saturday06/VRM-Addon-for-Blender) | Import VRM par script (MIT et GPL-3.0) | Compagnon |
+| [Licence Quaternius (QAL)](https://quaternius.com/license.html) | Usage dans des produits, pas de revente des fichiers | Lien de référence |
+| [Universal Base Characters](https://quaternius.com/packs/universalbasecharacters.html) | 6 corps, 20 coiffures, rig humanoïde | Lien de référence |
+| [Universal Animation Library](https://quaternius.com/packs/universalanimationlibrary.html) | Plus de 120 clips | Lien de référence |
+| [Kenney Mini Characters](https://kenney.nl/assets/mini-characters) | Personnages 3D CC0 | Lien de référence |
+| [Kenney Animated Characters](https://kenney.nl/assets/animated-characters-protagonists) | Personnages 3D animés CC0 | Lien de référence |
+| [Kenney Toon Characters](https://kenney.nl/assets/toon-characters-1) | Personnages 2D CC0 | Lien de référence |
+| [Documentation CharMorph](https://charmorph-docs.readthedocs.io/en/main/Introduction.html) | Licence par base (Vitruvian CC0, Antonia CC BY, MB-Lab AGPL) | Lien de référence |
+| [Upliner/CharMorph](https://github.com/Upliner/CharMorph) | Générateur réaliste avec rig facial | Lien de référence |
+| [Human Base Meshes](https://developer.blender.org/docs/features/asset_system/asset_bundles/human_base_meshes/) | Bases à sculpter | Lien de référence |
+| [Fichiers de démo Blender](https://www.blender.org/download/demo-files/) | Téléchargement des Human Base Meshes | Lien de référence |
+| [Rigify](https://docs.blender.org/manual/en/latest/addons/rigify/index.html) | Rig corps et visage livré avec Blender | Lien de référence |
+| [naver/anny](https://github.com/naver/anny) | Corps paramétrique, Apache-2.0 | Lien de référence |
+| [Licences Sketchfab](https://sketchfab.com/licenses) | Filtre CC0 et CC BY | Lien de référence |
+| [Conditions Poly Pizza](https://poly.pizza/docs/tos) | Licence par modèle, pas de téléchargement automatisé | Lien de référence |
+| [opengameart.org](https://opengameart.org/) | Assets par licence (CC0 et CC BY seulement) | Lien de référence |
+| [una-dinosauria/cmu-mocap](https://github.com/una-dinosauria/cmu-mocap) | Conversion BVH de la base CMU, usage commercial permis | Lien de référence |
+| [100STYLE](https://www.ianxmason.com/100style/) | 100 styles de marche, CC BY 4.0 | Lien de référence |
+| [100STYLE sur Zenodo](https://zenodo.org/records/8127870) | Archive BVH stable | Lien de référence |
+| [openpeeps.com](https://www.openpeeps.com/) | Personnages 2D dessinés, CC0 | Lien de référence |
+| [humaaans.com](https://www.humaaans.com/) | Personnages 2D plats, CC0 | Lien de référence |
+| [Licences DiceBear](https://www.dicebear.com/licenses/) | Licence par style d'avatar | Lien de référence |
+| [Styles DiceBear](https://www.dicebear.com/styles/) | Avatars générés depuis une graine | Lien de référence |
+| [Lottie Simple License](https://lottiefiles.com/page/license) | Usage commercial, mêmes conditions en redistribution | Lien de référence |
+| [Communauté Rive](https://rive.app/community/) | Fichiers remixables, souvent CC BY | Lien de référence |
+| [Grease Pencil](https://docs.blender.org/manual/en/latest/grease_pencil/index.html) | 2D riggée dans Blender | Lien de référence |
+| [Aodaruma/coa_tools2](https://github.com/Aodaruma/coa_tools2) | Découpe 2D façon Spine dans Blender (GPL-3.0) | Lien de référence |
+
 ## Écartés
 
 | Lien | Ce que c'est | Raison |
 | --- | --- | --- |
+| [mixamo.com](https://www.mixamo.com/) | Personnages et animations d'Adobe | Fichiers bruts non redistribuables, même gratuitement |
+| [readyplayer.me](https://readyplayer.me/) | Avatars | Service fermé le 2026-01-31 |
+| [animate-1978/MB-Lab](https://github.com/animate-1978/MB-Lab) | Générateur réaliste | Assets AGPL |
+| [smpl-x.is.tue.mpg.de](https://smpl-x.is.tue.mpg.de/) | Modèle de corps de recherche | Non commercial |
+| [Bandai Namco motion dataset](https://github.com/BandaiNamcoResearchInc/Bandai-Namco-Research-Motiondataset) | Mocap | CC BY-NC 4.0 |
+| [ubisoft-laforge-animation-dataset](https://github.com/ubisoft/ubisoft-laforge-animation-dataset) | Mocap LAFAN1 | CC BY-NC-ND 4.0 |
+| [mocap.cs.sfu.ca](https://mocap.cs.sfu.ca/) | Mocap SFU | Usage commercial exclu |
+| [reallusion.com](https://www.reallusion.com/character-creator/) | Character Creator 5 | Payant, contenu non redistribuable |
+| [humgen3d.com](https://humgen3d.com/) | Human Generator | Payant, assets non partageables |
+| [metahuman.com](https://www.metahuman.com/en-US/license) | MetaHuman | Licence Epic, fichiers non redistribuables |
+| [daz3d.com](https://www.daz3d.com/eula) | Daz Studio et Genesis | Contenu payant non redistribuable |
+| [renderpeople.com](https://renderpeople.com/general-terms-and-conditions/) | Scans de personnes | Payant, 3D non partageable |
+| [syntystore.com](https://syntystore.com/pages/one-time-purchase-licence) | Personnages low-poly | Payant, licence centrée sur le jeu vidéo |
+| [esotericsoftware.com](https://esotericsoftware.com/spine-purchase) | Spine (2D riggée) | Payant |
+| [live2d.com](https://www.live2d.com/en/cubism/comparison/) | Live2D Cubism | Version gratuite plafonnée (720p, petites structures) ; PRO payant |
+| [Auto-Rig Pro](https://superhivemarket.com/products/auto-rig-pro) | Rigging et retargeting | Payant |
+| [Faceit](https://superhivemarket.com/products/faceit) | 52 shape keys ARKit | Payant |
+| [meshy.ai](https://www.meshy.ai/) | 3D générée | Maillages générés : route director seulement, avec accord |
+| [Hunyuan3D 2](https://huggingface.co/tencent/Hunyuan3D-2/blob/main/LICENSE) | 3D générée | Licence qui exclut l'Union européenne |
+| [Liberated Pixel Cup](https://lpc.opengameart.org/) | Sprites pixel | CC BY-SA et GPL : partage à l'identique |
 | [pencil2d/pencil](https://github.com/pencil2d/pencil) | Application de dessin animé image par image (GPL-2.0) | Un agent ne peut pas la piloter ; utile seulement à un humain qui dessine les poses clés |
 | [60fps.design](https://60fps.design) | Mobile UI animation Free (paid extras) | payant, freemium verrouillé ou licence floue |
 | [backgrounds.supply](https://backgrounds.supply) | Galerie ou bibliothèque de ressources | payant, freemium verrouillé ou licence floue |

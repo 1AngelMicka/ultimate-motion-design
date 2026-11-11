@@ -30,6 +30,7 @@ What it brings:
   - Craft counts in the score: the idea and hero moment, typography, colour and sound design are judged against the project's target level (8 by default).
   - Sound is measured against picture: each effect lands on its event within ±45 ms (`umd sync`), and the music's real ending lands on the end card (`umd mix --backtime`).
 - **Measured, not just looked at.** The hero's size in every key still (`umd still --hero`), frames that do not depend on the render order (`--seek-check`), loops without a jump (`umd analyze --loop`), motion blur by sub-frames (`umd capture --subframes`) and one clock for every event and sound (`timing.json`).
+- **Real characters.** No more stiff faces drawn in code: `umd characters` searches film rigs (full face), a generator from baby to senior, anime, low-poly, animals and creatures, 4,000 avatars, 2D kits, motion libraries and tools, all free and usable in advertising, with licence and credit recorded. One layer (`templates/blender/character.py`) animates any humanoid the same way: look, blink, breathe, speak (`umd lipsync`), play an action, take a captured motion. In 2D, an HTML puppet does the same.
 - **A real sound department.** Twelve effects made on the spot with no licence to manage (`umd sfx whoosh`, `riser`, `impact`…), free effects and music searched and credited automatically (`umd sounds`, CC0 and CC BY only), and a guide that says which sound goes on which picture event, per project type. Listen on the [Sound and music](https://1angelmicka.github.io/ultimate-motion-design/en/son.html) page.
   - Cuts happen on motion, never between two parked shots, and no more than one second of near-still picture per 30 s: two measured checks, calibrated with zero false alarm on 15 reference films scored 7 to 8 by an AI jury.
 - **The grammar of professional launch films.** Six rules and 16 mechanisms drawn from the analysis of 28 launch films: one persistent actor, every action producing a result, the foreground carrying the transition.
@@ -192,7 +193,7 @@ All these commands rely on a zero-dependency CLI that you can also run yourself:
 - **rendering:** `capture`, `still`, `render`;
 - **analysis:** `analyze` (cuts, motion, dead air, flashes, loudness, contact sheet), `frames` (`--cuts`: 12 frames around each cut), `compare`, `vmaf`, `webperf`, `lint`, `licenses`;
 - **sound:** `mix` (ducking, loudness, `--backtime` to land the music's ending on the end card), `hits` (a track's final hits), `sync` (each sound against its picture), `normalize`, `loudness`, `captions`, `burn`;
-- **resources:** `styles` (1 323 styles, prompts and blocks; `styles match` picks from the brief), `moves` (120 named techniques), `commons` (free images from Wikimedia Commons), `sounds` (free effects and music), `sfx` (effects made on the spot);
+- **resources:** `styles` (1 323 styles, prompts and blocks; `styles match` picks from the brief), `moves` (120 named techniques), `commons` (free images from Wikimedia Commons), `sounds` (free effects and music), `sfx` (effects made on the spot), `characters` (free characters, rigs, motion and 2D kits), `lipsync` (mouth shapes from a voice);
 - **tracking:** `next`, `status`, `tokens`, `estimate` (render time from one test frame), `adopt` (runs a video rendered by your own pipeline through analysis, audit and delivery).
 
 ## Routes and technologies
