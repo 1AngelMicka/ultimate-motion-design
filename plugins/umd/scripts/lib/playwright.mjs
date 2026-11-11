@@ -30,6 +30,9 @@ export const CHROMIUM_ARGS = [
   "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist", "--enable-unsafe-webgpu",
   "--autoplay-policy=no-user-gesture-required", "--font-render-hinting=none", "--disable-lcd-text",
   "--hide-scrollbars", "--mute-audio",
+  // redraw whole tiles: a partial redraw keeps old anti-aliased edges at its border, so a frame drawn in
+  // sequence could differ by a pixel from the same frame drawn cold (seen on Linux and macOS with SVG)
+  "--disable-partial-raster",
 ];
 
 export async function launch(chromium, extraArgs = []) {

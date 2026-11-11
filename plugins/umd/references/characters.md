@@ -73,6 +73,7 @@ src = ch.load("assets/characters/cmu/02_01.bvh"); ch.retarget(src, rig, 2, 400, 
 - **BVH**: CMU runs at 120 fps and 100STYLE at 60, so pass `step = fps_source / fps_film`. The first frame of a CMU conversion is a T-pose; start at the second.
 - **Mesh2Motion clips** are meshopt-compressed GLB: three.js reads them (MeshoptDecoder); Blender 5.1's glTF importer does not. In Blender, use their rig `.glb` (not compressed) and take motion from BVH or another rig.
 - **FBX** from Unity or Mixamo: `load` applies the 0.01 scale and repairs materials that arrive with Alpha 0 (invisible). It prints `MISSING TEXTURES` when the FBX does not carry them: 100Avatars keeps its textures in the VRM, so prefer the VRM (it needs the VRM add-on).
+- **Film rigs (Blender Studio, CloudRig)**: render EEVEE with ray tracing on (the `character.py` test does it): their corneas refract, and without it the eyes render as dark holes. In a close-up, keep a look within about 30 degrees of the nose: past 40 degrees the eye shows mostly white. Once the head turns, Rain's eyes follow the rig's own EyeDot system: check the eyes on the test shot before planning a gaze.
 - Speech: `umd lipsync voice.wav --text script.txt` writes `.motion/lipsync/<name>.json` (Rhubarb, MIT; the phonetic recogniser for any language other than English). Mouth shapes switch on Rhubarb's cues. A shape the rig lacks borrows a near one at a lower weight, and a rig with only a jaw bone opens it by the shape's amount.
 
 ## 6. Animate (HTML, 2D)

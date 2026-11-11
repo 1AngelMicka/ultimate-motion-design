@@ -61,6 +61,10 @@ FAMILIES = {
         "shin.{s}": "calf_{ls}", "foot.{s}": "foot_{ls}", "toe.{s}": "ball_{ls}"}),
     "kaykit": _side({"hips": "hips", "spine": "spine", "chest": "chest", "head": "head", "upper_arm.{s}": "upperarm.{ls}", "forearm.{s}": "lowerarm.{ls}",
         "hand.{s}": "wrist.{ls}", "thigh.{s}": "upperleg.{ls}", "shin.{s}": "lowerleg.{ls}", "foot.{s}": "foot.{ls}", "toe.{s}": "toes.{ls}"}),
+    # CloudRig (Blender Studio: Rain, Snow): the FK and master controls
+    "cloudrig": _side({"hips": "MSTR-Pelvis", "spine": "FK-Spine", "chest": "FK-Chest", "upper_chest": "FK-RibCage", "neck": "FK-Neck", "head": "FK-Head",
+        "eye.{s}": "MSTR-Eye.{s}", "jaw": "MSTR-Jaw", "shoulder.{s}": "MSTR-Clavicle.{s}", "upper_arm.{s}": "FK-Upperarm.{s}", "forearm.{s}": "FK-Forearm.{s}",
+        "hand.{s}": "FK-Hand.{s}", "thigh.{s}": "FK-Thigh.{s}", "shin.{s}": "FK-Shin.{s}", "foot.{s}": "FK-Foot.{s}", "toe.{s}": "FK-Toe.{s}"}),
     # Rigify generated rig: the FK controls are what an animator (and the retarget) drives
     "rigify": _side({"hips": "torso", "spine": "spine_fk.001", "chest": "chest", "neck": "neck", "head": "head", "eye.{s}": "eye.{s}", "jaw": "jaw_master",
         "shoulder.{s}": "shoulder.{s}", "upper_arm.{s}": "upper_arm_fk.{s}", "forearm.{s}": "forearm_fk.{s}", "hand.{s}": "hand_fk.{s}",
@@ -122,12 +126,12 @@ def _map(rig):
     return (best if best_n >= 8 else "fuzzy"), mapping
 
 # ---- 2. face: blink and mouth shape keys under the names each ecosystem uses
-BLINK = ["blink", "eyeblinkleft", "eyeblinkright", "fclEYEclose", "fcleyeclose", "vrcblink", "eyesclosed", "blinkl", "blinkr", "eyeclose", "eyesclose"]
+BLINK = ["eyelidsclosel", "eyelidscloser", "blink", "eyeblinkleft", "eyeblinkright", "fclEYEclose", "fcleyeclose", "vrcblink", "eyesclosed", "blinkl", "blinkr", "eyeclose", "eyesclose"]
 VISEMES = {  # Rhubarb shape -> candidate shape keys (Meta/Oculus and VRChat visemes, VRM vowels, ARKit), best first
     "A": ["visemepp", "vrcvpp", "pp", "mouthclose"],
     "B": ["visemekk", "visemess", "vrcvkk", "vrcvss", "ih", "i", "fclmthi", "mouthstretchleft"],
-    "C": ["visemee", "vrcve", "ee", "e", "fclmthe", "jawopen"],
-    "D": ["visemeaa", "vrcvaa", "aa", "a", "fclmtha", "jawopen"],
+    "C": ["visemee", "vrcve", "ee", "e", "fclmthe", "jawopen", "mouthopen"],
+    "D": ["visemeaa", "vrcvaa", "aa", "a", "fclmtha", "jawopen", "mouthopen"],
     "E": ["visemeo", "vrcvoh", "oh", "o", "fclmtho", "mouthfunnel"],
     "F": ["visemeu", "vrcvou", "ou", "u", "fclmthu", "mouthpucker"],
     "G": ["visemeff", "vrcvff", "ff", "mouthrolllower"],
@@ -232,6 +236,11 @@ def load(path, name=None):
         for o in dst.objects:
             if o is not None:
                 bpy.context.scene.collection.objects.link(o)
+        # bone shapes (WGT-*) and helper objects were hidden in their own collection: keep them out of the render
+        shapes = {pb.custom_shape for a in dst.objects if a is not None and a.type == "ARMATURE" for pb in a.pose.bones if pb.custom_shape}
+        for o in dst.objects:
+            if o is not None and (o in shapes or o.name.startswith(("WGT-", "WGT_", "HLP-", "CS_")) or o.name.endswith("_viewport")):
+                o.hide_render = o.hide_viewport = True
     else:
         raise RuntimeError(f"Unsupported format {ext}")
     new = [o for o in bpy.data.objects if o not in before]
@@ -292,7 +301,7 @@ def _bone_target(rig, bone, target, axis, f0, f1, ease_frames, name, amount=1.0)
         c.keyframe_insert("influence", frame=f1 + ease_frames)
     return c
 
-def look_at(rig, p, target, f0, f1=None, head_amount=0.6, lead=8, ease=10):
+def look_at(rig, p, target, f0, f1=None, head_amount=0.8, lead=8, ease=10):
     """Eyes first, then the head (6 to 10 frames later), never the whole body at once."""
     b = p["bones"]
     if "eye.L" in b and "eye.R" in b and p.get("eye_forward"):
@@ -462,8 +471,10 @@ def _test(path, args):
     n = int(args.get("length", 120))
     scene.frame_start, scene.frame_end = 1, n
     h = p["height_m"]
-    # product on a plinth at chest height, to the character's right
-    bpy.ops.mesh.primitive_cube_add(size=h * 0.12, location=(h * 0.55, -h * 0.45, h * 0.62))
+    # product at chest height, to the character's left; in a close-up, held closer (about 30 degrees off the nose):
+    # a look past 40 degrees shows mostly the white of the eye, which reads as a fault in close-up
+    loc = (h * 0.28, -h * 0.5, h * 0.74) if args.get("framing") == "face" else (h * 0.55, -h * 0.45, h * 0.62)
+    bpy.ops.mesh.primitive_cube_add(size=h * 0.12, location=loc)
     product = bpy.context.object
     product.name = "product"
     if args.get("action") and args["action"] in acts:
@@ -493,10 +504,17 @@ def _test(path, args):
     cam_data.lens = 50
     cam = bpy.data.objects.new("cam", cam_data)
     scene.collection.objects.link(cam)
-    cam.location = (h * 1.3, -h * 3.6, h * 0.8)
     aim = bpy.data.objects.new("aim", None)
     scene.collection.objects.link(aim)
-    aim.location = (h * 0.2, 0, h * 0.5)
+    if args.get("framing") == "face" and "head" in p["bones"]:
+        # close-up for acting: 85 mm at eye level, head and shoulders, product edge in frame
+        hz = (rig.matrix_world @ rig.data.bones[p["bones"]["head"]].head_local)
+        cam_data.lens = 85
+        aim.location = (hz.x + h * 0.04, hz.y, hz.z + h * 0.05)
+        cam.location = (hz.x + h * 0.25, hz.y - h * 1.1, hz.z + h * 0.06)
+    else:
+        cam.location = (h * 1.3, -h * 3.6, h * 0.8)
+        aim.location = (h * 0.2, 0, h * 0.5)
     t = cam.constraints.new("TRACK_TO")
     t.target, t.track_axis, t.up_axis = aim, "TRACK_NEGATIVE_Z", "UP_Y"
     scene.camera = cam
@@ -512,6 +530,14 @@ def _test(path, args):
     scene.world = world
     eng = str(args.get("engine", os.environ.get("UMD_ENGINE", "eevee"))).lower()
     scene.render.engine = "CYCLES" if eng == "cycles" else "BLENDER_EEVEE"
+    if eng != "cycles":
+        # film characters have refractive corneas: without ray tracing EEVEE draws the eyes as dark holes
+        e = scene.eevee
+        e.use_raytracing = True
+        e.ray_tracing_options.use_denoise = True
+        e.use_shadows = True
+        e.use_fast_gi = True
+        e.taa_render_samples = 64
     if eng == "cycles":
         scene.cycles.samples = 64
     scene.render.resolution_x, scene.render.resolution_y = (int(x) for x in str(args.get("res", "960x540")).split("x"))
